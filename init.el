@@ -21,28 +21,34 @@
   :ensure t
   :config (setq yas-global-mode 1))
 
+(use-package which-key
+  :ensure t
+  :config (which-key-mode))
 
+(use-package go-autocomplete
+  :ensure t)
+
+;; Configure golint if it is installed
+(when (getenv "GOPATH")
+  (let ((lint-path (concat (getenv "GOPATH")  "/src/github.com/golang/lint/misc/emacs")))
+    (when (file-exists-p lint-path)
+      (add-to-list 'load-path lint-path)
+      (require 'golint))))
+
+
+(use-package flycheck
+  :ensure t
+  :config (global-flycheck-mode))
+
+
+ 
 ;; SKIP?
 ;; (add-to-list 'load-path "~/.emacs.d/lisp")
 ;; (require 'auto-complete-config)
 ;; (add-to-list 'ac-dictionary-directories "~/.emacs.d/ac-dict")
 ;; (ac-config-default)
 
-;; ;;(require 'yaml-mode)
-;; ;;(add-to-list 'auto-mode-alist '("\\.yml$" . yaml-mode))
-;; ;;(add-hook 'yaml-mode-hook
-;; ;;	  '(lambda ()
-;; ;;	     (define-key yaml-mode-map "\C-m" 'newline-and-indent)))
 
-;; (which-key-mode)
-
-;; (require 'go-autocomplete)
-;; (require 'auto-complete-config)
-
-;; (add-to-list 'load-path (concat (getenv "GOPATH")  "/src/github.com/golang/lint/misc/emacs"))
-;; (require 'golint)
-
-;; (add-hook 'after-init-hook #'global-flycheck-mode)
 
 ;; (setq js-indent-level 2)
 
