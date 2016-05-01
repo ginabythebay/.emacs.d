@@ -69,16 +69,8 @@
 (setq c-default-style "java"
       c-basic-offset 2)
 
-
-
 (delete-selection-mode t)
-
-
-
-
-;; (global-set-key [f2] 'switch-to-other-buffer)
-;; (global-set-key "\C-f" 'fill-paragraph)
-;; (setq column-number-mode t)  ;; put line number in mode line.
+(setq column-number-mode t)  ;; put line number in mode line.
 
 ;; (add-to-list 'load-path "~/.emacs.d/lisp/")
 
@@ -201,3 +193,5 @@
 ;;   "Switches to the most recent buffer"
 ;;   (interactive)
 ;;   (switch-to-buffer (other-buffer t)))
+;; (global-set-key [f2] 'switch-to-other-buffer)
+;; (global-set-key "\C-f" 'fill-paragraph)
