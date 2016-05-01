@@ -5,6 +5,11 @@
 
 ;;; Code:
 
+;; Get all this machine-written custom crud out of my cleanish init.el file.
+;; See http://emacsblog.org/2008/12/06/quick-tip-detaching-the-custom-file/
+(setq custom-file "~/.emacs.d/custom.el")
+(load custom-file 'noerror)
+
 (require 'package)
 (setq package-enable-at-startup nil)
 (add-to-list 'package-archives
@@ -29,37 +34,37 @@
   :ensure t)
 
 ;; Configure golint if it is installed
+;; TODO(gina) refactor to use use-package, :if, :load-path
 (when (getenv "GOPATH")
   (let ((lint-path (concat (getenv "GOPATH")  "/src/github.com/golang/lint/misc/emacs")))
     (when (file-exists-p lint-path)
       (add-to-list 'load-path lint-path)
       (require 'golint))))
 
-
 (use-package flycheck
   :ensure t
   :config (global-flycheck-mode))
 
+(use-package js2-mode
+  :ensure t
+  :config (setq js-indent-level 2))
 
- 
-;; SKIP?
-;; (add-to-list 'load-path "~/.emacs.d/lisp")
-;; (require 'auto-complete-config)
-;; (add-to-list 'ac-dictionary-directories "~/.emacs.d/ac-dict")
-;; (ac-config-default)
+;; C
+(setq c-default-style "stroustrup"
+      c-basic-offset 2)
+(setq c-default-style "whitesmith"
+      c-basic-offset 2)
+
+;; Python
+(setq c-default-style "python"
+      c-basic-offset 2)
+
+;; Java
+(setq c-default-style "java"
+      c-basic-offset 2)
 
 
 
-;; (setq js-indent-level 2)
-
-;; ;(setq c-default-style "stroustrup"
-;; ;      c-basic-offset 2)
-;; ;(setq c-default-style "whitesmith"
-;; ;      c-basic-offset 2)
-;; ;(setq c-default-style "python"
-;; ;      c-basic-offset 2)
-;; ;(setq c-default-style "java"
-;; ;      c-basic-offset 2)
 
 ;; ;;; Stefan Monnier <foo at acm.org>. It is the opposite of fill-paragraph    
 ;; (defun unfill-paragraph ()
@@ -183,3 +188,11 @@
 
 (provide 'init)
 ;;; init.el ends here
+
+
+ 
+;; SKIP?
+;; (add-to-list 'load-path "~/.emacs.d/lisp")
+;; (require 'auto-complete-config)
+;; (add-to-list 'ac-dictionary-directories "~/.emacs.d/ac-dict")
+;; (ac-config-default)
