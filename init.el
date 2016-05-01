@@ -47,6 +47,7 @@
 
 (use-package js2-mode
   :ensure t
+  :mode ("\\.js\\'" . js2-mode)
   :config (setq js-indent-level 2))
 
 (use-package magit
@@ -93,9 +94,6 @@
 
 ;; (delete-selection-mode t) 
 
-
-;; ;; Magit rules!
-;; (global-set-key (kbd "C-x g") 'magit-status)
 
 
 
