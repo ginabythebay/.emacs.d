@@ -49,6 +49,11 @@
   :ensure t
   :config (setq js-indent-level 2))
 
+(use-package magit
+  :ensure t
+  :bind ("C-x g" . magit-status))
+
+
 ;; C
 (setq c-default-style "stroustrup"
       c-basic-offset 2)
