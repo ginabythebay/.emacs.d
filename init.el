@@ -71,28 +71,7 @@
 
 
 
-
-;; ;;; Stefan Monnier <foo at acm.org>. It is the opposite of fill-paragraph    
-;; (defun unfill-paragraph ()
-;;   "Takes a multi-line paragraph and makes it into a single line of text."
-;;   (interactive)
-;;   (let ((fill-column (point-max)))
-;;     (fill-paragraph nil)))
-
-;; (defun toggle-line-move-visual ()
-;;   "Toggle behavior of up/down arrow key, by visual line vs logical line."
-;;   (interactive)
-;;   (if line-move-visual
-;;       (setq line-move-visual nil)
-;;     (setq line-move-visual t))
-;;   )
-
-;; (defun switch-to-other-buffer () 
-;;   "Switches to the most recent buffer"
-;;   (interactive)
-;;   (switch-to-buffer (other-buffer t)))
-
-;; (delete-selection-mode t) 
+(delete-selection-mode t)
 
 
 
@@ -199,3 +178,26 @@
 ;; (require 'auto-complete-config)
 ;; (add-to-list 'ac-dictionary-directories "~/.emacs.d/ac-dict")
 ;; (ac-config-default)
+
+
+
+
+;; ;;; Stefan Monnier <foo at acm.org>. It is the opposite of fill-paragraph    
+;; (defun unfill-paragraph ()
+;;   "Takes a multi-line paragraph and makes it into a single line of text."
+;;   (interactive)
+;;   (let ((fill-column (point-max)))
+;;     (fill-paragraph nil)))
+
+;; (defun toggle-line-move-visual ()
+;;   "Toggle behavior of up/down arrow key, by visual line vs logical line."
+;;   (interactive)
+;;   (if line-move-visual
+;;       (setq line-move-visual nil)
+;;     (setq line-move-visual t))
+;;   )
+
+;; (defun switch-to-other-buffer () 
+;;   "Switches to the most recent buffer"
+;;   (interactive)
+;;   (switch-to-buffer (other-buffer t)))
