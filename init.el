@@ -50,6 +50,10 @@
   :mode ("\\.js\\'" . js2-mode)
   :config (setq js-indent-level 2))
 
+(use-package markdown-mode
+  :ensure t
+  :mode ("\\.md\\'" . markdown-mode))
+
 (use-package magit
   :ensure t
   :bind ("C-x g" . magit-status))
