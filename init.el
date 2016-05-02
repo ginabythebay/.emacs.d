@@ -52,7 +52,10 @@
 
 (use-package markdown-mode
   :ensure t
-  :mode ("\\.md\\'" . markdown-mode))
+  :mode ("\\.md\\'" . markdown-mode)
+  :config (let ((mm "/usr/local/bin/multimarkdown"))
+	    (when (file-exists-p mm)
+	      (setq markdown-command mm))))
 
 (use-package magit
   :ensure t
@@ -78,16 +81,6 @@
 
 ;; (add-to-list 'load-path "~/.emacs.d/lisp/")
 
-;; (autoload 'markdown-mode "markdown-mode.el" 
-;;   "Major mode for editing Markdown files" t)
-;; (setq auto-mode-alist 
-;;       (cons '("\\.md" . markdown-mode) auto-mode-alist))
-
-;; ;; Assume .m files are octave files rather than the default of objective c
-;; (setq auto-mode-alist 
-;;       (cons '("\\.m" . octave-mode) auto-mode-alist))
-
-;; (setq markdown-command "/usr/local/bin/multimarkdown")
 
 
 ;; (set-face-attribute 'default nil :height 130)
