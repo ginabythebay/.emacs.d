@@ -34,7 +34,6 @@
   :ensure t)
 
 ;; Configure golint if it is installed
-;; TODO(gina) refactor to use use-package, :if, :load-path
 (let ((lint-path (eval-and-compile (concat (getenv "GOPATH")  "/src/github.com/golang/lint/misc/emacs"))))
   (use-package golint
     :if (and (getenv "GOPATH") (file-exists-p lint-path))
