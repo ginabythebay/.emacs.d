@@ -43,6 +43,10 @@
   :ensure t
   :config (global-flycheck-mode))
 
+(use-package yaml-mode
+  :ensure t
+  :mode ("\\.yml\\'" . yaml-mode))
+
 (use-package js2-mode
   :ensure t
   :mode ("\\.js\\'" . js2-mode)
