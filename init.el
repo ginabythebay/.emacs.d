@@ -3,6 +3,8 @@
 ;;; Commentary:
 ;;; Stuff here
 
+;; TODO(gina) investigate colors in compilation mode: http://endlessparentheses.com/ansi-colors-in-the-compilation-buffer-output.html?source=rss
+
 ;;; Code:
 
 ;; Get all this machine-written custom crud out of my cleanish init.el file.
