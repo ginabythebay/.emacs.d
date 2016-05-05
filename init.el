@@ -4,6 +4,7 @@
 ;;; Stuff here
 
 ;; TODO(gina) investigate colors in compilation mode: http://endlessparentheses.com/ansi-colors-in-the-compilation-buffer-output.html?source=rss
+;; TODO(gina) enable flyspell?
 
 ;;; Code:
 
