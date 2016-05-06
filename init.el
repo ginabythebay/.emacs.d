@@ -7,6 +7,7 @@
 ;; TODO(gina) solarized theme: https://github.com/bbatsov/solarized-emacs
 ;; TODO(gina) investigate colors in compilation mode: http://endlessparentheses.com/ansi-colors-in-the-compilation-buffer-output.html?source=rss
 ;; TODO(gina) enable flyspell?
+;; TODO(gina) enable gocode?  https://github.com/nsf/gocode
 
 ;;; Code:
 
@@ -42,6 +43,7 @@
   :bind (([f11] . switch-to-home-buffer)
 	 ([(control f11)] . set-current-buffer-to-home-buffer)))
 
+;; TODO(gina) look into getting a bunch of snippets, including go.  See https://github.com/capitaomorte/yasnippet
 (use-package yasnippet
   :ensure t
   :config (setq yas-global-mode 1))
@@ -51,6 +53,17 @@
   :config (which-key-mode))
 
 ;; BEGIN GO CONFIGURATION
+
+(use-package go-mode
+  :ensure t
+  :mode ("\\.go$" . go-mode)
+  :config (add-hook 'go-mode-hook
+	    (lambda ()
+	      (define-key go-mode-map (kbd "C-c C-c") 'compile)
+	      (add-hook 'before-save-hook 'gofmt-before-save)
+	      (setq tab-width 4)
+	      (setq gofmt-command "goimports")
+	      (setq indent-tabs-mode 1))))
 
 (use-package go-autocomplete
 	     :ensure t)
@@ -116,30 +129,10 @@
 (delete-selection-mode t)
 (setq column-number-mode t)  ;; put line number in mode line.
 
-;; (add-to-list 'load-path "~/.emacs.d/lisp/")
-
-
-
-;; (set-face-attribute 'default nil :height 130)
-
-;; ;(require 'go-mode-load)
-;; (require 'go-mode-autoloads)
 ;; (require 'auto-highlight-symbol)
 
 ;; (setq ahs-modes (cons `go-mode ahs-modes))
 ;; (global-auto-highlight-symbol-mode t)
-
-;; (add-hook 'c-mode-hook
-;;           (lambda ()
-;; 	    (gtags-mode 1)))
-
-;; (add-hook 'go-mode-hook
-;;           (lambda ()
-;; 	    (define-key go-mode-map (kbd "C-c C-c") 'compile)
-;;             (add-hook 'before-save-hook 'gofmt-before-save)
-;;             (setq tab-width 4)
-;; 	    (gtags-mode 1)
-;;             (setq indent-tabs-mode 1)))
 
 ;; (smartparens-global-mode t)
 
@@ -154,8 +147,6 @@
 ;; (add-to-list 'auto-mode-alist '("\\.html?\\'" . web-mode))
 
 
-
-;; (setq gofmt-command "goimports")
 
 ;; ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; ;; deft                                                                   ;;
