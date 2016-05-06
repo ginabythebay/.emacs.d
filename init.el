@@ -61,9 +61,6 @@
     (when (and (not (path-contains "PATH" go-bin)) (file-exists-p go-bin))
       (setenv "PATH" (concat (getenv "PATH") ":" go-bin)))))
 
-(message (getenv "GOPATH"))
-(message (getenv "PATH"))
-
 ;; Configure golint if it is installed
 (let (
   (lint-cfg-path (eval-and-compile (concat (getenv "GOPATH")  "/src/github.com/golang/lint/misc/emacs"))))
