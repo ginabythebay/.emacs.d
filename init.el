@@ -2,8 +2,23 @@
 
 ;;; Commentary:
 ;;; Stuff here
+;;; TODO(gina) things to look into:
+;;;   . projectile: http://batsov.com/projectile/
+;;;   . zenburn theme: https://github.com/bbatsov/zenburn-emacs
+;;;   . solarized theme: https://github.com/bbatsov/solarized-emacs
+
 
 ;;; Code:
+
+;; Support functions
+
+(defun path-contains (haystack needle)
+  "Return t if HAYSTACK has a path element NEEDLE."
+  (let ((result nil))
+    (dolist (token (split-string (getenv haystack) ":"))
+      (when (string-match needle token)
+	(setq result t)))
+    result))
 
 ;; Get all this machine-written custom crud out of my cleanish init.el file.
 ;; See http://emacsblog.org/2008/12/06/quick-tip-detaching-the-custom-file/
@@ -30,14 +45,33 @@
   :ensure t
   :config (which-key-mode))
 
+;; BEGIN GO CONFIGURATION
+
 (use-package go-autocomplete
-  :ensure t)
+	     :ensure t)
+
+; If GOPATH isn't set, try to set it
+(unless (getenv "GOPATH")
+  (when (file-exists-p "~/go")
+    (setenv "GOPATH" "~/go")))
+
+; If GOPATH/bin isn't part of path and it exists, append it
+(when (getenv "GOPATH")
+  (let ((go-bin (concat (getenv "GOPATH") "/bin")))
+    (when (and (not (path-contains "PATH" go-bin)) (file-exists-p go-bin))
+      (setenv "PATH" (concat (getenv "PATH") ":" go-bin)))))
+
+(message (getenv "GOPATH"))
+(message (getenv "PATH"))
 
 ;; Configure golint if it is installed
-(let ((lint-path (eval-and-compile (concat (getenv "GOPATH")  "/src/github.com/golang/lint/misc/emacs"))))
+(let (
+  (lint-cfg-path (eval-and-compile (concat (getenv "GOPATH")  "/src/github.com/golang/lint/misc/emacs"))))
   (use-package golint
-    :if (and (getenv "GOPATH") (file-exists-p lint-path))
-    :load-path lint-path))
+    :if (and (getenv "GOPATH") (file-exists-p lint-cfg-path))
+    :load-path lint-cfg-path))
+
+;; END GO CONFIGURATION
 
 (use-package flycheck
   :ensure t
