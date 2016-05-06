@@ -148,18 +148,6 @@
 
 
 
-;; ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; ;; deft                                                                   ;;
-;; ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; (require 'deft)
-;; (setq deft-directory "/home/gina/docs/deft")
-;; (setq deft-extension "org")
-;; (setq deft-text-mode 'org-mode)
-;; (setq deft-use-filename-as-title t)
-;; (setq deft-auto-save-interval 0)
-;; ;;key to launch deft
-;; (global-set-key (kbd "C-c d") 'deft)
-
 ;; (server-start)
 
 (provide 'init)
