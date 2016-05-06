@@ -52,6 +52,18 @@ the syntax class ')'."
   (package-refresh-contents)
   (package-install 'use-package))
 
+;; Themes
+(use-package zenburn-theme
+  :ensure t
+  :config (load-theme 'zenburn t t))
+(use-package solarized-theme
+  :ensure t
+  :config
+  (load-theme 'solarized-dark t t)
+  (load-theme 'solarized-light t t))
+;; Our default, for now
+(load-theme 'zenburn)
+
 ;; This package is a little janky, but probably better than me doing it all manually
 ;; Under the covers, this runs shell initialization, and copies the values of the resulting
 ;; environment variables back up into emacs.  Useful in the land of mac, where
