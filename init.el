@@ -8,6 +8,9 @@
 ;;;   . solarized theme: https://github.com/bbatsov/solarized-emacs
 
 
+;; TODO(gina) investigate colors in compilation mode: http://endlessparentheses.com/ansi-colors-in-the-compilation-buffer-output.html?source=rss
+;; TODO(gina) enable flyspell?
+
 ;;; Code:
 
 ;; Support functions
@@ -76,6 +79,10 @@
 (use-package flycheck
   :ensure t
   :config (global-flycheck-mode))
+
+(use-package yaml-mode
+  :ensure t
+  :mode ("\\.yml\\'" . yaml-mode))
 
 (use-package js2-mode
   :ensure t
