@@ -2,12 +2,9 @@
 
 ;;; Commentary:
 ;;; Stuff here
-;;; TODO(gina) things to look into:
-;;;   . projectile: http://batsov.com/projectile/
-;;;   . zenburn theme: https://github.com/bbatsov/zenburn-emacs
-;;;   . solarized theme: https://github.com/bbatsov/solarized-emacs
-
-
+;; TODO(gina) projectile: http://batsov.com/projectile/
+;; TODO(gina) zenburn theme: https://github.com/bbatsov/zenburn-emacs
+;; TODO(gina) solarized theme: https://github.com/bbatsov/solarized-emacs
 ;; TODO(gina) investigate colors in compilation mode: http://endlessparentheses.com/ansi-colors-in-the-compilation-buffer-output.html?source=rss
 ;; TODO(gina) enable flyspell?
 
