@@ -26,6 +26,7 @@
 (setq custom-file "~/.emacs.d/custom.el")
 (load custom-file 'noerror)
 
+; consider using smartparens: https://github.com/Fuco1/smartparens/wiki
 (show-paren-mode 1)
 (defadvice show-paren-function
      (after show-matching-paren-offscreen activate)
@@ -58,7 +59,8 @@ the syntax class ')'."
 (use-package home-buffer
   :load-path "lisp"
   :bind (([f11] . switch-to-home-buffer)
-	 ([(control f11)] . set-current-buffer-to-home-buffer)))
+	 ([(control f11)] . set-current-buffer-to-home-buffer)
+	 ([f2] . switch-to-other-buffer)))
 
 ;; TODO(gina) look into getting a bunch of snippets, including go.  See https://github.com/capitaomorte/yasnippet
 (use-package yasnippet
@@ -177,24 +179,5 @@ the syntax class ')'."
 
 
 
-;; ;;; Stefan Monnier <foo at acm.org>. It is the opposite of fill-paragraph    
-;; (defun unfill-paragraph ()
-;;   "Takes a multi-line paragraph and makes it into a single line of text."
-;;   (interactive)
-;;   (let ((fill-column (point-max)))
-;;     (fill-paragraph nil)))
 
-;; (defun toggle-line-move-visual ()
-;;   "Toggle behavior of up/down arrow key, by visual line vs logical line."
-;;   (interactive)
-;;   (if line-move-visual
-;;       (setq line-move-visual nil)
-;;     (setq line-move-visual t))
-;;   )
 
-;; (defun switch-to-other-buffer () 
-;;   "Switches to the most recent buffer"
-;;   (interactive)
-;;   (switch-to-buffer (other-buffer t)))
-;; (global-set-key [f2] 'switch-to-other-buffer)
-;; (global-set-key "\C-f" 'fill-paragraph)

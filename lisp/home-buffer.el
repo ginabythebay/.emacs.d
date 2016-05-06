@@ -15,18 +15,23 @@
 ;; code goes here
 
 (defvar home-buffer nil
-  "The buffer currently designated as home")
+  "The buffer currently designated as home.")
 
-(defun set-current-buffer-to-home-buffer () 
-  "Saves the current buffer as the home buffer"
+(defun set-current-buffer-to-home-buffer ()
+  "Save the current buffer as the home buffer."
   (interactive)
   (setq home-buffer (current-buffer))
   (message "Home buffer was set to %s" home-buffer))
 
 (defun switch-to-home-buffer ()
-  "Switches to the home buffer"
+  "Switch to the home buffer."
   (interactive)
   (switch-to-buffer home-buffer))
+
+(defun switch-to-other-buffer ()
+  "Switch to the most recent buffer."
+  (interactive)
+  (switch-to-buffer (other-buffer t)))
 
 (provide 'home-buffer)
 ;;; home-buffer.el ends here
