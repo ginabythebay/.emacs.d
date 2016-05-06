@@ -52,6 +52,19 @@ the syntax class ')'."
   (package-refresh-contents)
   (package-install 'use-package))
 
+;; This package is a little janky, but probably better than me doing it all manually
+;; Under the covers, this runs shell initialization, and copies the values of the resulting
+;; environment variables back up into emacs.  Useful in the land of mac, where
+;; environment variable are completely mysterious to me.
+(use-package exec-path-from-shell
+  :ensure t
+  ;:if (memq window-system '(mac ns))
+  :config
+    (require 'eshell)  ;; next command has a bug that assumes eshell is loaded
+    (exec-path-from-shell-copy-env "PATH")
+    (exec-path-from-shell-copy-env "MANPATH")
+    (exec-path-from-shell-copy-env "GOPATH"))
+
 (use-package highlight-symbol
   :ensure t
   :config (add-hook 'prog-mode-hook 'highlight-symbol-mode))
@@ -86,17 +99,6 @@ the syntax class ')'."
 
 (use-package go-autocomplete
   :ensure t)
-
-; If GOPATH isn't set, try to set it
-(unless (getenv "GOPATH")
-  (when (file-exists-p "~/go")
-    (setenv "GOPATH" "~/go")))
-
-; If GOPATH/bin isn't part of path and it exists, append it
-(when (getenv "GOPATH")
-  (let ((go-bin (concat (getenv "GOPATH") "/bin")))
-    (when (and (not (path-contains "PATH" go-bin)) (file-exists-p go-bin))
-      (setenv "PATH" (concat (getenv "PATH") ":" go-bin)))))
 
 ;; Configure golint if it is installed
 (let (
