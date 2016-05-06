@@ -38,6 +38,10 @@
   (package-refresh-contents)
   (package-install 'use-package))
 
+(use-package highlight-symbol
+  :ensure t
+  :config (add-hook 'prog-mode-hook 'highlight-symbol-mode))
+
 (use-package home-buffer
   :load-path "lisp"
   :bind (([f11] . switch-to-home-buffer)
