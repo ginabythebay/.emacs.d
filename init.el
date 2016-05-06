@@ -37,6 +37,11 @@
   (package-refresh-contents)
   (package-install 'use-package))
 
+(use-package home-buffer
+  :load-path "lisp"
+  :bind (([f11] . switch-to-home-buffer)
+	 ([(control f11)] . set-current-buffer-to-home-buffer)))
+
 (use-package yasnippet
   :ensure t
   :config (setq yas-global-mode 1))
@@ -94,7 +99,6 @@
   :ensure t
   :bind ("C-x g" . magit-status))
 
-
 ;; C
 (setq c-default-style "stroustrup"
       c-basic-offset 2)
@@ -150,31 +154,8 @@
 ;; (add-to-list 'auto-mode-alist '("\\.html?\\'" . web-mode))
 
 
-;; (defvar home-buffer nil
-;;        "The buffer currently designated as home")
-
-;; (defun set-current-buffer-to-home-buffer () 
-;;   "Saves the current buffer as the home buffer"
-;;   (interactive)
-;;   (setq home-buffer (current-buffer))
-;;   (message "Home buffer was set to %s" home-buffer))
-
-;; (defun switch-to-home-buffer ()
-;;   "Switches to the home buffer"
-;;   (interactive)
-;;   (switch-to-buffer home-buffer))
-
-;; (global-set-key [f11] 'switch-to-home-buffer)
-;; (global-set-key [(control f11)] 'set-current-buffer-to-home-buffer)
 
 ;; (setq gofmt-command "goimports")
-
-;; (custom-set-faces
-;;  ;; custom-set-faces was added by Custom.
-;;  ;; If you edit it by hand, you could mess it up, so be careful.
-;;  ;; Your init file should contain only one such instance.
-;;  ;; If there is more than one, they won't work right.
-;;  )
 
 ;; ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; ;; deft                                                                   ;;
