@@ -144,11 +144,6 @@
 (delete-selection-mode t)
 (setq column-number-mode t)  ;; put line number in mode line.
 
-;; (require 'auto-highlight-symbol)
-
-;; (setq ahs-modes (cons `go-mode ahs-modes))
-;; (global-auto-highlight-symbol-mode t)
-
 ;; (smartparens-global-mode t)
 
 
