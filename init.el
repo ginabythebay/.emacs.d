@@ -26,6 +26,19 @@
 (setq custom-file "~/.emacs.d/custom.el")
 (load custom-file 'noerror)
 
+(show-paren-mode 1)
+(defadvice show-paren-function
+     (after show-matching-paren-offscreen activate)
+     "If the matching paren is offscreen, show matching line in the echo area.
+Has no effect if the character before point is not of
+the syntax class ')'."
+     (interactive)
+     (let* ((cb (char-before (point)))
+            (matching-text (and cb
+                                (char-equal (char-syntax cb) ?\) )
+                                (blink-matching-open))))
+       (when matching-text (message matching-text))))
+
 (require 'package)
 (setq package-enable-at-startup nil)
 (add-to-list 'package-archives
@@ -70,7 +83,7 @@
 	      (setq indent-tabs-mode 1))))
 
 (use-package go-autocomplete
-	     :ensure t)
+  :ensure t)
 
 ; If GOPATH isn't set, try to set it
 (unless (getenv "GOPATH")
