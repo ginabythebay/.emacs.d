@@ -23,7 +23,6 @@
 (setq custom-file "~/.emacs.d/custom.el")
 (load custom-file 'noerror)
 
-; consider using smartparens: https://github.com/Fuco1/smartparens/wiki
 (show-paren-mode 1)
 (defadvice show-paren-function
      (after show-matching-paren-offscreen activate)
@@ -56,6 +55,11 @@ the syntax class ')'."
   :ensure t)
 ;; Our default, for now
 (load-theme 'zenburn)
+
+;; I cannot decide if I want to dig into this or not
+;(use-package smartparens
+;  :ensure t
+;  :config (smartparens-global-mode 1))
 
 ;; This package is a little janky, but probably better than me doing it all manually
 ;; Under the covers, this runs shell initialization, and copies the values of the resulting
@@ -168,8 +172,6 @@ the syntax class ')'."
 
 (delete-selection-mode t)
 (setq column-number-mode t)  ;; put line number in mode line.
-
-;; (smartparens-global-mode t)
 
 
 
