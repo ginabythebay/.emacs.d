@@ -3,8 +3,6 @@
 ;;; Commentary:
 ;;; Stuff here
 ;; TODO(gina) projectile: http://batsov.com/projectile/
-;; TODO(gina) zenburn theme: https://github.com/bbatsov/zenburn-emacs
-;; TODO(gina) solarized theme: https://github.com/bbatsov/solarized-emacs
 ;; TODO(gina) investigate colors in compilation mode: http://endlessparentheses.com/ansi-colors-in-the-compilation-buffer-output.html?source=rss
 ;; TODO(gina) enable flyspell?
 ;; TODO(gina) enable gocode?  https://github.com/nsf/gocode
@@ -54,13 +52,9 @@ the syntax class ')'."
 
 ;; Themes
 (use-package zenburn-theme
-  :ensure t
-  :config (load-theme 'zenburn t t))
+  :ensure t)
 (use-package solarized-theme
-  :ensure t
-  :config
-  (load-theme 'solarized-dark t t)
-  (load-theme 'solarized-light t t))
+  :ensure t)
 ;; Our default, for now
 (load-theme 'zenburn)
 
@@ -70,7 +64,7 @@ the syntax class ')'."
 ;; environment variable are completely mysterious to me.
 (use-package exec-path-from-shell
   :ensure t
-  ;:if (memq window-system '(mac ns))
+  :if (memq window-system '(mac ns))
   :config
     (require 'eshell)  ;; next command has a bug that assumes eshell is loaded
     (exec-path-from-shell-copy-env "PATH")
