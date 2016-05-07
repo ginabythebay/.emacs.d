@@ -74,6 +74,11 @@ the syntax class ')'."
     (exec-path-from-shell-copy-env "MANPATH")
     (exec-path-from-shell-copy-env "GOPATH"))
 
+;; Notes for getting hunspell working on the mac.
+;; Install the binary using brew
+;; Get the dictionaries from a libreoffice extension.  This worked:
+;; http://extensions.libreoffice.org/extension-center/english-dictionaries
+;; Unzip the ofx file.  Copy *.aff and *.dic into ~/Library/Spelling/
 (add-hook 'text-mode-hook 'flyspell-mode)
 (add-hook 'prog-mode-hook 'flyspell-prog-mode)
 
@@ -95,6 +100,10 @@ the syntax class ')'."
 (use-package which-key
   :ensure t
   :config (which-key-mode))
+
+(use-package ledger-mode
+  :ensure t
+  :mode ("\\.ledger$" . ledger-mode))
 
 ;; BEGIN GO CONFIGURATION
 
