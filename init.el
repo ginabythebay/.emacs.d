@@ -74,6 +74,11 @@ the syntax class ')'."
     (exec-path-from-shell-copy-env "MANPATH")
     (exec-path-from-shell-copy-env "GOPATH"))
 
+; While I like fish shell in terminals, I can't get it to look right in emacs shell
+(when (file-exists-p "/bin/bash")
+  (customize-set-variable 'explicit-shell-file-name "/bin/bash")
+  (customize-set-variable 'explicit-bash-args '("--noediting" "--login" "-i")))
+
 ;; Notes for getting hunspell working on the mac.
 ;; Install the binary using brew
 ;; Get the dictionaries from a libreoffice extension.  This worked:
@@ -181,8 +186,6 @@ the syntax class ')'."
 
 (delete-selection-mode t)
 (setq column-number-mode t)  ;; put line number in mode line.
-
-
 
 ;; (server-start)
 
