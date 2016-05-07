@@ -4,7 +4,6 @@
 ;;; Stuff here
 ;; TODO(gina) projectile: http://batsov.com/projectile/
 ;; TODO(gina) investigate colors in compilation mode: http://endlessparentheses.com/ansi-colors-in-the-compilation-buffer-output.html?source=rss
-;; TODO(gina) enable flyspell?
 ;; TODO(gina) enable gocode?  https://github.com/nsf/gocode
 
 ;;; Code:
@@ -70,6 +69,9 @@ the syntax class ')'."
     (exec-path-from-shell-copy-env "PATH")
     (exec-path-from-shell-copy-env "MANPATH")
     (exec-path-from-shell-copy-env "GOPATH"))
+
+(add-hook 'text-mode-hook 'flyspell-mode)
+(add-hook 'prog-mode-hook 'flyspell-prog-mode)
 
 (use-package highlight-symbol
   :ensure t
