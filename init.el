@@ -148,6 +148,14 @@ the syntax class ')'."
   :mode ("\\.js\\'" . js2-mode)
   :config (setq js-indent-level 2))
 
+(use-package gradle-mode
+  :ensure t
+  :mode ("\\.gradle\\'" . gradle-mode))
+
+(use-package groovy-mode
+  :ensure t
+  :mode ("\\.gradle\\'" . groovy-mode))
+
 (use-package web-mode
   :ensure t
   :mode (("\\.phtml\\'" . web-mode)
