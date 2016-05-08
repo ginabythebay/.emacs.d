@@ -70,6 +70,7 @@ the syntax class ')'."
   :if (memq window-system '(mac ns))
   :config
     (require 'eshell)  ;; next command has a bug that assumes eshell is loaded
+    (exec-path-from-shell-copy-env "LANG")
     (exec-path-from-shell-copy-env "PATH")
     (exec-path-from-shell-copy-env "MANPATH")
     (exec-path-from-shell-copy-env "GOPATH"))
