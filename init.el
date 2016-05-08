@@ -199,7 +199,7 @@ the syntax class ')'."
 (delete-selection-mode t)
 (setq column-number-mode t)  ;; put line number in mode line.
 
-;; (server-start)
+(server-start)
 
 (provide 'init)
 ;;; init.el ends here
@@ -214,6 +214,13 @@ the syntax class ')'."
 ;;
 ;; (autoload 'gtags-mode "gtags" "" t)
 ;; 
-
+;; (require 'deft)
+;; (setq deft-directory "/home/gina/docs/deft")
+;; (setq deft-extension "org")
+;; (setq deft-text-mode 'org-mode)
+;; (setq deft-use-filename-as-title t)
+;; (setq deft-auto-save-interval 0)
+;; ;;key to launch deft
+;; (global-set-key (kbd "C-c d") 'deft)
 
 
