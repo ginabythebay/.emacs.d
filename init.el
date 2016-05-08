@@ -106,6 +106,10 @@ the syntax class ')'."
   :ensure t
   :config (which-key-mode))
 
+(use-package avy
+  :ensure t
+  :bind (("M-s" . avy-goto-word-1)))
+
 (use-package ledger-mode
   :ensure t
   :mode ("\\.ledger$" . ledger-mode))
@@ -201,15 +205,15 @@ the syntax class ')'."
 ;;; init.el ends here
 
 
- 
+;; These are things from my old init file that I haven't decided yet if I want
 ;; SKIP?
 ;; (add-to-list 'load-path "~/.emacs.d/lisp")
 ;; (require 'auto-complete-config)
 ;; (add-to-list 'ac-dictionary-directories "~/.emacs.d/ac-dict")
 ;; (ac-config-default)
-
-
-
+;;
+;; (autoload 'gtags-mode "gtags" "" t)
+;; 
 
 
 
