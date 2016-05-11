@@ -115,7 +115,16 @@ the syntax class ')'."
   :ensure t
   :mode ("\\.ledger$" . ledger-mode))
 
+(use-package company
+  :ensure t
+  :config (global-company-mode))
+
 ;; BEGIN GO CONFIGURATION
+
+(use-package company-go
+  :ensure t
+  :commands company-go
+  :init (add-to-list 'company-backends 'company-go))
 
 (use-package go-mode
   :ensure t
