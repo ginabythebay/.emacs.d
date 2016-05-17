@@ -192,6 +192,8 @@ the syntax class ')'."
   :ensure t
   :bind ("C-x g" . magit-status))
 
+(setq-default show-trailing-whitespace t)
+
 ;; C
 (setq c-default-style "stroustrup"
       c-basic-offset 2)
