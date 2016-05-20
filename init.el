@@ -107,6 +107,10 @@ the syntax class ')'."
   :ensure t
   :config (which-key-mode))
 
+(use-package expand-region
+  :ensure t
+  :bind (([(control =)] . er/expand-region)))
+
 (use-package avy
   :ensure t
   :bind (("M-s" . avy-goto-word-1)))
