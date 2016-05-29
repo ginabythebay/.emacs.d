@@ -23,6 +23,9 @@
 (setq custom-file "~/.emacs.d/custom.el")
 (load custom-file 'noerror)
 
+;; Stop asking me this already
+(setq vc-follow-symlinks t)
+
 (show-paren-mode 1)
 (defadvice show-paren-function
      (after show-matching-paren-offscreen activate)
