@@ -117,7 +117,9 @@ the syntax class ')'."
 
 (use-package ledger-mode
   :ensure t
-  :mode ("\\.ledger$" . ledger-mode))
+  :mode ("\\.ledger$" . ledger-mode)
+  :config
+  (setq ledger-schedule-file "~/ledger-private/schedule.ledger"))
 
 (use-package company
   :ensure t
