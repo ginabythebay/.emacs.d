@@ -124,6 +124,9 @@ the syntax class ')'."
   :config
   (setq ledger-schedule-file "~/ledger-private/schedule.ledger"))
 
+(use-package flycheck-ledger
+  :ensure t)
+
 (use-package company
   :ensure t
   :config (global-company-mode))
