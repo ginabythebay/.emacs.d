@@ -207,6 +207,11 @@ the syntax class ')'."
 
 (setq-default show-trailing-whitespace t)
 
+(defun my-shell-setup ()
+  "Turn off trailing whitespace here."
+  (setq show-trailing-whitespace nil))
+(setq shell-mode-hook 'my-shell-setup)
+
 ;; C
 (setq c-default-style "stroustrup"
       c-basic-offset 2)
