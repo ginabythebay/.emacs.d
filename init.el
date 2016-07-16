@@ -164,7 +164,9 @@ the syntax class ')'."
 
 (use-package flycheck
   :ensure t
-  :config (global-flycheck-mode))
+  :config
+    (global-flycheck-mode)
+    (setq flycheck-go-vet-shadow t))
 
 (use-package yaml-mode
   :ensure t
