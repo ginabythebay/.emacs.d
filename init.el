@@ -80,6 +80,13 @@ the syntax class ')'."
     (exec-path-from-shell-copy-env "MANPATH")
     (exec-path-from-shell-copy-env "GOPATH"))
 
+(use-package bm
+  :ensure t
+  :bind (("<C-f2>" . bm-toggle)
+         ("<f2>" . bm-next)
+         ("<S-f2>" . bm-previous))
+  :config (setq bm-cycle-all-buffers t))
+
 ; While I like fish shell in terminals, I can't get it to look right in emacs shell
 (when (file-exists-p "/bin/bash")
   (customize-set-variable 'explicit-shell-file-name "/bin/bash")
@@ -97,11 +104,12 @@ the syntax class ')'."
   :ensure t
   :config (add-hook 'prog-mode-hook 'highlight-symbol-mode))
 
-(use-package home-buffer
-  :load-path "lisp"
-  :bind (([f11] . switch-to-home-buffer)
-	 ([(control f11)] . set-current-buffer-to-home-buffer)
-	 ([f2] . switch-to-other-buffer)))
+;; TODO(gina) delete after 8/22/2016.  Using bookmarks package (above) instead
+;(use-package home-buffer
+;  :load-path "lisp"
+;  :bind (([f11] . switch-to-home-buffer)
+;	 ([(control f11)] . set-current-buffer-to-home-buffer)
+;	 ([f2] . switch-to-other-buffer)))
 
 ;; TODO(gina) look into getting a bunch of snippets, including go.  See https://github.com/capitaomorte/yasnippet
 (use-package yasnippet
