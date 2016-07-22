@@ -51,6 +51,8 @@ the syntax class ')'."
   (package-refresh-contents)
   (package-install 'use-package))
 
+(global-set-key (kbd "C-f") 'fill-paragraph)
+
 ;; Themes
 (use-package zenburn-theme
   :ensure t)
