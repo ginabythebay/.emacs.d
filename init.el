@@ -140,7 +140,12 @@ the syntax class ')'."
 
 (use-package company
   :ensure t
-  :config (global-company-mode))
+  :config
+  ; when running mnt-gdrive inside emacs (for development) and trying
+  ; to test things inside emacs, in shell mode, emacs locks up if
+  ; company mode is on.
+  (setq company-global-modes `(not shell-mode))
+  (global-company-mode))
 
 ;; BEGIN GO CONFIGURATION
 
