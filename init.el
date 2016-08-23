@@ -3,7 +3,6 @@
 ;;; Commentary:
 ;;; Stuff here
 ;; TODO(gina) projectile: http://batsov.com/projectile/
-;; TODO(gina) investigate colors in compilation mode: http://endlessparentheses.com/ansi-colors-in-the-compilation-buffer-output.html?source=rss
 ;; TODO(gina) enable gocode?  https://github.com/nsf/gocode
 
 ;;; Code:
@@ -25,6 +24,17 @@
 
 ;; Stop asking me this already
 (setq vc-follow-symlinks t)
+
+;; colors in compilation mode: http://endlessparentheses.com/ansi-colors-in-the-compilation-buffer-output.html?source=rss
+(require 'ansi-color)
+(defun endless/colorize-compilation ()
+  "Colorize from `compilation-filter-start' to `point'."
+  (let ((inhibit-read-only t))
+    (ansi-color-apply-on-region
+     compilation-filter-start (point))))
+
+(add-hook 'compilation-filter-hook
+          #'endless/colorize-compilation)
 
 (show-paren-mode 1)
 (defadvice show-paren-function
