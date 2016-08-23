@@ -27,6 +27,7 @@
 
 ;; colors in compilation mode: http://endlessparentheses.com/ansi-colors-in-the-compilation-buffer-output.html?source=rss
 (require 'ansi-color)
+(require 'compile)
 (defun endless/colorize-compilation ()
   "Colorize from `compilation-filter-start' to `point'."
   (let ((inhibit-read-only t))
