@@ -72,11 +72,6 @@ the syntax class ')'."
 ;; Our default, for now
 (load-theme 'zenburn)
 
-;; I cannot decide if I want to dig into this or not
-;(use-package smartparens
-;  :ensure t
-;  :config (smartparens-global-mode 1))
-
 ;; This package is a little janky, but probably better than me doing it all manually
 ;; Under the covers, this runs shell initialization, and copies the values of the resulting
 ;; environment variables back up into emacs.  Useful in the land of mac, where
@@ -157,6 +152,46 @@ the syntax class ')'."
   ; company mode is on.
   (setq company-global-modes `(not shell-mode))
   (global-company-mode))
+
+
+;; 8/23/16: Not sure if I like this, but giving it a try
+;;
+;; see https://github.com/Fuco1/smartparens
+;; see https://ebzzry.github.io/emacs-pairs.html
+(require 'help-mode) ;; smartparens cheat sheet will fail without this
+(use-package smartparens
+  :ensure t
+  :bind
+  ("C-c (" . wrap-with-parens)
+  ("C-c [" . wrap-with-brackets)
+  ("C-c {" . wrap-with-braces)
+  ("C-c '" . wrap-with-single-quotes)
+  ("C-c \"" . wrap-with-double-quotes)
+  ("C-c `" . wrap-with-back-quotes)
+  :config
+  (show-smartparens-global-mode 1)
+    (add-hook 'prog-mode-hook 'turn-on-smartparens-strict-mode)
+    (add-hook 'markdown-mode-hook 'turn-on-smartparens-strict-mode)
+
+    (defmacro def-pairs (pairs)
+      `(progn
+	 ,@(loop for (key . val) in pairs
+		 collect
+		 `(defun ,(read (concat
+				 "wrap-with-"
+				 (prin1-to-string key)
+				 "s"))
+		      (&optional arg)
+		    (interactive "p")
+		    (sp-wrap-with-pair ,val)))))
+
+    (def-pairs ((paren        . "(")
+		(bracket      . "[")
+		(brace        . "{")
+		(single-quote . "'")
+		(double-quote . "\"")
+		(back-quote   . "`")))
+        )
 
 ;; BEGIN GO CONFIGURATION
 
