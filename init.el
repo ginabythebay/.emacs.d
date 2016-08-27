@@ -70,7 +70,7 @@ the syntax class ')'."
 (use-package solarized-theme
   :ensure t)
 ;; Our default, for now
-(load-theme 'solarized-dark)
+(load-theme 'solarized-light)
 
 ;; This package is a little janky, but probably better than me doing it all manually
 ;; Under the covers, this runs shell initialization, and copies the values of the resulting
@@ -220,9 +220,7 @@ the syntax class ')'."
 (use-package go-guru
   :ensure t
   :config
-  (add-hook 'go-mode-hook #'go-guru-hl-identifier-mode)
-  ; more legible on solarized-dark theme
-  (set-face-attribute 'go-guru-hl-identifier-face nil :foreground "#f5f5f5"))
+  (add-hook 'go-mode-hook #'go-guru-hl-identifier-mode))
 
 (eval-and-compile
   (defun go-lint-load-path ()
