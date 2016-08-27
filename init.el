@@ -70,7 +70,7 @@ the syntax class ')'."
 (use-package solarized-theme
   :ensure t)
 ;; Our default, for now
-(load-theme 'zenburn)
+(load-theme 'solarized-dark)
 
 ;; This package is a little janky, but probably better than me doing it all manually
 ;; Under the covers, this runs shell initialization, and copies the values of the resulting
@@ -108,7 +108,8 @@ the syntax class ')'."
 
 (use-package highlight-symbol
   :ensure t
-  :config (add-hook 'prog-mode-hook 'highlight-symbol-mode))
+  :config
+  (add-hook 'prog-mode-hook 'highlight-symbol-mode))
 
 ;; TODO(gina) delete after 8/22/2016.  Using bookmarks package (above) instead
 ;(use-package home-buffer
@@ -206,6 +207,8 @@ the syntax class ')'."
   :config (add-hook 'go-mode-hook
 	    (lambda ()
 	      (define-key go-mode-map (kbd "C-c C-c") 'compile)
+	      ; use guru for highlighting instead
+	      (set (make-local-variable 'highlight-symbol-mode) nil)
 	      (add-hook 'before-save-hook 'gofmt-before-save)
 	      (setq tab-width 4)
 	      (setq gofmt-command "goimports")
@@ -214,12 +217,18 @@ the syntax class ')'."
 (use-package go-autocomplete
   :ensure t)
 
-;; Configure golint if it is installed
-(let (
-  (lint-cfg-path (eval-and-compile (concat (getenv "GOPATH")  "/src/github.com/golang/lint/misc/emacs"))))
-  (use-package golint
-    :if (and (getenv "GOPATH") (file-exists-p lint-cfg-path))
-    :load-path lint-cfg-path))
+(use-package go-guru
+  :ensure t
+  :config
+  (add-hook 'go-mode-hook #'go-guru-hl-identifier-mode)
+  ; more legible on solarized-dark theme
+  (set-face-attribute 'go-guru-hl-identifier-face nil :foreground "#f5f5f5"))
+
+(eval-and-compile
+  (defun go-lint-load-path ()
+    (concat (getenv "GOPATH")  "/src/github.com/golang/lint/misc/emacs")))
+(use-package golint
+  :load-path (lambda() (list (go-lint-load-path))))
 
 ;; END GO CONFIGURATION
 
