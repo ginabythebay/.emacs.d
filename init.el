@@ -171,8 +171,8 @@ the syntax class ')'."
   ("C-c `" . wrap-with-back-quotes)
   :config
   (show-smartparens-global-mode 1)
-    ;;(add-hook 'prog-mode-hook 'turn-on-smartparens-strict-mode)
-    ;;(add-hook 'markdown-mode-hook 'turn-on-smartparens-strict-mode)
+    (add-hook 'prog-mode-hook 'turn-on-smartparens-mode)
+    (add-hook 'markdown-mode-hook 'turn-on-smartparens-mode)
 
     (defmacro def-pairs (pairs)
       `(progn
