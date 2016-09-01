@@ -70,7 +70,7 @@ the syntax class ')'."
 (use-package solarized-theme
   :ensure t)
 ;; Our default, for now
-(load-theme 'solarized-light)
+(load-theme 'zenburn)
 
 ;; This package is a little janky, but probably better than me doing it all manually
 ;; Under the covers, this runs shell initialization, and copies the values of the resulting
