@@ -25,6 +25,10 @@
 ;; Stop asking me this already
 (setq vc-follow-symlinks t)
 
+; Turn on view mode for read-only files
+; http://pragmaticemacs.com/emacs/view-mode-makes-for-great-read-only-reading/
+(setq view-read-only t)
+
 ;; colors in compilation mode: http://endlessparentheses.com/ansi-colors-in-the-compilation-buffer-output.html?source=rss
 (require 'ansi-color)
 (require 'compile)
