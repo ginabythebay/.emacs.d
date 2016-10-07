@@ -90,6 +90,11 @@ the syntax class ')'."
     (exec-path-from-shell-copy-env "MANPATH")
     (exec-path-from-shell-copy-env "GOPATH"))
 
+(use-package crux
+  :bind (
+	 ("C-a" . crux-move-beginning-of-line)
+	 ("C-c r" . crux-rename-file-and-buffer)))
+
 (use-package bm
   :ensure t
   :bind (("<C-f2>" . bm-toggle)
