@@ -56,9 +56,18 @@ the syntax class ')'."
 
 (require 'package)
 (setq package-enable-at-startup nil)
-(add-to-list 'package-archives
-             '("melpa" . "https://melpa.org/packages/"))
-
+(setq package-archives
+        '(("gnu" . "http://elpa.gnu.org/packages/")
+          ("melpa" . "http://melpa.org/packages/")
+          ("melpa-stable" . "http://stable.melpa.org/packages/")
+          ("marmalade" . "http://marmalade-repo.org/packages/")
+          ))
+(setq package-archive-priorities
+      '(("melpa-stable" . 20)
+        ("marmalade" . 20)
+        ("gnu" . 10)
+        ("melpa" . 0)))
+(setq package-menu-hide-low-priority t)
 (package-initialize)
 
 ;; Bootstrap `use-package'
