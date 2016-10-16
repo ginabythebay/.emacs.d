@@ -102,6 +102,8 @@ the syntax class ')'."
          ("<S-f2>" . bm-previous))
   :config (setq bm-cycle-all-buffers t))
 
+(use-package pt)
+
 ; While I like fish shell in terminals, I can't get it to look right in emacs shell
 (when (file-exists-p "/bin/bash")
   (customize-set-variable 'explicit-shell-file-name "/bin/bash")
@@ -178,6 +180,7 @@ the syntax class ')'."
   ("C-c '" . wrap-with-single-quotes)
   ("C-c \"" . wrap-with-double-quotes)
   ("C-c `" . wrap-with-back-quotes)
+  :demand
   :config
   (show-smartparens-global-mode 1)
     (add-hook 'prog-mode-hook 'turn-on-smartparens-mode)
