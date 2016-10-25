@@ -25,6 +25,16 @@
 ;; Stop asking me this already
 (setq vc-follow-symlinks t)
 
+
+;; These come from https://fonts.google.com/?category=Monospace
+(set-frame-font "Roboto Mono-14" nil t)
+;(set-frame-font "Inconsolata-16" nil t)
+;(set-frame-font "PT Mono-14" nil t)
+;(set-frame-font "Ubuntu Mono-16" nil t)
+;(set-frame-font "Cousine-14" nil t)
+;(set-frame-font "Oxygen Mono-14" nil t)
+
+
 ; Turn on view mode for read-only files
 ; http://pragmaticemacs.com/emacs/view-mode-makes-for-great-read-only-reading/
 (setq view-read-only t)
@@ -56,9 +66,18 @@ the syntax class ')'."
 
 (require 'package)
 (setq package-enable-at-startup nil)
-(add-to-list 'package-archives
-             '("melpa" . "https://melpa.org/packages/"))
-
+(setq package-archives
+        '(("gnu" . "http://elpa.gnu.org/packages/")
+          ("melpa" . "http://melpa.org/packages/")
+          ("melpa-stable" . "http://stable.melpa.org/packages/")
+          ("marmalade" . "http://marmalade-repo.org/packages/")
+          ))
+(setq package-archive-priorities
+      '(("melpa-stable" . 20)
+        ("marmalade" . 20)
+        ("gnu" . 10)
+        ("melpa" . 0)))
+(setq package-menu-hide-low-priority t)
 (package-initialize)
 
 ;; Bootstrap `use-package'
