@@ -27,7 +27,7 @@
 
 
 ;; These come from https://fonts.google.com/?category=Monospace
-(set-frame-font "Roboto Mono-14" nil t)
+(set-frame-font "Roboto Mono-12" nil t)
 ;(set-frame-font "Inconsolata-16" nil t)
 ;(set-frame-font "PT Mono-14" nil t)
 ;(set-frame-font "Ubuntu Mono-16" nil t)
