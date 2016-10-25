@@ -25,6 +25,16 @@
 ;; Stop asking me this already
 (setq vc-follow-symlinks t)
 
+
+;; These come from https://fonts.google.com/?category=Monospace
+(set-frame-font "Roboto Mono-14" nil t)
+;(set-frame-font "Inconsolata-16" nil t)
+;(set-frame-font "PT Mono-14" nil t)
+;(set-frame-font "Ubuntu Mono-16" nil t)
+;(set-frame-font "Cousine-14" nil t)
+;(set-frame-font "Oxygen Mono-14" nil t)
+
+
 ; Turn on view mode for read-only files
 ; http://pragmaticemacs.com/emacs/view-mode-makes-for-great-read-only-reading/
 (setq view-read-only t)
