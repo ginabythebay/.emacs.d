@@ -95,6 +95,14 @@ the syntax class ')'."
 ;; Our default, for now
 (load-theme 'zenburn)
 
+; see http://pragmaticemacs.com/emacs/copy-and-paste-files-with-dired-ranger/
+(use-package dired-ranger
+  :ensure t
+  :bind (:map dired-mode-map
+              ("W" . dired-ranger-copy)
+              ("X" . dired-ranger-move)
+              ("Y" . dired-ranger-paste)))
+
 ;; This package is a little janky, but probably better than me doing it all manually
 ;; Under the covers, this runs shell initialization, and copies the values of the resulting
 ;; environment variables back up into emacs.  Useful in the land of mac, where
