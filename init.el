@@ -169,7 +169,8 @@ the syntax class ')'."
   :ensure t
   :mode ("\\.ledger$" . ledger-mode)
   :config
-  (setq ledger-schedule-file "~/ledger-private/schedule.ledger"))
+  (setq ledger-schedule-file "~/ledger-private/schedule.ledger")
+  (setq ledger-post-amount-alignment-column 65))
 
 (use-package flycheck-ledger
   :ensure t
