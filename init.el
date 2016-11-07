@@ -34,6 +34,11 @@
 ;(set-frame-font "Cousine-14" nil t)
 ;(set-frame-font "Oxygen Mono-14" nil t)
 
+;; Save whatever’s in the current (system) clipboard before
+;; replacing it with the Emacs’ text.
+;; http://pragmaticemacs.com/emacs/add-the-system-clipboard-to-the-emacs-kill-ring/
+;; https://github.com/dakrone/eos/blob/master/eos.org
+(setq save-interprogram-paste-before-kill t)
 
 ; Turn on view mode for read-only files
 ; http://pragmaticemacs.com/emacs/view-mode-makes-for-great-read-only-reading/
