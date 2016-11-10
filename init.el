@@ -218,28 +218,40 @@ the syntax class ')'."
   :demand
   :config
   (show-smartparens-global-mode 1)
-    (add-hook 'prog-mode-hook 'turn-on-smartparens-mode)
-    (add-hook 'markdown-mode-hook 'turn-on-smartparens-mode)
+  (add-hook 'prog-mode-hook 'turn-on-smartparens-mode)
+  (add-hook 'markdown-mode-hook 'turn-on-smartparens-mode)
 
-    (defmacro def-pairs (pairs)
-      `(progn
-	 ,@(loop for (key . val) in pairs
-		 collect
-		 `(defun ,(read (concat
-				 "wrap-with-"
-				 (prin1-to-string key)
-				 "s"))
-		      (&optional arg)
-		    (interactive "p")
-		    (sp-wrap-with-pair ,val)))))
+  (defmacro def-pairs (pairs)
+    `(progn
+       ,@(loop for (key . val) in pairs
+	       collect
+	       `(defun ,(read (concat
+			       "wrap-with-"
+			       (prin1-to-string key)
+			       "s"))
+		    (&optional arg)
+		  (interactive "p")
+		  (sp-wrap-with-pair ,val)))))
 
-    (def-pairs ((paren        . "(")
-		(bracket      . "[")
-		(brace        . "{")
-		(single-quote . "'")
-		(double-quote . "\"")
-		(back-quote   . "`")))
-        )
+  (def-pairs ((paren        . "(")
+	      (bracket      . "[")
+	      (brace        . "{")
+	      (single-quote . "'")
+	      (double-quote . "\"")
+	      (back-quote   . "`")))
+
+  (sp-local-pair 'go-mode "{" nil :post-handlers '((my-create-newline-and-enter-sexp "RET")))
+  (sp-local-pair 'go-mode "(" nil :post-handlers '((my-create-newline-and-enter-sexp "RET")))
+  (sp-local-pair 'go-mode "[" nil :post-handlers '((my-create-newline-and-enter-sexp "RET")))
+  (sp-local-pair 'go-mode "`" nil :post-handlers '((my-create-newline-and-enter-sexp "RET")))
+
+  (defun my-create-newline-and-enter-sexp (&rest _ignored)
+    "Open a new brace or bracket expression, with relevant newlines and indent. "
+    (newline)
+    (indent-according-to-mode)
+    (forward-line -1)
+    (indent-according-to-mode))
+  )
 
 ;; BEGIN GO CONFIGURATION
 
