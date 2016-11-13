@@ -71,15 +71,16 @@ the syntax class ')'."
 
 (require 'package)
 (setq package-enable-at-startup nil)
+; marmalade has expired certs as of 11/13/16.  skip it for now
 (setq package-archives
         '(("gnu" . "http://elpa.gnu.org/packages/")
           ("melpa" . "http://melpa.org/packages/")
           ("melpa-stable" . "http://stable.melpa.org/packages/")
-          ("marmalade" . "http://marmalade-repo.org/packages/")
+          ;("marmalade" . "http://marmalade-repo.org/packages/")
           ))
 (setq package-archive-priorities
       '(("melpa-stable" . 20)
-        ("marmalade" . 20)
+        ;("marmalade" . 20)
         ("gnu" . 10)
         ("melpa" . 0)))
 (setq package-menu-hide-low-priority t)
@@ -275,6 +276,10 @@ the syntax class ')'."
 
 (use-package go-autocomplete
   :ensure t)
+
+
+(use-package gotests
+  :load-path "lisp")
 
 (use-package go-guru
   :ensure t
