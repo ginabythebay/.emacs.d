@@ -272,6 +272,7 @@ the syntax class ')'."
   :config (add-hook 'go-mode-hook
 	    (lambda ()
 	      (define-key go-mode-map (kbd "C-c C-c") 'compile)
+	      (define-key go-mode-map (kbd "C-c h") 'godoc-at-point)
 	      ; use guru for highlighting instead
 	      (set (make-local-variable 'highlight-symbol-mode) nil)
 	      (add-hook 'before-save-hook 'gofmt-before-save)
