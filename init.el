@@ -26,8 +26,11 @@
 (setq vc-follow-symlinks t)
 
 
+; from https://aur.archlinux.org/packages/go-fonts-git/
+(set-frame-font "Go Mono-12" nil t)
+
 ;; These come from https://fonts.google.com/?category=Monospace
-(set-frame-font "Roboto Mono-12" nil t)
+;(set-frame-font "Roboto Mono-12" nil t)
 ;(set-frame-font "Inconsolata-16" nil t)
 ;(set-frame-font "PT Mono-14" nil t)
 ;(set-frame-font "Ubuntu Mono-16" nil t)
@@ -167,7 +170,9 @@ the syntax class ')'."
 ;; TODO(gina) look into getting a bunch of snippets, including go.  See https://github.com/capitaomorte/yasnippet
 (use-package yasnippet
   :ensure t
-  :config (setq yas-global-mode 1))
+  :config
+  (yas-reload-all)
+  (add-hook 'prog-mode-hook #'yas-minor-mode))
 
 (use-package which-key
   :ensure t
@@ -278,6 +283,7 @@ the syntax class ')'."
   :ensure t)
 
 
+;; depends on https://github.com/cweill/gotests
 (use-package gotests
   :load-path "lisp")
 
