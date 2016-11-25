@@ -193,9 +193,14 @@ the syntax class ')'."
   (setq ledger-schedule-file "~/ledger-private/schedule.ledger")
   (setq ledger-post-amount-alignment-column 65))
 
+(use-package flycheck-ledger-tools-lint
+  :load-path "lisp")
+
 (use-package flycheck-ledger
   :ensure t
   :if (executable-find "ledger"))
+
+(flycheck-add-next-checker 'ledger '(warning . ledger-tools-lint))
 
 (use-package company
   :ensure t
