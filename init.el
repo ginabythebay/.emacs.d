@@ -160,6 +160,9 @@ the syntax class ')'."
   :config
   (add-hook 'prog-mode-hook 'highlight-symbol-mode))
 
+(use-package gina-keymap
+  :load-path "lisp")
+
 ;; TODO(gina) delete after 8/22/2016.  Using bookmarks package (above) instead
 ;(use-package home-buffer
 ;  :load-path "lisp"
