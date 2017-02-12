@@ -104,6 +104,13 @@ the syntax class ')'."
 ;; Our default, for now
 (load-theme 'zenburn)
 
+;; Project management.
+(use-package projectile
+  :ensure t
+  :config
+  (projectile-global-mode t)
+  :diminish projectile-mode)
+
 ; see http://pragmaticemacs.com/emacs/copy-and-paste-files-with-dired-ranger/
 (use-package dired-ranger
   :ensure t
