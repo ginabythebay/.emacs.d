@@ -117,9 +117,11 @@ the syntax class ')'."
 (use-package multiple-cursors
   :ensure t
   :demand
-  :bind (:map gina-map
+  :bind (
+	 ("C--" . mc/mark-next-like-this)
+	 (:map gina-map
 	      ("m" . mc/edit-lines)
-	      ("a" . mc/mark-all-like-this)))
+	      ("a" . mc/mark-all-like-this))))
 
 ; see http://pragmaticemacs.com/emacs/copy-and-paste-files-with-dired-ranger/
 (use-package dired-ranger
