@@ -2,7 +2,6 @@
 
 ;;; Commentary:
 ;;; Stuff here
-;; TODO(gina) projectile: http://batsov.com/projectile/
 ;; TODO(gina) enable gocode?  https://github.com/nsf/gocode
 
 ;;; Code:
@@ -111,6 +110,17 @@ the syntax class ')'."
   (projectile-global-mode t)
   :diminish projectile-mode)
 
+
+(use-package gina-keymap
+  :load-path "lisp")
+
+(use-package multiple-cursors
+  :ensure t
+  :demand
+  :bind (:map gina-map
+	      ("m" . mc/edit-lines)
+	      ("a" . mc/mark-all-like-this)))
+
 ; see http://pragmaticemacs.com/emacs/copy-and-paste-files-with-dired-ranger/
 (use-package dired-ranger
   :ensure t
@@ -166,9 +176,6 @@ the syntax class ')'."
   :ensure t
   :config
   (add-hook 'prog-mode-hook 'highlight-symbol-mode))
-
-(use-package gina-keymap
-  :load-path "lisp")
 
 ;; TODO(gina) delete after 8/22/2016.  Using bookmarks package (above) instead
 ;(use-package home-buffer
