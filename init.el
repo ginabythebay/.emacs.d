@@ -108,20 +108,8 @@ the syntax class ')'."
   :ensure t
   :config
   (projectile-global-mode t)
-  :diminish projectile-mode)
-
-;; TODO(gina) move this into use-package, above.  Figure out how to
-;; hook into project change to automatically run this.  Probably use:
-;; projectile-before-switch-project-hook
-(defun projectile-bury-buffers ()
-  "Bury all project buffers."
-  (interactive)
-  (let ((project-root (projectile-project-root)))
-    (mapc #'bury-buffer (projectile-project-buffers))
-    ; for some reason the current buffer isn't buried by the above
-    ; command so we take care of it below.
-    (if (projectile-project-buffer-p (current-buffer) project-root)
-	(bury-buffer))))
+  (setq projectile-create-missing-test-files t)
+  (setq projectile-switch-project-action #'projectile-commander))
 
 (use-package gina-keymap
   :load-path "lisp")
