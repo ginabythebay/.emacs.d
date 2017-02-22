@@ -227,7 +227,8 @@ the syntax class ')'."
   ; when running mnt-gdrive inside emacs (for development) and trying
   ; to test things inside emacs, in shell mode, emacs locks up if
   ; company mode is on.
-  (setq company-global-modes `(not shell-mode))
+  ; ledger-mode has its own compltetion
+  (setq company-global-modes `(not shell-mode ledger-mode))
   (global-company-mode))
 
 
