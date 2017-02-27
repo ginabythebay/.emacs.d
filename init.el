@@ -246,6 +246,7 @@ the syntax class ')'."
   ("C-c '" . wrap-with-single-quotes)
   ("C-c \"" . wrap-with-double-quotes)
   ("C-c `" . wrap-with-back-quotes)
+  ("C-c u" . sp-unwrap-sexp)
   :demand
   :config
   (show-smartparens-global-mode 1)
