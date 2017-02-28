@@ -58,6 +58,8 @@
 (add-hook 'compilation-filter-hook
           #'endless/colorize-compilation)
 
+(setq compilation-scroll-output 'first-error)
+
 (show-paren-mode 1)
 (defadvice show-paren-function
      (after show-matching-paren-offscreen activate)
