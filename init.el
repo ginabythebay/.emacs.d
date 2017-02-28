@@ -231,6 +231,7 @@ the syntax class ')'."
   ; company mode is on.
   ; ledger-mode has its own compltetion
   (setq company-global-modes `(not shell-mode ledger-mode))
+  (setq company-dabbrev-downcase nil)
   (global-company-mode))
 
 
