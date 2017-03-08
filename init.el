@@ -391,6 +391,14 @@ the syntax class ')'."
 ;; Python
 (setq c-default-style "python"
       c-basic-offset 2)
+;; see https://github.com/boorad/emacs/blob/master/python/my-python-compile.el#L19
+;; TODO(gina) extrat this stuff out to a separate file I can import
+(defun my-python-mode-hook ()
+  "Make compile available by keyboard."
+  (local-unset-key "\C-c\C-c")
+  (global-unset-key "\C-c\C-c")
+  (local-set-key "\C-c\C-c" 'compile))
+(add-hook 'python-mode-hook 'my-python-mode-hook)
 
 ;; Java
 (setq c-default-style "java"
