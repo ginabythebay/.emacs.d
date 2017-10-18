@@ -46,6 +46,10 @@
 ; http://pragmaticemacs.com/emacs/view-mode-makes-for-great-read-only-reading/
 (setq view-read-only t)
 
+; Faster than default scp, according to
+; https://www.emacswiki.org/emacs/TrampMode
+(setq tramp-default-method "ssh")
+
 ;; colors in compilation mode: http://endlessparentheses.com/ansi-colors-in-the-compilation-buffer-output.html?source=rss
 (require 'ansi-color)
 (require 'compile)
@@ -288,6 +292,47 @@ the syntax class ')'."
     (indent-according-to-mode))
   )
 
+;; js2 (javascript) mode
+
+(use-package js2-mode
+  :mode (("\\.js$" . js2-mode))
+  :interpreter ("node" . js2-mode)
+  :bind (("C-a" . back-to-indentation-or-beginning-of-line)
+         ("C-M-h" . backward-kill-word))
+  :config
+  (progn
+    (add-hook 'js2-mode-hook (
+       lambda ()
+	      (define-key js2-mode-map (kbd "C-c C-c") 'compile)
+	      (setq js2-basic-offset 2)))))
+
+;; BEGIN JSON CONFIGURATION
+
+(use-package json-mode
+  :ensure t)
+
+(use-package flymake-json
+  :ensure t
+  :config (add-hook 'js-mode-hook 'flymake-json-maybe-load))
+
+
+	      
+
+;; BEGIN TYPESCRIPT CONFIGURATION
+
+(use-package typescript-mode
+  :ensure t)
+
+(use-package ts-comint
+  :ensure t
+  :config (add-hook 'typescript-mode-hook
+	    (lambda ()
+	      (local-set-key (kbd "C-x C-e") 'ts-send-last-sexp)
+	      (local-set-key (kbd "C-M-x") 'ts-send-last-sexp-and-go)
+	      (local-set-key (kbd "C-c b") 'ts-send-buffer)
+	      (local-set-key (kbd "C-c C-b") 'ts-send-buffer-and-go)
+	      (local-set-key (kbd "C-c l") 'ts-load-file-and-go))))
+
 ;; BEGIN GO CONFIGURATION
 
 (use-package company-go
@@ -388,6 +433,15 @@ the syntax class ')'."
 (setq c-default-style "whitesmith"
       c-basic-offset 2)
 
+(use-package anaconda-mode
+  :ensure t
+  :config (add-hook 'python-mode-hook 'anaconda-mode))
+
+(use-package company-anaconda
+  :ensure t
+  :commands company-anaconda
+  :init (add-to-list 'company-backends 'company-anaconda))
+
 ;; Python
 (setq c-default-style "python"
       c-basic-offset 2)
@@ -432,3 +486,5 @@ the syntax class ')'."
 ;; (global-set-key (kbd "C-c d") 'deft)
 
 
+(put 'downcase-region 'disabled nil)
+(put 'upcase-region 'disabled nil)
