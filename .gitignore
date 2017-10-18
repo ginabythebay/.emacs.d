@@ -3,3 +3,5 @@ ac-comphist.dat
 custom.el
 *~
 projectile-bookmarks.eld
+.mc-lists.el
+anaconda-mode/*
