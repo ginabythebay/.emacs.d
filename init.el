@@ -297,8 +297,6 @@ the syntax class ')'."
 (use-package js2-mode
   :mode (("\\.js$" . js2-mode))
   :interpreter ("node" . js2-mode)
-  :bind (("C-a" . back-to-indentation-or-beginning-of-line)
-         ("C-M-h" . backward-kill-word))
   :config
   (progn
     (add-hook 'js2-mode-hook (
