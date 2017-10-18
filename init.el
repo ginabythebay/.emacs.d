@@ -316,7 +316,7 @@ the syntax class ')'."
   :config (add-hook 'js-mode-hook 'flymake-json-maybe-load))
 
 
-	      
+
 
 ;; BEGIN TYPESCRIPT CONFIGURATION
 
