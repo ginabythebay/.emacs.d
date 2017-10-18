@@ -303,7 +303,7 @@ the syntax class ')'."
   (progn
     (add-hook 'js2-mode-hook (
        lambda ()
-	      (define-key js2-mode-map (kbd "C-c C-c") 'compile)
+	      (define-key js2-mode-map (kbd "C-c C-c") 'projectile-compile-project)
 	      (setq js2-basic-offset 2)))))
 
 ;; BEGIN JSON CONFIGURATION
