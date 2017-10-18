@@ -8,6 +8,8 @@
 
 ;; Support functions
 
+(setq-default indent-tabs-mode nil)
+
 (defun path-contains (haystack needle)
   "Return t if HAYSTACK has a path element NEEDLE."
   (let ((result nil))
