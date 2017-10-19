@@ -4,11 +4,13 @@
 ;;; Stuff here
 ;; TODO(gina) enable gocode?  https://github.com/nsf/gocode
 
+(setq-default indent-tabs-mode nil)
+
+(setq visible-bell t)
+
 ;;; Code:
 
 ;; Support functions
-
-(setq-default indent-tabs-mode nil)
 
 (defun path-contains (haystack needle)
   "Return t if HAYSTACK has a path element NEEDLE."
