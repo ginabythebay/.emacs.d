@@ -301,12 +301,21 @@ the syntax class ')'."
 (use-package js2-mode
   :mode (("\\.js$" . js2-mode))
   :interpreter ("node" . js2-mode)
-  :config
-  (progn
-    (add-hook 'js2-mode-hook (
-       lambda ()
+  :config (add-hook 'js2-mode-hook (
+            (lambda ()
 	      (define-key js2-mode-map (kbd "C-c C-c") 'projectile-compile-project)
-	      (setq js2-basic-offset 2)))))
+	      (setq js2-basic-offset 2))))
+          ;; from https://benhollis.net/blog/2015/12/20/nodejs-stack-traces-in-emacs-compilation-mode/
+          (setq compilation-error-regexp-alist-alist
+                (cons '(node "^[  ]+at \\(?:[^\(\n]+ \(\\)?\\([a-zA-Z\.0-9_/-]+\\):\\([0-9]+\\):\\([0-9]+\\)\)?$"
+                             1 ;; file
+                             2 ;; line
+                             3 ;; column
+                             )
+                      compilation-error-regexp-alist-alist))
+          (setq compilation-error-regexp-alist
+                (cons 'node compilation-error-regexp-alist))
+  )
 
 ;; BEGIN JSON CONFIGURATION
 
