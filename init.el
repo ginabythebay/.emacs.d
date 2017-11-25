@@ -365,6 +365,10 @@ the syntax class ')'."
 	      (setq gofmt-command "goimports")
 	      (setq indent-tabs-mode 1))))
 
+
+(use-package go-expanderr
+  :load-path "~/go/src/github.com/stapelberg/expanderr/lisp")
+
 (use-package go-autocomplete
   :ensure t)
 
@@ -499,3 +503,4 @@ the syntax class ')'."
 
 (put 'downcase-region 'disabled nil)
 (put 'upcase-region 'disabled nil)
+(put 'narrow-to-region 'disabled 
