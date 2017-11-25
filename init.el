@@ -108,6 +108,8 @@ the syntax class ')'."
 (use-package ivy
   :ensure t
   :diminish ivy-mode
+  :init
+  (require 'hydra)
   :config
   (ivy-mode 1)
   (bind-key "C-c C-r" 'ivy-resume))
