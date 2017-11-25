@@ -105,6 +105,34 @@ the syntax class ')'."
 
 (global-set-key (kbd "C-f") 'fill-paragraph)
 
+(use-package ivy
+  :ensure t
+  :diminish ivy-mode
+  :config
+  (ivy-mode 1)
+  (bind-key "C-c C-r" 'ivy-resume))
+
+(use-package counsel
+  :ensure t
+  :bind
+  ("M-x" . counsel-M-x)
+  ("C-x C-f" . counsel-find-file)
+  ; these don't work
+  ;("[f1] f" . counsel-describe-function)
+  ;("[f1] v" . counsel-describe-variable)
+  ;("[f1] l" . counsel-find-library)
+  ;("[f2] i" . counsel-info-lookup-symbol)
+  ;("[f2] u" . counsel-unicode-char)
+  ("C-c g" . counsel-git)
+  ("C-c j" . counsel-git-grep)
+  ("C-c k" . counsel-ag)
+  ("C-x l" . counsel-locate)
+  ("C-S-o" . counsel-rhythmbox))
+  ; these also don't work
+  ;("C-z f" . counsel-describe-function)
+  ;("C-z v" . counsel-describe-variable)
+  ;("C-c k" . counsel-ag))
+
 ;; Themes
 (use-package zenburn-theme
   :ensure t)
@@ -503,4 +531,4 @@ the syntax class ')'."
 
 (put 'downcase-region 'disabled nil)
 (put 'upcase-region 'disabled nil)
-(put 'narrow-to-region 'disabled 
+(put 'narrow-to-region 'disabled nil)
