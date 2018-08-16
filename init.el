@@ -29,8 +29,10 @@
 (setq vc-follow-symlinks t)
 
 
-; from https://aur.archlinux.org/packages/go-fonts-git/
-(set-frame-font "Go Mono-12" nil t)
+;; from https://aur.archlinux.org/packages/go-fonts-git/
+;; Note that on linux I had 12 points, but on windows 11 felt better.
+;; Might need to make this dependant on the screen or something.
+(set-frame-font "Go Mono-11" nil t)
 
 ;; These come from https://fonts.google.com/?category=Monospace
 ;(set-frame-font "Roboto Mono-12" nil t)
@@ -81,6 +83,8 @@ the syntax class ')'."
                                 (blink-matching-open))))
        (when matching-text (message matching-text))))
 
+(require 're-builder)
+
 (require 'package)
 (setq package-enable-at-startup nil)
 ; marmalade has expired certs as of 11/13/16.  skip it for now
@@ -103,11 +107,17 @@ the syntax class ')'."
   (package-refresh-contents)
   (package-install 'use-package))
 
-(global-set-key (kbd "C-f") 'fill-paragraph)
+
+;; see https://nicolas.petton.fr/blog/per-computer-emacs-settings.html
+(defconst my-host (substring (shell-command-to-string "hostname") 0 -1))
+(let ((host-dir (concat "~/.emacs.d/hosts/" my-host))
+      (init-host-feature (intern (concat "init-" my-host))))
+  (add-to-list 'load-path host-dir)
+  (require init-host-feature nil 'noerror))
 
 (use-package ivy
   :ensure t
-  :diminish ivy-mode
+  :diminish `ivy-mode
   :init
   (require 'hydra)
   :config
@@ -177,6 +187,7 @@ the syntax class ')'."
 ;; Under the covers, this runs shell initialization, and copies the values of the resulting
 ;; environment variables back up into emacs.  Useful in the land of mac, where
 ;; environment variable are completely mysterious to me.
+;; TODO(gina) make this only work on mac?
 (use-package exec-path-from-shell
   :ensure t
   :if (memq window-system '(mac ns))
@@ -192,13 +203,6 @@ the syntax class ')'."
 	 ("C-a" . crux-move-beginning-of-line)
 	 ("C-c r" . crux-rename-file-and-buffer)))
 
-(use-package bm
-  :ensure t
-  :bind (("<C-f2>" . bm-toggle)
-         ("<f2>" . bm-next)
-         ("<S-f2>" . bm-previous))
-  :config (setq bm-cycle-all-buffers t))
-
 (use-package pt)
 
 ; While I like fish shell in terminals, I can't get it to look right in emacs shell
@@ -212,6 +216,7 @@ the syntax class ')'."
 ;; http://extensions.libreoffice.org/extension-center/english-dictionaries
 ;; Unzip the ofx file.  Copy *.aff and *.dic into ~/Library/Spelling/
 (add-hook 'text-mode-hook 'flyspell-mode)
+(add-hook 'org-mode-hook 'flyspell-mode)
 (add-hook 'prog-mode-hook 'flyspell-prog-mode)
 
 (use-package highlight-symbol
@@ -241,37 +246,19 @@ the syntax class ')'."
   :ensure t
   :bind (([(control =)] . er/expand-region)))
 
-(use-package avy
-  :ensure t
-  :bind (("M-s" . avy-goto-word-1)))
-
-(use-package ledger-mode
-  :ensure t
-  :mode ("\\.ledger$" . ledger-mode)
-  :config
-  (setq ledger-schedule-file "~/ledger-private/schedule.ledger")
-  (setq ledger-post-amount-alignment-column 65))
-
-(use-package flycheck-ledger-tools-lint
-  :load-path "lisp")
-
-(use-package flycheck-ledger
-  :ensure t
-  :if (executable-find "ledger"))
-
-(flycheck-add-next-checker 'ledger '(warning . ledger-tools-lint))
-
 (use-package company
   :ensure t
   :config
-  ; when running mnt-gdrive inside emacs (for development) and trying
-  ; to test things inside emacs, in shell mode, emacs locks up if
-  ; company mode is on.
-  ; ledger-mode has its own compltetion
-  (setq company-global-modes `(not shell-mode ledger-mode))
+  ;; when running mnt-gdrive inside emacs (for development) and trying
+  ;; to test things inside emacs, in shell mode, emacs locks up if
+  ;; company mode is on.
+  ;; ledger-mode has its own completion
+  (when (equal my-host "octavia")
+    (setq company-global-modes `(not shell-mode ledger-mode))
+    )
+
   (setq company-dabbrev-downcase nil)
   (global-company-mode))
-
 
 ;; 8/23/16: Not sure if I like this, but giving it a try
 ;;
@@ -296,7 +283,7 @@ the syntax class ')'."
 
   (defmacro def-pairs (pairs)
     `(progn
-       ,@(loop for (key . val) in pairs
+       ,@(cl-loop for (key . val) in pairs
 	       collect
 	       `(defun ,(read (concat
 			       "wrap-with-"
@@ -414,7 +401,8 @@ the syntax class ')'."
 
 (eval-and-compile
   (defun go-lint-load-path ()
-    (concat (getenv "GOPATH")  "/src/github.com/golang/lint/misc/emacs")))
+    (concat (getenv "GOPATH")  "/src/github.com/golang/lint/misc/emacs")  ; octavia
+    (concat (getenv "GOPATH")  "/src/golang.org/x/lint/misc/emacs")))     ; Gina-PC
 (use-package golint
   :load-path (lambda() (list (go-lint-load-path))))
 
@@ -503,8 +491,117 @@ the syntax class ')'."
 (setq c-default-style "java"
       c-basic-offset 2)
 
+;; initialise
+(pdf-tools-install)
+;; open pdfs scaled to fit page
+(setq-default pdf-view-display-size 'fit-page)
+;; automatically annotate highlights
+(setq pdf-annot-activate-created-annotations t)
+;; use normal isearch
+;(define-key pdf-view-mode-map (kbd "C-s") 'isearch-forward))
+
+(use-package org
+  :ensure t
+  :config
+  (bind-key "C-x l" 'org-refile-goto-last-stored)
+
+  ; see https://stackoverflow.com/questions/22720526/set-clock-table-duration-format-for-emacs-org-mode
+  (setq org-duration-format (quote h:mm))
+
+  (setq org-reverse-note-order t)
+
+  (setq org-default-notes-file "c:/Users/gina/Documents/Gina/overall notes.org")
+
+  ; see http://doc.norang.ca/org-mode.html#FindTasksToClockIn
+  (setq org-time-stamp-rounding-minutes (quote (1 1)))
+
+  ; see http://cachestocaches.com/2016/9/my-workflow-org-agenda/
+  (setq org-columns-default-format "%50ITEM(Task) %10CLOCKSUM %16TIMESTAMP_IA")
+
+  ; see http://cachestocaches.com/2016/9/my-workflow-org-agenda/
+  (setq org-capture-templates
+	'(("t" "todo" entry (file org-default-notes-file)
+	   "* TODO %?\n%u\n%a\n" :clock-in t :clock-resume t)
+	  ("m" "Meeting" entry (file org-default-notes-file)
+	   "* MEETING with %? :MEETING:\n%t" :clock-in t :clock-resume t)
+	  ("i" "Idea" entry (file org-default-notes-file)
+	   "* %? :IDEA: \n%t" :clock-in t :clock-resume t)
+	  ("n" "Next Task" entry (file+headline org-default-notes-file "Tasks")
+	   "** TODO NEXT %? \nDEADLINE: %t" :prepend t :clock-in t :clock-resume t)
+	  ("c" "Schedule court deadline in current buffer" entry (file+olp+datetree buffer-file-name "Court deadlines")
+	   "** %? " :time-prompt t)))
+
+  (setq org-agenda-exporter-settings
+	'((ps-number-of-columns 2)
+          (ps-landscape-mode t)
+          (org-agenda-add-entry-text-maxlines 5)
+          (htmlize-output-type 'css)))
+
+  (setq org-refile-targets (quote ((nil :maxlevel . 9)
+                                   (org-agenda-files :maxlevel . 9)))))
+
+(global-set-key "\C-cl" 'org-store-link)
+(global-set-key "\C-ca" 'org-agenda)
+(global-set-key "\C-cc" 'org-capture)
+(global-set-key "\C-cb" 'org-switchb)
+
+
+
+(use-package helm
+  :ensure t
+  :config
+  (helm-mode 1)
+  (bind-key "M-x" 'helm-M-x)
+  (bind-key "C-x r b" 'helm-filtered-bookmarks)
+  (bind-key "C-h a" 'helm-apropos)
+  (bind-key "C-x C-f" 'helm-find-files))
+
+(use-package helm-google
+  :ensure t
+)
+
+(use-package helm-projectile
+  :ensure t
+)
+
+(global-set-key [f2] 'mode-line-other-buffer)
+
+; These don't really seem to do anything yet
+; TODO(gina) continue fixing these up
+(use-package calfw)
+(use-package calfw-org)
+
+(setenv "LANG" "en_US")
+(setq-default  ispell-program-name "c:/mingw64/bin/hunspell.exe")
+(setq ispell-really-hunspell t)
+(setq ispell-program-name "hunspell.exe")
+(setq ispell-dictionary "en_US")
+
 (delete-selection-mode t)
 (setq column-number-mode t)  ;; put line number in mode line.
+
+
+; from
+; https://emacs.stackexchange.com/questions/16640/can-i-export-a-specific-table-in-an-org-file-to-csv-from-the-command-line
+(defun my-tbl-export (name)
+  "Search for table named `NAME` and export."
+  (interactive "s")
+  (show-all)
+  (let ((case-fold-search t))
+    (if (search-forward (concat "#+TBLNAME: " name))
+    (progn
+      (next-line)
+      (org-table-export (format "%s.tsv" name) "orgtbl-to-tsv")))))
+
+(defun my-subtree-export (name)
+  "Search for table named `NAME` and export the subtree."
+  (interactive "s")
+  (show-all)
+  (let ((case-fold-search t))
+    (if (search-forward (concat "#+TBLNAME: " name))
+    (progn
+      (next-line)
+      (org-html-export-to-html nil t)))))
 
 (server-start)
 
