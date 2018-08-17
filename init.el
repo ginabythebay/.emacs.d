@@ -494,6 +494,8 @@ the syntax class ')'."
  ;; automatically annotate highlights
  (setq pdf-annot-activate-created-annotations t))
 
+(use-package org-noter)
+
 (use-package org
   :ensure t
   :config
