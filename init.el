@@ -106,7 +106,7 @@ the syntax class ')'."
 (unless (package-installed-p 'use-package)
   (package-refresh-contents)
   (package-install 'use-package))
-
+(setq use-package-always-ensure t)
 
 ;; see https://nicolas.petton.fr/blog/per-computer-emacs-settings.html
 (defconst my-host (substring (shell-command-to-string "hostname") 0 -1))
@@ -153,7 +153,8 @@ the syntax class ')'."
   (setq projectile-switch-project-action #'projectile-commander))
 
 (use-package gina-keymap
-  :load-path "lisp")
+  :load-path "lisp"
+  :ensure nil)
 
 (use-package multiple-cursors
   :ensure t
@@ -375,6 +376,7 @@ the syntax class ')'."
 
 
 (use-package go-expanderr
+  :ensure nil
   :load-path "~/go/src/github.com/stapelberg/expanderr/lisp")
 
 (use-package go-autocomplete
@@ -383,6 +385,7 @@ the syntax class ')'."
 
 ;; depends on https://github.com/cweill/gotests
 (use-package gotests
+  :ensure nil
   :load-path "lisp")
 
 (use-package go-guru
