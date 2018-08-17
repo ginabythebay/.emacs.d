@@ -234,5 +234,181 @@ Optional parameter SHORT means to use short form."
 
 (global-set-key "\C-b" 'bates-copy-or-paste)
 
+
+(defun bates-create-skeleton ()
+  "Create notes skeleton with the PDF outline or annotations.
+Only available with PDF Tools."
+  (interactive)
+  (org-noter--with-valid-session
+   (cond
+    ((eq (org-noter--session-doc-mode session) 'pdf-view-mode)
+     (let* ((ast (org-noter--parse-root))
+            (top-level (org-element-property :level ast))
+            (options '(("Outline" . (outline))
+                       ("Annotations" . (annots))
+                       ("Both" . (outline annots))))
+            answer output-data file-range start end expected-pdf-pages )
+       (with-current-buffer (org-noter--session-doc-buffer session)
+         (setq file-range (bates--decode-bates-range(file-name-base (buffer-file-name))))
+         (setq start (nth 0 file-range))
+         (setq end (nth 1 file-range))
+         (setq expected-pdf-pages (bates--expected-pdf-pages file-range))
+
+         (unless (equal expected-pdf-pages (pdf-cache-number-of-pages))
+           (user-error "Based on a start of `%s' and an end of %d, we expected %d pages but found %d"
+                       start end expected-pdf-pages (pdf-cache-number-of-pages)))
+
+         (setq answer (assoc (completing-read "What do you want to import? " options nil t) options))
+
+         (when (memq 'outline answer)
+           (dolist (item (pdf-info-outline))
+             (let ((type  (alist-get 'type item))
+                   (page  (alist-get 'page item))
+                   (depth (alist-get 'depth item))
+                   (title (alist-get 'title item))
+                   (top   (alist-get 'top item)))
+               (when (and (eq type 'goto-dest) (> page 0))
+                 (push (vector title (cons page top) (1+ depth) nil) output-data)))))
+
+         (when (memq 'annots answer)
+           (let ((possible-annots (list '("Highlights" . highlight)
+                                        '("Underlines" . underline)
+                                        '("Squigglies" . squiggly)
+                                        '("Text notes" . text)
+                                        '("Strikeouts" . strike-out)
+                                        '("Links" . link)
+                                        '("ALL" . all)))
+                 chosen-annots insert-contents pages-with-links)
+             (while (> (length possible-annots) 1)
+               (let* ((chosen-string (completing-read "Which types of annotations do you want? "
+                                                      possible-annots nil t))
+                      (chosen-pair (assoc chosen-string possible-annots)))
+                 (cond ((eq (cdr chosen-pair) 'all)
+                        (dolist (annot possible-annots)
+                          (when (and (cdr annot) (not (eq (cdr annot) 'all)))
+                            (push (cdr annot) chosen-annots)))
+                        (setq possible-annots nil))
+                       ((cdr chosen-pair)
+                        (push (cdr chosen-pair) chosen-annots)
+                        (setq possible-annots (delq chosen-pair possible-annots))
+                        (when (= 1 (length chosen-annots)) (push '("DONE") possible-annots)))
+                       (t
+                        (setq possible-annots nil)))))
+
+             (setq insert-contents (y-or-n-p "Should we insert the annotations contents? "))
+
+             (dolist (item (pdf-info-getannots))
+               (let* ((type  (alist-get 'type item))
+                      (page  (alist-get 'page item))
+                      (edges (or (org-noter--pdf-tools-edges-to-region (alist-get 'markup-edges item))
+                                 (alist-get 'edges item)))
+                      (top (nth 1 edges))
+                      (item-subject (alist-get 'subject item))
+                      (item-contents (alist-get 'contents item))
+                      name contents)
+                 (when (and (memq type chosen-annots) (> page 0))
+                   (if (eq type 'link)
+                       (cl-pushnew page pages-with-links)
+                     (setq name (cond ((eq type 'highlight)  "Highlight")
+                                      ((eq type 'underline)  "Underline")
+                                      ((eq type 'squiggly)   "Squiggly")
+                                      ((eq type 'text)       "Text note")
+                                      ((eq type 'strike-out) "Strikeout")))
+
+                     (when insert-contents
+                       (setq contents (cons (pdf-info-gettext page edges)
+                                            (and (or (and item-subject (> (length item-subject) 0))
+                                                     (and item-contents (> (length item-contents) 0)))
+                                                 (concat (or item-subject "")
+                                                         (if (and item-subject item-contents) "\n" "")
+                                                         (or item-contents ""))))))
+
+                     (push (vector (format "%s on page %d" name page) (cons page top) 'inside contents)
+                           output-data)))))
+
+             (dolist (page pages-with-links)
+               (let ((links (pdf-info-pagelinks page))
+                     type)
+                 (dolist (link links)
+                   (setq type (alist-get 'type  link))
+                   (unless (eq type 'goto-dest) ;; NOTE(nox): Ignore internal links
+                     (let* ((edges (alist-get 'edges link))
+                            (title (alist-get 'title link))
+                            (top (nth 1 edges))
+                            (target-page (alist-get 'page link))
+                            target heading-text)
+
+                       (unless (and title (> (length title) 0)) (setq title (pdf-info-gettext page edges)))
+
+                       (cond
+                        ((eq type 'uri)
+                         (setq target (alist-get 'uri link)
+                               heading-text (format "Link on page %d: [[%s][%s]]" page target title)))
+
+                        ((eq type 'goto-remote)
+                         (setq target (concat "file:" (alist-get 'filename link))
+                               heading-text (format "Link to document on page %d: [[%s][%s]]" page target title))
+                         (when target-page
+                           (setq heading-text (concat heading-text (format " (target page: %d)" target-page)))))
+
+                        (t (error "Unexpected link type")))
+
+                       (push (vector heading-text (cons page top) 'inside nil) output-data))))))))
+
+         (when output-data
+           (setq output-data
+                 (sort output-data
+                       (lambda (e1 e2)
+                         (or (not (aref e1 1))
+                             (and (aref e2 1)
+                                  (org-noter--compare-location-cons '< (aref e1 1) (aref e2 1)))))))
+           (push (vector "Skeleton" nil 1 nil) output-data)))
+
+       (with-current-buffer (org-noter--session-notes-buffer session)
+         ;; NOTE(nox): org-with-wide-buffer can't be used because we want to reset the
+         ;; narrow region to include the new headings
+         (widen)
+         (save-excursion
+           (goto-char (org-element-property :end ast))
+
+           (let (last-absolute-level
+                 title location relative-level contents
+                 level)
+             (dolist (data output-data)
+               (setq title          (aref data 0)
+                     location       (aref data 1)
+                     relative-level (aref data 2)
+                     contents       (aref data 3))
+
+               (if (symbolp relative-level)
+                   (setq level (1+ last-absolute-level))
+                 (setq last-absolute-level (+ top-level relative-level)
+                       level last-absolute-level))
+
+               (org-noter--insert-heading level title)
+
+               (when location
+                 (org-entry-put nil org-noter-property-note-location (org-noter--pretty-print-location location))
+                 (when (or (not (cdr location)) (<= (cdr location) 0))
+                   (let* ((page (car location))
+                          (bts (create-bates-page (bates-page-prefix start) (- (+ page (bates-page-no start)) 1) nil)))
+                     (org-entry-put nil "BATES" (bates--format bts)))))
+
+               (when (car contents)
+                 (org-noter--insert-heading (1+ level) "Contents")
+                 (insert (car contents)))
+               (when (cdr contents)
+                 (org-noter--insert-heading (1+ level) "Comment")
+                 (insert (cdr contents)))))
+
+           (setq ast (org-noter--parse-root))
+           (org-noter--narrow-to-root ast)
+           (goto-char (org-element-property :begin ast))
+           (outline-hide-subtree)
+           (org-show-children 2)))))
+
+    (t (error "This command is only supported on PDF Tools")))))
+
+
 (provide 'bates)
 ;;; bates.el ends here
