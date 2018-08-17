@@ -5,3 +5,5 @@ custom.el
 projectile-bookmarks.eld
 .mc-lists.el
 anaconda-mode/*
+bookmarks
+server
