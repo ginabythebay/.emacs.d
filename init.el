@@ -115,15 +115,6 @@ the syntax class ')'."
   (add-to-list 'load-path host-dir)
   (require init-host-feature nil 'noerror))
 
-(use-package ivy
-  :ensure t
-  :diminish `ivy-mode
-  :init
-  (require 'hydra)
-  :config
-  (ivy-mode 1)
-  (bind-key "C-c C-r" 'ivy-resume))
-
 (use-package counsel
   :ensure t
   :bind
@@ -491,14 +482,14 @@ the syntax class ')'."
 (setq c-default-style "java"
       c-basic-offset 2)
 
-;; initialise
-(pdf-tools-install)
-;; open pdfs scaled to fit page
-(setq-default pdf-view-display-size 'fit-page)
-;; automatically annotate highlights
-(setq pdf-annot-activate-created-annotations t)
-;; use normal isearch
-;(define-key pdf-view-mode-map (kbd "C-s") 'isearch-forward))
+(use-package pdf-tools
+ :config
+ ;; initialise
+ (pdf-tools-install)
+ ;; open pdfs scaled to fit page
+ (setq-default pdf-view-display-size 'fit-page)
+ ;; automatically annotate highlights
+ (setq pdf-annot-activate-created-annotations t))
 
 (use-package org
   :ensure t
