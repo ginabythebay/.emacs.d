@@ -389,10 +389,13 @@ Only available with PDF Tools."
 
                (when location
                  (org-entry-put nil org-noter-property-note-location (org-noter--pretty-print-location location))
-                 (when (or (not (cdr location)) (<= (cdr location) 0))
-                   (let* ((page (car location))
-                          (bts (create-bates-page (bates-page-prefix start) (- (+ page (bates-page-no start)) 1) nil)))
-                     (org-entry-put nil "BATES" (bates--format bts)))))
+                 (let* ((page (car location))
+                        (bts (create-bates-page (bates-page-prefix start) (- (+ page (bates-page-no start)) 1) nil)))
+                   (org-entry-put nil "BATES" (bates--format bts))))
+
+               (org-entry-put nil "DATE" "")
+               (org-entry-put nil "DESCRIPTION" title)
+
 
                (when (car contents)
                  (org-noter--insert-heading (1+ level) "Contents")

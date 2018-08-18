@@ -92,6 +92,7 @@ the syntax class ')'."
         '(("gnu" . "http://elpa.gnu.org/packages/")
           ("melpa" . "http://melpa.org/packages/")
           ("melpa-stable" . "http://stable.melpa.org/packages/")
+          ("org" . "https://orgmode.org/elpa/")
           ;("marmalade" . "http://marmalade-repo.org/packages/")
           ))
 (setq package-archive-priorities
@@ -494,8 +495,6 @@ the syntax class ')'."
  ;; automatically annotate highlights
  (setq pdf-annot-activate-created-annotations t))
 
-(use-package org-noter)
-
 (use-package org
   :ensure t
   :config
@@ -541,7 +540,9 @@ the syntax class ')'."
 (global-set-key "\C-cc" 'org-capture)
 (global-set-key "\C-cb" 'org-switchb)
 
-
+(use-package org-noter)
+(use-package org-plus-contrib)
+(require 'org-collector)
 
 (use-package helm
   :ensure t
