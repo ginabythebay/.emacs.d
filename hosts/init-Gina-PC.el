@@ -31,4 +31,5 @@
   "Return the current Win idle time in seconds."
   (/ (string-to-number (shell-command-to-string "C:/msys64/home/gina/bin/winidle.exe")) 1000))
 
+(provide 'init-Gina-PC)
 ;;; init-Gina-PC.el ends here

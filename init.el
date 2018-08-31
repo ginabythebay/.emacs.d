@@ -111,10 +111,10 @@ the syntax class ')'."
 
 ;; see https://nicolas.petton.fr/blog/per-computer-emacs-settings.html
 (defconst my-host (substring (shell-command-to-string "hostname") 0 -1))
-(let ((host-dir (concat "~/.emacs.d/hosts/" my-host))
+(let ((host-dir "~/.emacs.d/hosts/")
       (init-host-feature (intern (concat "init-" my-host))))
   (add-to-list 'load-path host-dir)
-  (require init-host-feature nil 'noerror))
+  (require init-host-feature))
 
 (use-package counsel
   :ensure t
@@ -149,7 +149,7 @@ the syntax class ')'."
 (use-package projectile
   :ensure t
   :config
-  (projectile-global-mode t)
+  (projectile-mode t)
   (setq projectile-create-missing-test-files t)
   (setq projectile-switch-project-action #'projectile-commander))
 
@@ -495,10 +495,13 @@ the syntax class ')'."
  ;; automatically annotate highlights
  (setq pdf-annot-activate-created-annotations t))
 
+(use-package htmlize)
+
 (use-package org
   :ensure t
   :config
   (bind-key "C-x l" 'org-refile-goto-last-stored)
+  (bind-key "C-c !" 'org-time-stamp-inactive)
 
   ; see https://stackoverflow.com/questions/22720526/set-clock-table-duration-format-for-emacs-org-mode
   (setq org-duration-format (quote h:mm))
@@ -526,11 +529,26 @@ the syntax class ')'."
 	  ("c" "Schedule court deadline in current buffer" entry (file+olp+datetree buffer-file-name "Court deadlines")
 	   "** %? " :time-prompt t)))
 
-  (setq org-agenda-exporter-settings
-	'((ps-number-of-columns 2)
-          (ps-landscape-mode t)
-          (org-agenda-add-entry-text-maxlines 5)
-          (htmlize-output-type 'css)))
+  ;;(setq org-agenda-exporter-settings
+;;	'((ps-number-of-columns 2)
+;;          (ps-left-header (list 'org-agenda-write-buffer-name))
+;;          (ps-right-header
+;;           (list "/pagenumberstring load"
+;;                 (lambda () (format-time-string "%d/%m/%Y"))))
+;;          (ps-landscape-mode t)
+;;          (org-agenda-add-entry-text-maxlines 5)
+;;          (htmlize-output-type 'css)))
+
+  ;;(setq org-agenda-exporter-settings
+  ;;      '((ps-left-header (list 'org-agenda-write-buffer-name))
+  ;;        (ps-right-header
+  ;;         (list "/pagenumberstring load"
+  ;;               (lambda () (format-time-string "%d/%m/%Y"))))
+  ;;        (ps-print-color-p 'black-white)
+  ;;        (ps-number-of-columns 2)
+  ;;        (ps-landscape-mode t)
+  ;;        (org-agenda-add-entry-text-maxlines 5)
+  ;;        (htmlize-output-type 'css)))
 
   (setq org-refile-targets (quote ((nil :maxlevel . 9)
                                    (org-agenda-files :maxlevel . 9)))))
@@ -590,7 +608,7 @@ the syntax class ')'."
       (next-line)
       (org-table-export (format "%s.tsv" name) "orgtbl-to-tsv")))))
 
-(defun my-subtree-export (name)
+(defun my-named-subtree-export (name)
   "Search for table named `NAME` and export the subtree."
   (interactive "s")
   (show-all)
@@ -598,9 +616,61 @@ the syntax class ')'."
     (if (search-forward (concat "#+TBLNAME: " name))
     (progn
       (next-line)
-      (org-html-export-to-html nil t)))))
+      (my-subtree-export)))))
+
+(defun my-subtree-export ()
+  "Export the current subtree."
+  (interactive)
+  (org-html-export-to-html nil t))
+
+;; see http://emacsredux.com/blog/2013/03/27/copy-filename-to-the-clipboard/
+(defun my-copy-file-name-to-clipboard ()
+  "Copy the current buffer file name to the clipboard."
+  (interactive)
+  (let ((filename (if (equal major-mode 'dired-mode)
+                      default-directory
+                    (buffer-file-name))))
+    (when filename
+      (kill-new filename)
+      (message "Copied buffer file name '%s' to the clipboard." filename))))
+
+(defun my-print-each-agenda (filename)
+  "Print a single ps file with a section for each agenda file, to FILENAME."
+  (interactive "Postscript file to Save to: ")
+  (save-excursion
+    (let ((cnt 0))
+      ;; TODO(gina) see if there is some code I can lift to deal, with, e.g. directory names
+      (dolist (f org-agenda-files)
+        (setq cnt (+ 1 cnt))
+        (switch-to-buffer (find-file-noselect f nil nil nil))
+        (let* ((name (buffer-name))
+               (ps-left-header (list 'name)))
+          (org-agenda nil "a" 'buffer)
+          (switch-to-buffer "*Org Agenda*")
+          (ps-spool-buffer)))
+      (ps-despool filename)
+      (message "Wrote %d agenda entries to %s" cnt filename))))
+
+(defun my-print-each-agenda-faces (filename)
+  "Print a single pdf file with a section for each agenda file, to FILENAME."
+  (interactive "Postscript file to Save to: ")
+  (save-excursion
+    (let ((cnt 0))
+      ;; TODO(gina) see if there is some code I can lift to deal, with, e.g. directory names
+      (dolist (f org-agenda-files)
+        (setq cnt (+ 1 cnt))
+        (switch-to-buffer (find-file-noselect f nil nil nil))
+        (let* ((name (buffer-name))
+               (ps-left-header (list 'name)))
+          (org-agenda nil "a" 'buffer)
+          (switch-to-buffer "*Org Agenda*")
+          (ps-spool-buffer)))
+      (ps-despool filename)
+      (message "Wrote %d agenda entries to %s" cnt filename))))
+
 
 (server-start)
+
 
 (provide 'init)
 ;;; init.el ends here

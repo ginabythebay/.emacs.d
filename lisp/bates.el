@@ -234,7 +234,6 @@ Optional parameter SHORT means to use short form."
 
 (global-set-key "\C-b" 'bates-copy-or-paste)
 
-
 (defun bates-create-skeleton ()
   "Create notes skeleton with the PDF outline or annotations.
 Only available with PDF Tools."
@@ -391,7 +390,7 @@ Only available with PDF Tools."
                  (org-entry-put nil org-noter-property-note-location (org-noter--pretty-print-location location))
                  (let* ((page (car location))
                         (bts (create-bates-page (bates-page-prefix start) (- (+ page (bates-page-no start)) 1) nil)))
-                   (org-entry-put nil "BATES" (bates--format bts))))
+                   (org-entry-put nil "BATES_START" (bates--format bts))))
 
                (org-entry-put nil "DATE" "")
                (org-entry-put nil "DESCRIPTION" title)
@@ -412,6 +411,60 @@ Only available with PDF Tools."
 
     (t (error "This command is only supported on PDF Tools")))))
 
+
+(defun bates--range-link (file bates-start bates-end &optional params)
+  "Create an org mode link for a bates range.
+
+FILE is the file to link to.
+BATES-START is the start of the bates range.
+BATES-END is the end of the bates range.
+PARAMS is an optional alist of url parameters."
+  (unless params
+    (setq params ()))
+  (let* ((text (if (equal bates-start bates-end)
+                  bates-start
+                 (format "%s - %s" bates-start bates-end)))
+         (suffix (if (equal 0 (length params))
+                     ""
+                   (concat "#"
+                    (string-join
+                     (let ((l ()))
+                       (dolist (e params)
+                         (push (format "%s=%s" (car e) (cdr e)) l))
+                       l)
+                     "&"))))
+         (link (concat file suffix)))
+    (format "[[%s][%s]]" link text)))
+
+(ert-deftest bates--range-link ()
+  "Tests bates range linking."
+  (should (equal
+           (bates--range-link "foo.pdf" "794" "795")
+           "[[foo.pdf][794 - 795]]"))
+  (should (equal
+           (bates--range-link "foo.pdf" "794" "794")
+           "[[foo.pdf][794]]"))
+  (should (equal
+           (bates--range-link "foo.pdf" "794" "794" '(("page" . 3) ("zoom" . 100)))
+           "[[foo.pdf#zoom=100&page=3][794]]")))
+
+
+(defun bates-foo ()
+  "Do something with bates ranges."
+  (interactive)
+  (save-excursion
+    (org-back-to-heading 1)
+    (org-previous-visible-heading 1)
+    (let ((cnt 0))
+      (let ((page-no (org-entry-get nil "NOTER_PAGE")))
+        (while page-no
+          (setq cnt (+ 1 cnt))
+          (let* ((start-no (nth 1 (split-string (org-entry-get nil "BATES_START"))))
+                 (end-no (nth 1 (split-string(org-entry-get nil "BATES_END")))))
+            (org-entry-put nil "BATES" (bates--range-link "file:Defendants production/COB0002421-COB0003964.pdf" start-no end-no (list (cons "page" page-no) (cons "zoom" "100")))))
+          (org-previous-visible-heading 1)
+          (setq page-no (org-entry-get nil "NOTER_PAGE"))))
+      (message "Processed %d entries" cnt))))
 
 (provide 'bates)
 ;;; bates.el ends here
