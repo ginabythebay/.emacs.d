@@ -12,6 +12,8 @@
 
 ;; Support functions
 
+(add-to-list 'load-path "~/.emacs.d/lisp/")
+
 (defun path-contains (haystack needle)
   "Return t if HAYSTACK has a path element NEEDLE."
   (let ((result nil))
@@ -499,6 +501,7 @@ the syntax class ')'."
 
 (use-package org
   :ensure t
+  :demand t
   :config
   (bind-key "C-x l" 'org-refile-goto-last-stored)
   (bind-key "C-c !" 'org-time-stamp-inactive)
@@ -550,6 +553,9 @@ the syntax class ')'."
   ;;        (org-agenda-add-entry-text-maxlines 5)
   ;;        (htmlize-output-type 'css)))
 
+  (setq org-agenda-span 700)
+  (add-hook 'org-mode-hook (lambda () (require 'org-override)))
+
   (setq org-refile-targets (quote ((nil :maxlevel . 9)
                                    (org-agenda-files :maxlevel . 9)))))
 
@@ -559,7 +565,6 @@ the syntax class ')'."
 (global-set-key "\C-cb" 'org-switchb)
 
 (use-package org-noter)
-(use-package org-plus-contrib)
 (require 'org-collector)
 
 (use-package helm
@@ -587,7 +592,6 @@ the syntax class ')'."
 (use-package calfw-org)
 
 (setenv "LANG" "en_US")
-(setq-default  ispell-program-name "c:/mingw64/bin/hunspell.exe")
 (setq ispell-really-hunspell t)
 (setq ispell-program-name "hunspell.exe")
 (setq ispell-dictionary "en_US")

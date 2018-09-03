@@ -13,6 +13,7 @@
   (setq ledger-post-amount-alignment-column 65))
 
 (use-package flycheck-ledger-tools-lint
+  :ensure nil
   :load-path "lisp")
 
 (use-package flycheck-ledger
@@ -21,4 +22,5 @@
 
 (flycheck-add-next-checker 'ledger '(warning . ledger-tools-lint))
 
+(provide 'init-octavia)
 ;;; init-octavia.el ends here

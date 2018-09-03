@@ -27,6 +27,8 @@
         ))
 (pr-update-menus t)
 
+(setq-default  ispell-program-name "c:/mingw64/bin/hunspell.exe")
+
 (defun org-user-idle-seconds ()
   "Return the current Win idle time in seconds."
   (/ (string-to-number (shell-command-to-string "C:/msys64/home/gina/bin/winidle.exe")) 1000))
