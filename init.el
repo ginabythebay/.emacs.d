@@ -560,6 +560,14 @@ the syntax class ')'."
   (setq org-refile-targets (quote ((nil :maxlevel . 9)
                                    (org-agenda-files :maxlevel . 9)))))
 
+;; Not quite ready yet.  Doesn't seem to display all agenda files?
+;; (use-package org-super-agenda
+;;   :ensure t)
+;; (let ((org-super-agenda-groups
+;;        '((:auto-category t))))
+;;   (org-super-agenda-mode 1)
+;;   (org-agenda-list))
+
 (global-set-key "\C-cl" 'org-store-link)
 (global-set-key "\C-ca" 'org-agenda)
 (global-set-key "\C-cc" 'org-capture)
