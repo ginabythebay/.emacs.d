@@ -639,22 +639,20 @@ the syntax class ')'."
       (kill-new filename)
       (message "Copied buffer file name '%s' to the clipboard." filename))))
 
-(defun my-print-each-agenda (filename)
-  "Print a single ps file with a section for each agenda file, to FILENAME."
+(defun my-print-each-agenda (dir)
+  "Create an html file for every agenda file in DIR."
   (interactive "Postscript file to Save to: ")
   (save-excursion
     (let ((cnt 0))
       ;; TODO(gina) see if there is some code I can lift to deal, with, e.g. directory names
       (dolist (f org-agenda-files)
-        (setq cnt (+ 1 cnt))
+         (setq cnt (+ 1 cnt))
         (switch-to-buffer (find-file-noselect f nil nil nil))
-        (let* ((name (buffer-name))
-               (ps-left-header (list 'name)))
           (org-agenda nil "a" 'buffer)
           (switch-to-buffer "*Org Agenda*")
-          (ps-spool-buffer)))
-      (ps-despool filename)
-      (message "Wrote %d agenda entries to %s" cnt filename))))
+          (let ((htmlfile (concat dir (format "%d.html" cnt))))
+            (org-agenda-write htmlfile)))
+      (message "Wrote %d agenda entries to %s" cnt dir))))
 
 (defun my-print-each-agenda-faces (filename)
   "Print a single pdf file with a section for each agenda file, to FILENAME."
