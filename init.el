@@ -554,6 +554,7 @@ the syntax class ')'."
   ;;        (htmlize-output-type 'css)))
 
   (setq org-agenda-span 700)
+  (setq org-agenda-show-all-dates nil)
   (add-hook 'org-mode-hook (lambda () (require 'org-override)))
 
   (setq org-refile-targets (quote ((nil :maxlevel . 9)
