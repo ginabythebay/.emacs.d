@@ -300,6 +300,10 @@ the syntax class ')'."
   (sp-local-pair 'go-mode "[" nil :post-handlers '((my-create-newline-and-enter-sexp "RET")))
   (sp-local-pair 'go-mode "`" nil :post-handlers '((my-create-newline-and-enter-sexp "RET")))
 
+  ;; see https://github.com/Fuco1/smartparens/wiki/Permissions
+  (sp-local-pair 'emacs-lisp-mode "'" nil :actions nil)           ;; no '' pair in emacs-lisp-mode
+  (sp-local-pair 'markdown-mode "`" nil :actions '(insert))       ;; only use ` for auto insertion in markdown-mode
+
   (defun my-create-newline-and-enter-sexp (&rest _ignored)
     "Open a new brace or bracket expression, with relevant newlines and indent. "
     (newline)
@@ -555,6 +559,8 @@ the syntax class ')'."
 
   (setq org-agenda-span 700)
   (setq org-agenda-show-all-dates nil)
+  (setq org-agenda-show-future-repeats (quote next))
+
   (add-hook 'org-mode-hook (lambda () (require 'org-override)))
 
   (setq org-refile-targets (quote ((nil :maxlevel . 9)
@@ -654,12 +660,12 @@ the syntax class ')'."
     (let ((cnt 0))
       ;; TODO(gina) see if there is some code I can lift to deal, with, e.g. directory names
       (dolist (f org-agenda-files)
-         (setq cnt (+ 1 cnt))
+        (setq cnt (+ 1 cnt))
         (switch-to-buffer (find-file-noselect f nil nil nil))
+        (let ((htmlfile (concat dir (format "%02d-%s.html" cnt (buffer-name)))))
           (org-agenda nil "a" 'buffer)
           (switch-to-buffer "*Org Agenda*")
-          (let ((htmlfile (concat dir (format "%d.html" cnt))))
-            (org-agenda-write htmlfile)))
+          (org-agenda-write htmlfile)))
       (message "Wrote %d agenda entries to %s" cnt dir))))
 
 (defun my-print-each-agenda-faces (filename)
