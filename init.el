@@ -601,6 +601,9 @@ the syntax class ')'."
 
 (global-set-key [f2] 'mode-line-other-buffer)
 
+(global-set-key [f5] 'kmacro-end-and-call-macro)
+
+
 ; These don't really seem to do anything yet
 ; TODO(gina) continue fixing these up
 (use-package calfw)
