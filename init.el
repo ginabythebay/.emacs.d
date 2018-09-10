@@ -513,6 +513,9 @@ the syntax class ')'."
   ; see https://stackoverflow.com/questions/22720526/set-clock-table-duration-format-for-emacs-org-mode
   (setq org-duration-format (quote h:mm))
 
+  ;; turn off validation goo.  https://stackoverflow.com/a/15145594
+  (setq org-html-validation-link nil)
+
   (setq org-reverse-note-order t)
 
   (setq org-default-notes-file "c:/Users/gina/Documents/Gina/overall notes.org")
