@@ -563,6 +563,9 @@ the syntax class ')'."
   (setq org-agenda-span 700)
   (setq org-agenda-show-all-dates nil)
   (setq org-agenda-show-future-repeats (quote next))
+  (setq org-startup-folded (quote showeverything))
+  (setq org-latex-default-table-environment "longtable")
+  (setq org-table-copy-increment nil)
 
   (add-hook 'org-mode-hook (lambda () (require 'org-override)))
 
