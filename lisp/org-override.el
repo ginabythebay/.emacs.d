@@ -23,6 +23,7 @@
   "Return an image for and TAGS according to `org-agenda-category-icon-alist'."
   (cond ((member "court" tags) (apply #'create-image '("~/.emacs.d/icons/baseline-lock-24px.svg" nil nil :ascent center)))
         ((member "hard" tags) (apply #'create-image '("~/.emacs.d/icons/baseline-lock-24px.svg" nil nil :ascent center)))
+        ((member "soft" tags) (apply #'create-image '("~/.emacs.d/icons/baseline-lock_open-24px.svg" nil nil :ascent center)))
         ((member "other" tags) (apply #'create-image '("~/.emacs.d/icons/baseline-group-24px.svg" nil nil :ascent center)))))
 
 (defun org-agenda-format-item (extra txt &optional level category tags dotime
