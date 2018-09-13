@@ -19,6 +19,9 @@
 (require 'org)
 
 
+(defun org-cycle-hide-drawers (state &optional exceptions)
+  "Does nothing.  STATE is ignored.  EXCEPTIONS is ignored.")
+
 (defun org-agenda-get-category-icon (tags)
   "Return an image for and TAGS according to `org-agenda-category-icon-alist'."
   (cond ((member "court" tags) (apply #'create-image '("~/.emacs.d/icons/baseline-lock-24px.svg" nil nil :ascent center)))
