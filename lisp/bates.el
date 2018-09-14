@@ -36,40 +36,76 @@ NO is a bates number.
 WIDTH is the minimum printed width of the bates number, if set."
   (create--bates-page :prefix prefix :no no :width width))
 
+(defun bates--calc-width (name start end)
+  "Calculate the width of the bates range.  If there are no \
+leading zeros, then nil is returned.  Otherwise, if the lengths \
+of START and END are different, it is an error.  Otherwise, \
+the length of START is returned.  NAME is used for errors"
+  (if (not (equal ?0 (aref start 0)))
+      nil
+    (unless (equal
+             (string-width start)
+             (string-width end))
+      (user-error "Invalid digits in `%s'.  When leading zeros are \
+found, the numeric portions must have the same length" name))
+    (string-width start)))
+
+(ert-deftest bates--calc-width ()
+  "Tests bates file width calculations"
+  (should (equal
+           (bates--calc-width
+            "16-0433 PITCHESS 10229-10736" "10229" "10736")
+           nil))
+  (should-error (bates--calc-width
+                 "16-0433 PITCHESS 010229-0010736" "010229" "0010736"))
+  (should (equal
+           (bates--calc-width
+            "16-0433 PITCHESS 0010229-0010736" "0010229" "0010736")
+           7)))
+
 (defun bates--decode-bates-range (name)
-  "Decodes a NAME like 'COB0002421-COB0003964' into ('COB' 2421 3964)."
-  (unless (string-match "\\([A-Z]+\\)\\([0-9]+\\)[^A-Z]*\\([A-Z]+\\)\\([0-9]+\\)" name)
-    (user-error "Unable to decode `%s': Expected something like COB0002421-COB0003964" name))
-  (let* ((prefix1 (match-string 1 name))
-        (start (match-string 2 name))
-        (prefix2 (match-string 3 name))
-        (end (match-string 4 name))
-        (width nil))
-    (unless (string= prefix1 prefix2)
-      (user-error "Invalid name `%s', `%s'!=`%s'.  Expected something like COB0002421-COB0003964" name prefix1 prefix2))
-    (when (equal ?0 (aref start 0))
-        (unless (equal
-                 (string-width start)
-                 (string-width end))
-          (user-error "Invalid digits in `%s'.  When leading zeros are found, the numeric portions must have the same length" name))
-        (setq width (string-width start)))
-    (list (create-bates-page prefix1 (string-to-number start) width)
-     (create-bates-page prefix1 (string-to-number end ) width))))
+  "Decodes a NAME like 'COB0002421-COB0003964' into ('COB' 2421 3964).
+Can also handle something like '16-0433 PITCHESS 10229-10736', \
+decoding it into ('PITCHESS' 10229 10736)."
+  (let ((case-fold-search nil))
+    (cond ((string-match "\\([A-Z]+\\)\\([0-9]+\\)[^A-Z]*\\([A-Z]+\\)\\([0-9]+\\)" name)
+           (let* ((prefix1 (match-string 1 name))
+                  (start (match-string 2 name))
+                  (prefix2 (match-string 3 name))
+                  (end (match-string 4 name))
+                  (width (bates--calc-width name start end)))
+             (unless (string= prefix1 prefix2)
+               (user-error "Invalid name `%s', `%s'!=`%s'.  Expected something like COB0002421-COB0003964" name prefix1 prefix2))
+             (list (create-bates-page prefix1 (string-to-number start) width)
+                   (create-bates-page prefix1 (string-to-number end ) width))))
+          ((string-match "\\([[:upper:]]+\\)[[:blank:]]*\\([[:digit:]]+\\)[[:blank:]]*-[[:blank:]]*\\([[:digit:]]+\\)" name)
+           (let* ((prefix (match-string 1 name))
+                  (start (match-string 2 name))
+                  (end (match-string 3 name))
+                  (width (bates--calc-width name start end)))
+             (list (create-bates-page prefix (string-to-number start) width)
+                   (create-bates-page prefix (string-to-number end ) width))
+                  ))
+          (t (user-error "Unable to decode `%s': Expected something like COB0002421-COB0003964" name)))))
 
 (ert-deftest bates--decode-bates-range ()
   "Tests bates file base name decoding"
   (should (equal
            (bates--decode-bates-range "COB0002421-COB0003964")
            (list (create-bates-page "COB" 2421 7)
-            (create-bates-page "COB" 3964 7))))
+                 (create-bates-page "COB" 3964 7))))
   (should (equal
            (bates--decode-bates-range "COB0002421 - COB0003964")
            (list (create-bates-page "COB" 2421 7)
-            (create-bates-page "COB" 3964 7))))
+                 (create-bates-page "COB" 3964 7))))
   (should (equal
            (bates--decode-bates-range "COB2421-COB3964")
            (list (create-bates-page "COB" 2421 nil)
-            (create-bates-page "COB" 3964 nil)))))
+                 (create-bates-page "COB" 3964 nil))))
+  (should (equal
+           (bates--decode-bates-range "16-0433 PITCHESS 10229-10736")
+           (list (create-bates-page "PITCHESS" 10229 nil)
+                 (create-bates-page "PITCHESS" 10736 nil)))))
 
 
 (defun bates--format (val &optional short)
