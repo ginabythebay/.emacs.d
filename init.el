@@ -569,6 +569,8 @@ the syntax class ')'."
 
   (add-hook 'org-mode-hook (lambda () (require 'org-override)))
 
+  (add-hook 'org-noter-notes-mode-hook (lambda () (require 'org-override)))
+
   (setq org-refile-targets (quote ((nil :maxlevel . 9)
                                    (org-agenda-files :maxlevel . 9)))))
 
