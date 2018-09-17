@@ -569,8 +569,6 @@ the syntax class ')'."
 
   (add-hook 'org-mode-hook (lambda () (require 'org-override)))
 
-  (add-hook 'org-noter-notes-mode-hook (lambda () (require 'org-override)))
-
   (setq org-refile-targets (quote ((nil :maxlevel . 9)
                                    (org-agenda-files :maxlevel . 9)))))
 
@@ -587,7 +585,14 @@ the syntax class ')'."
 (global-set-key "\C-cc" 'org-capture)
 (global-set-key "\C-cb" 'org-switchb)
 
-(use-package org-noter)
+(use-package org-noter
+  :config
+  (add-hook 'org-noter-notes-mode-hook (lambda () (require 'org-noter-override))))
+
+(use-package bates
+  :load-path "lisp"
+  :ensure nil)
+
 (require 'org-collector)
 
 (use-package helm

@@ -15,6 +15,7 @@
 ;; code goes here
 
 (require 'cl-macs)
+(require 'org-noter)
 (require 'seq)
 
 (defvar bates--ring '()
@@ -107,7 +108,6 @@ decoding it into ('PITCHESS' 10229 10736)."
            (list (create-bates-page "PITCHESS" 10229 nil)
                  (create-bates-page "PITCHESS" 10736 nil)))))
 
-
 (defun bates--format (val &optional short)
   "Format VAL for printing.
 Optional parameter SHORT means to use short form."
@@ -134,7 +134,6 @@ Optional parameter SHORT means to use short form."
 (defun bates--expected-pdf-pages (file-range)
   "Return the expected number of pdf pages in FILE-RANGE."
   (+ 1 (- (bates-page-no (nth 1 file-range)) (bates-page-no (nth 0 file-range)))))
-
 
 (ert-deftest bates--expected-pdf-pages ()
   "Tests bates pdf page expectations."
@@ -214,7 +213,6 @@ Optional parameter SHORT means to use short form."
           atext
         (format "%s - %s" atext btext)))))
 
-
 (ert-deftest bates--paste-text ()
   "Tests bates pdf page expectations."
   (setq bates--ring (list
@@ -229,7 +227,6 @@ Optional parameter SHORT means to use short form."
                      (create-bates-page "COB" 2423 nil)
                      (create-bates-page "COB" 2421 nil)))
   (should (equal "COB 2421 - COB 2423" (bates--paste-text))))
-
 
 (defun bates--ring-maybe-next ()
   "Put the next page in the ring if won't exceed the last entry."
@@ -252,7 +249,6 @@ Optional parameter SHORT means to use short form."
   (bates--ring-maybe-next)
   (should (equal 2424 (bates-page-no (car (last bates--ring))))))
 
-
 (defun bates--paste ()
   "Pastes the last two entries into the current buffer."
   (unless (> (length bates--ring) 1)
@@ -270,6 +266,72 @@ Optional parameter SHORT means to use short form."
 
 (global-set-key "\C-b" 'bates-copy-or-paste)
 
+(defun bates-initialize-props (file-range title &optional page)
+  "Initialize properties for the current entry.
+FILE-RANGE comes from the base filename.
+TITLE will be used for the DESCRIPTION property.
+PAGE will be used to calculate the bates number."
+  (org-noter--with-valid-session
+   (with-current-buffer (org-noter--session-notes-buffer session)
+     (when page
+       (let ((start (nth 0 file-range))
+             (end (nth 1 file-range))
+             (expected-pdf-pages (bates--expected-pdf-pages file-range)))
+         (message "start: %s" start)
+         (message "end: %s" end)
+         (message "expected: %s" expected-pdf-pages)
+
+         (with-current-buffer (org-noter--session-doc-buffer session)
+           (unless (equal expected-pdf-pages (pdf-cache-number-of-pages))
+             (user-error "Based on a start of `%s' and an end of %d, we expected %d pages but found %d"
+                         start end expected-pdf-pages (pdf-cache-number-of-pages))))
+
+         (let ((bts (create-bates-page
+                     (bates-page-prefix start) (- (+ page (bates-page-no start)) 1) nil)))
+           (message "bts: %s" bts)
+           (org-entry-put nil "BATES_START" (bates--format bts)))))
+
+     (org-entry-put nil "DATE" "")
+     (org-entry-put nil "DESCRIPTION" title))))
+
+(defun bates-test ()
+  "Do."
+  (interactive)
+  (org-noter--with-valid-session
+   (let ((file-range (bates--decode-bates-range
+                      (file-name-base
+                       (buffer-file-name
+                        (org-noter--session-doc-buffer session))))))
+     (message "file range: %s" file-range)
+
+     (with-current-buffer (org-noter--session-notes-buffer session)
+       (let ((page (string-to-number (org-entry-get nil org-noter-property-note-location))))
+         (message "page: %s" page)
+         (bates-initialize-props file-range "description" page))))))
+
+(defun bates-insert-note ()
+  "Run org-noter-insert-note and then insert the extra fields we care about."
+  (interactive)
+  (org-noter--with-valid-session
+   (let ((file-range (bates--decode-bates-range
+                      (file-name-base
+                       (buffer-file-name
+                        (org-noter--session-doc-buffer session))))))
+     (org-noter-insert-note)
+
+     (with-current-buffer (org-noter--session-notes-buffer session)
+       (let ((page (string-to-number (org-entry-get nil org-noter-property-note-location)))
+             (title (org-get-heading t t t t)))
+         (bates-initialize-props file-range title page)))))
+
+  (search-backward ":DATE:")
+  (end-of-line)
+  (insert " "))
+
+(eval-after-load "org-noter"
+  '(progn
+  (define-key org-noter-doc-mode-map (kbd   "i") 'bates-insert-note)))
+
 (defun bates-create-skeleton ()
   "Create notes skeleton with the PDF outline or annotations.
 Only available with PDF Tools."
@@ -282,16 +344,9 @@ Only available with PDF Tools."
             (options '(("Outline" . (outline))
                        ("Annotations" . (annots))
                        ("Both" . (outline annots))))
-            answer output-data file-range start end expected-pdf-pages )
+            answer output-data file-range)
        (with-current-buffer (org-noter--session-doc-buffer session)
          (setq file-range (bates--decode-bates-range(file-name-base (buffer-file-name))))
-         (setq start (nth 0 file-range))
-         (setq end (nth 1 file-range))
-         (setq expected-pdf-pages (bates--expected-pdf-pages file-range))
-
-         (unless (equal expected-pdf-pages (pdf-cache-number-of-pages))
-           (user-error "Based on a start of `%s' and an end of %d, we expected %d pages but found %d"
-                       start end expected-pdf-pages (pdf-cache-number-of-pages)))
 
          (setq answer (assoc (completing-read "What do you want to import? " options nil t) options))
 
@@ -422,15 +477,10 @@ Only available with PDF Tools."
 
                (org-noter--insert-heading level title)
 
-               (when location
-                 (org-entry-put nil org-noter-property-note-location (org-noter--pretty-print-location location))
-                 (let* ((page (car location))
-                        (bts (create-bates-page (bates-page-prefix start) (- (+ page (bates-page-no start)) 1) nil)))
-                   (org-entry-put nil "BATES_START" (bates--format bts))))
-
-               (org-entry-put nil "DATE" "")
-               (org-entry-put nil "DESCRIPTION" title)
-
+               (let (page (when location (org-noter--pretty-print-location location)))
+                 (when page
+                   (org-entry-put nil org-noter-property-note-location page))
+                 (bates-initialize-props file-range title page))
 
                (when (car contents)
                  (org-noter--insert-heading (1+ level) "Contents")
@@ -446,7 +496,6 @@ Only available with PDF Tools."
            (org-show-children 2)))))
 
     (t (error "This command is only supported on PDF Tools")))))
-
 
 (defun bates--range-link (file bates-start bates-end &optional params)
   "Create an org mode link for a bates range.
@@ -483,7 +532,6 @@ PARAMS is an optional alist of url parameters."
   (should (equal
            (bates--range-link "foo.pdf" "794" "794" '(("page" . 3) ("zoom" . 100)))
            "[[foo.pdf#zoom=100&page=3][794]]")))
-
 
 (defun bates-foo ()
   "Do something with bates ranges."
