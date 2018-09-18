@@ -533,7 +533,7 @@ PARAMS is an optional alist of url parameters."
            (bates--range-link "foo.pdf" "794" "794" '(("page" . 3) ("zoom" . 100)))
            "[[foo.pdf#zoom=100&page=3][794]]")))
 
-(defun bates-foo ()
+(defun bates-props-foo ()
   "Do something with bates ranges."
   (interactive)
   (save-excursion
@@ -549,6 +549,38 @@ PARAMS is an optional alist of url parameters."
           (org-previous-visible-heading 1)
           (setq page-no (org-entry-get nil "NOTER_PAGE"))))
       (message "Processed %d entries" cnt))))
+
+(defun bates-props-fill-end ()
+  "Fill in BATES_END."
+  (interactive)
+  (save-excursion
+    (org-back-to-heading 1)
+    (let ((prev-bates-start-no (string-to-number
+                                (nth
+                                 1
+                                 (split-string
+                                  (org-entry-get nil "BATES_START"))))))
+      (org-previous-visible-heading 1)
+      (let ((cnt 0)
+            (bates-prefix (nth 0 (split-string(org-entry-get nil "BATES_START"))))
+            (page-no (org-entry-get nil "NOTER_PAGE"))
+            bates-start-no)
+        (while page-no
+          (setq cnt (+ 1 cnt))
+
+          (setq bates-start-no (string-to-number
+                                (nth
+                                 1
+                                 (split-string
+                                  (org-entry-get nil "BATES_START")))))
+          (org-entry-put nil "BATES_END" (bates--format
+                                          (create-bates-page
+                                           bates-prefix
+                                           (- prev-bates-start-no 1) nil)))
+          (org-previous-visible-heading 1)
+          (setq prev-bates-start-no bates-start-no)
+          (setq page-no (org-entry-get nil "NOTER_PAGE")))
+        (message "Processed %d entries" cnt)))))
 
 (provide 'bates)
 ;;; bates.el ends here
