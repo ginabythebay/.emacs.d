@@ -481,21 +481,21 @@ Only available with PDF Tools."
                               (org-noter--pretty-print-location location)
                             nil)))
                  (when page
-                   (org-entry-put nil org-noter-property-note-location page))
-                 (bates-initialize-props file-range title page))
+                   (org-entry-put nil org-noter-property-note-location page)
+                   (bates-initialize-props file-range title (string-to-number page))))
 
                (when (car contents)
                  (org-noter--insert-heading (1+ level) "Contents")
                  (insert (car contents)))
                (when (cdr contents)
                  (org-noter--insert-heading (1+ level) "Comment")
-                 (insert (cdr contents)))))
+                 (insert (cdr contents))))
 
            (setq ast (org-noter--parse-root))
            (org-noter--narrow-to-root ast)
            (goto-char (org-element-property :begin ast))
            (outline-hide-subtree)
-           (org-show-children 2)))))
+           (org-show-children 2)))))))))
 
     (t (error "This command is only supported on PDF Tools")))))
 
