@@ -567,6 +567,12 @@ the syntax class ')'."
   (setq org-latex-default-table-environment "longtable")
   (setq org-table-copy-increment nil)
 
+  (setq org-file-apps
+        '(("\\.docx\\'" . default)
+          ("\\.mm\\'" . default)
+          ("\\.x?html?\\'" . default)
+          (auto-mode . emacs)))
+
   (add-hook 'org-mode-hook (lambda () (require 'org-override)))
 
   (setq org-refile-targets (quote ((nil :maxlevel . 9)
