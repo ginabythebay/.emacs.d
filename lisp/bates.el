@@ -495,7 +495,7 @@ Only available with PDF Tools."
            (org-noter--narrow-to-root ast)
            (goto-char (org-element-property :begin ast))
            (outline-hide-subtree)
-           (org-show-children 2)))))))))
+           (org-show-children 2)))))
 
     (t (error "This command is only supported on PDF Tools")))))
 
