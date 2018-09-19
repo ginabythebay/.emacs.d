@@ -320,9 +320,12 @@ PAGE will be used to calculate the bates number."
      (org-noter-insert-note)
 
      (with-current-buffer (org-noter--session-notes-buffer session)
-       (let ((page (string-to-number (org-entry-get nil org-noter-property-note-location)))
-             (title (org-get-heading t t t t)))
-         (bates-initialize-props file-range title page)))))
+       (let ((page (string-to-number (org-entry-get nil org-noter-property-note-location))))
+         (bates-initialize-props file-range " " page)))))
+
+  (search-backward ":DESCRIPTION:")
+  (end-of-line)
+  (insert " ")
 
   (search-backward ":DATE:")
   (end-of-line)
