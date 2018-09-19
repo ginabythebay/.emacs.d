@@ -291,8 +291,8 @@ PAGE will be used to calculate the bates number."
            (message "bts: %s" bts)
            (org-entry-put nil "BATES_START" (bates--format bts)))))
 
-     (org-entry-put nil "DATE" "")
-     (org-entry-put nil "DESCRIPTION" title))))
+     (org-entry-put nil "DESCRIPTION" title)
+     (org-entry-put nil "DATE" ""))))
 
 (defun bates-test ()
   "Do."
@@ -323,11 +323,11 @@ PAGE will be used to calculate the bates number."
        (let ((page (string-to-number (org-entry-get nil org-noter-property-note-location))))
          (bates-initialize-props file-range " " page)))))
 
-  (search-backward ":DESCRIPTION:")
+  (search-backward ":DATE:")
   (end-of-line)
   (insert " ")
 
-  (search-backward ":DATE:")
+  (search-backward ":DESCRIPTION:")
   (end-of-line)
   (insert " "))
 
