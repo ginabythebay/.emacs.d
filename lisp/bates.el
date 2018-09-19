@@ -477,7 +477,9 @@ Only available with PDF Tools."
 
                (org-noter--insert-heading level title)
 
-               (let (page (when location (org-noter--pretty-print-location location)))
+               (let ((page (if location
+                              (org-noter--pretty-print-location location)
+                            nil)))
                  (when page
                    (org-entry-put nil org-noter-property-note-location page))
                  (bates-initialize-props file-range title page))
