@@ -497,6 +497,33 @@ Only available with PDF Tools."
 
     (t (error "This command is only supported on PDF Tools")))))
 
+(defun bates--range (start end &optional prefix)
+  "Create a range for a pair of bates numbers.
+START is the first bates number.
+END is the second bates number.
+PREFIX is an optional prefix."
+  (let ((text (if (equal start end)
+                  start
+                (format "%s - %s" start end))))
+    (when prefix
+      (setq text (format "%s %s" prefix text)))
+    text))
+
+(ert-deftest bates--range ()
+  "Tests bates range."
+  (should (equal
+           (bates--range "794" "795")
+           "794 - 795"))
+  (should (equal
+           (bates--range "794" "794")
+           "794"))
+  (should (equal
+           (bates--range "794" "795" "AA")
+           "AA 794 - 795"))
+  (should (equal
+           (bates--range "794" "794" "AA")
+           "AA 794")))
+
 (defun bates--range-link (file bates-start bates-end &optional params)
   "Create an org mode link for a bates range.
 
@@ -573,10 +600,12 @@ PARAMS is an optional alist of url parameters."
                                  1
                                  (split-string
                                   (org-entry-get nil "BATES_START")))))
-          (org-entry-put nil "BATES_END" (bates--format
-                                          (create-bates-page
-                                           bates-prefix
-                                           (- prev-bates-start-no 1) nil)))
+          (let ((bates-end-no (- prev-bates-start-no 1)))
+            (org-entry-put nil "BATES_END" (bates--format
+                                            (create-bates-page
+                                             bates-prefix
+                                             bates-end-no nil)))
+            (org-entry-put nil "BATES" (bates--range bates-start-no bates-end-no bates-prefix)))
           (org-previous-visible-heading 1)
           (setq prev-bates-start-no bates-start-no)
           (setq page-no (org-entry-get nil "NOTER_PAGE")))
