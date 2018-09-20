@@ -24,6 +24,7 @@
 (global-set-key (kbd "C-2") 'gina-map)
 
 (define-key gina-map (kbd "j") 'join-line)
+(define-key gina-map (kbd "d") 'my-cleanup-region-date)
 
 (provide 'gina-keymap)
 ;;; gina-keymap.el ends here

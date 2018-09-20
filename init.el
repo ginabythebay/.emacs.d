@@ -155,10 +155,6 @@ the syntax class ')'."
   (setq projectile-create-missing-test-files t)
   (setq projectile-switch-project-action #'projectile-commander))
 
-(use-package gina-keymap
-  :load-path "lisp"
-  :ensure nil)
-
 (use-package multiple-cursors
   :ensure t
   :demand
@@ -707,6 +703,28 @@ the syntax class ')'."
       (ps-despool filename)
       (message "Wrote %d agenda entries to %s" cnt filename))))
 
+(defun my-cleanup-region-date ()
+  "Convert text in region to an org mode date and replace it."
+  (interactive)
+  (unless (use-region-p)
+    (user-error
+     "Command my-cleanup-region-date only works with an active region"))
+  (let* ((bounds (cons (region-beginning) (region-end)))
+         (text
+          (org-read-date
+           nil
+           nil
+           (buffer-substring-no-properties (car bounds) (cdr bounds)))))
+    (delete-region (car bounds) (cdr bounds))
+    (insert text)
+
+    (when (org-at-timestamp-p 'lax)
+      (org-timestamp-change 0 'day))))
+
+
+(use-package gina-keymap
+  :load-path "lisp"
+  :ensure nil)
 
 (server-start)
 
