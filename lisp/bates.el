@@ -266,6 +266,11 @@ Optional parameter SHORT means to use short form."
 
 (global-set-key "\C-b" 'bates-copy-or-paste)
 
+(defun ile--set-props (props)
+  "Iterate through PROPS which is expected to be a list of cons cells and set them."
+  (cl-loop for p in props do
+           (org-entry-put nil (car p) (cdr p))))
+
 (defun bates-initialize-props (file-range title &optional page)
   "Initialize properties for the current entry.
 FILE-RANGE comes from the base filename.
@@ -291,8 +296,11 @@ PAGE will be used to calculate the bates number."
            (message "bts: %s" bts)
            (org-entry-put nil "BATES_START" (bates--format bts)))))
 
-     (org-entry-put nil "DESCRIPTION" title)
-     (org-entry-put nil "DATE" ""))))
+     (ile--set-props
+      `( ("DESCRIPTION" . ,title)
+         ("DATE" . "")
+         ("REVISIT" . "")
+         ("NOTES" . ""))))))
 
 (defun bates-test ()
   "Do."
