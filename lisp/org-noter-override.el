@@ -163,11 +163,13 @@ defines if the text should be inserted inside the note."
 
 (defun ile--find-one-match (text)
   "Find first span within TEXT with match face or blank string if nothing found."
-  (let* ((start (next-single-property-change 0 'face text))
-         (end (next-single-property-change start 'face text)))
-    (if (and start end)
-        (substring text start end)
-      "")))
+  (let ((start (next-single-property-change 0 'face text))
+        (end))
+    (when start
+      (setq end (next-single-property-change start 'face text)))
+    (unless start
+      (setq start 0))
+    (substring text start end)))
 
 (defun ile-org-noter-dates ()
   "Find dates in the current document page and prompts the user to pick one, \
@@ -178,15 +180,15 @@ then insert it in the notes buffer."
      (with-current-buffer doc-buffer
        (let* ((page (car (org-noter--doc-approx-location)))
               (all-results (pdf-info-search-regexp
-                            ;;"\\d{4}"
-                            "\\b[a-zA-Z]+\\s+\\d{1,2},?\\s+\\d{4}\\b"
-                            ;;"[a-zA-Z]+\\s+\\d{1,2},?\\s+\\d{4}"
+                            "\\b([a-zA-Z]+\\s+\\d{1,2},?\\s*\\d{4})|(\\d{1,2}/\\d{1,2}/\\d{4})\\b"
+                            ;;"[a-zA-Z]+\\s+\\d{1,2},?\\s*\\d{4}"
                             page
                             'invalid-regexp
                             doc-buffer))
               (all-date-texts
                (mapcar
-                (lambda (x) (ile--find-one-match (let-alist x .text)))
+                (lambda (x)
+                  (ile--find-one-match (let-alist x .text)))
                 all-results)))
 
          (let ((choice
