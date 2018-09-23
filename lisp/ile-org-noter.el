@@ -92,12 +92,13 @@ then insert it in the notes buffer."
          (org-entry-put nil "DESCRIPTION" description)
          (org-entry-put nil "DATE" date)))))))
 
-
 (defun ile-insert-and-dup ()
   "Run bates-insert-note and then ile-duplicate."
   (interactive)
-  (bates-insert-note)
-  (ile-duplicate))
+  (org-noter--with-valid-session
+   (save-excursion
+     (bates-insert-note)
+     (ile-duplicate))))
 
 (provide 'ile-org-noter)
 ;;; ile-org-noter.el ends here
