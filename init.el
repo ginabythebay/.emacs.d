@@ -595,6 +595,10 @@ the syntax class ')'."
   :load-path "lisp"
   :ensure nil)
 
+(use-package ile-org-noter
+  :load-path "lisp"
+  :ensure nil)
+
 (require 'org-collector)
 
 (use-package helm

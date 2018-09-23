@@ -14,9 +14,9 @@
 
 ;; code goes here
 
-(require 'org-noter)
-
+(require 'cl-lib)
 (require 'let-alist)
+(require 'org-noter)
 
 (defun ile--find-one-match (text)
   "Find first span within TEXT with match face or blank string if nothing found."
@@ -57,6 +57,47 @@ then insert it in the notes buffer."
                         "undated"
                       (org-read-date nil nil choice))))))))))
 
+
+(defun ile-duplicate ()
+  "Prompt the user for an entry and treat the current entry as a duplicate of that."
+  (interactive)
+  (org-noter--with-valid-session
+   (with-current-buffer (org-noter--session-notes-buffer session)
+     (let ((chosen))
+       (save-excursion
+         (org-back-to-heading 1)
+
+         (let ((choices
+                (cl-loop with page-no = 0
+                         with description = ""
+                         while t do
+                           (org-previous-visible-heading 1)
+                           (setq page-no (org-entry-get nil "NOTER_PAGE"))
+                           (setq description (org-entry-get nil "DESCRIPTION"))
+                         if (not page-no)
+                           return temp
+                         else
+                          if (not (string-prefix-p "dup of" description t))
+                            collect (format
+                                     "Dup of %s %s|%s"
+                                     (org-entry-get nil "BATES_START")
+                                     description
+                                     (org-entry-get nil "DATE")) into temp)))
+           (setq chosen (completing-read "Duplicate of" choices))))
+
+       (if (not (string-match "^\\(.*\\)|\\(.*\\)$" chosen))
+           (error "Internal error parsing %s" chosen)
+         (let ((description (match-string 1 chosen))
+               (date (match-string 2 chosen)))
+         (org-entry-put nil "DESCRIPTION" description)
+         (org-entry-put nil "DATE" date)))))))
+
+
+(defun ile-insert-and-dup ()
+  "Run bates-insert-note and then ile-duplicate."
+  (interactive)
+  (bates-insert-note)
+  (ile-duplicate))
 
 (provide 'ile-org-noter)
 ;;; ile-org-noter.el ends here

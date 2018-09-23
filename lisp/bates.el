@@ -341,8 +341,8 @@ PAGE will be used to calculate the bates number."
 
 (eval-after-load "org-noter"
   '(progn
-  (define-key org-noter-doc-mode-map (kbd   "i") 'bates-insert-note)
-  (define-key org-noter-notes-mode-map (kbd   "C-d") 'ile-org-noter-dates)))
+     (define-key org-noter-doc-mode-map (kbd   "i") 'bates-insert-note)
+     (define-key org-noter-doc-mode-map (kbd   "d") 'ile-insert-and-dup)))
 
 (defun bates-create-skeleton ()
   "Create notes skeleton with the PDF outline or annotations.
