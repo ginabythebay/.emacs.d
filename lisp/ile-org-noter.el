@@ -21,7 +21,16 @@
 (defconst ile-pdf-date-regexp
   (eval-when-compile
     (concat
-     "\\b([a-zA-Z]+\\s+\\d{1,2},?\\s*\\d{4})|(\\d{1,2}/\\d{1,2}/\\d{4})\\b"
+     "\\b"
+     ;; e.g. August 13, 1984
+     "([a-zA-Z]+\\s+\\d{1,2},?\\s+\\d{4})"
+     ;; e.g. 03/04/2014
+     "|"
+     "(\\d{1,2}/\\d{1,2}/\\d{4})"
+     ;; e.g. 04 Jan 16
+     "|"
+     "(\\d{1,2}\\s+[a-zA-Z]{3,}\\s+\\d{2}|\\d{4})"
+     "\\b"
      )))
 
 (defun ile--find-one-match (text)
