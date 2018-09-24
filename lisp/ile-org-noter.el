@@ -18,6 +18,12 @@
 (require 'let-alist)
 (require 'org-noter)
 
+(defconst ile-pdf-date-regexp
+  (eval-when-compile
+    (concat
+     "\\b([a-zA-Z]+\\s+\\d{1,2},?\\s*\\d{4})|(\\d{1,2}/\\d{1,2}/\\d{4})\\b"
+     )))
+
 (defun ile--find-one-match (text)
   "Find first span within TEXT with match face or blank string if nothing found."
   (let ((start (next-single-property-change 0 'face text))
@@ -37,8 +43,7 @@ then insert it in the notes buffer."
      (with-current-buffer doc-buffer
        (let* ((page (car (org-noter--doc-approx-location)))
               (all-results (pdf-info-search-regexp
-                            "\\b([a-zA-Z]+\\s+\\d{1,2},?\\s*\\d{4})|(\\d{1,2}/\\d{1,2}/\\d{4})\\b"
-                            ;;"[a-zA-Z]+\\s+\\d{1,2},?\\s*\\d{4}"
+                            ile-pdf-date-regexp
                             page
                             'invalid-regexp
                             doc-buffer))
@@ -98,7 +103,8 @@ then insert it in the notes buffer."
   (org-noter--with-valid-session
    (save-excursion
      (bates-insert-note)
-     (ile-duplicate))))
+     (ile-duplicate)
+     (pop-to-buffer (org-noter--session-doc-buffer session)))))
 
 (provide 'ile-org-noter)
 ;;; ile-org-noter.el ends here
