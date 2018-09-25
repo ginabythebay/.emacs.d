@@ -290,7 +290,6 @@ PAGE will be used to calculate the bates number."
 
          (let ((bts (create-bates-page
                      (bates-page-prefix start) (- (+ page (bates-page-no start)) 1) nil)))
-           (message "bts: %s" bts)
            (org-entry-put nil "BATES_START" (bates--format bts)))))
 
      (ile--set-props
