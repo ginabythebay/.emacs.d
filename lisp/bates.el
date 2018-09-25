@@ -177,7 +177,7 @@ Optional parameter SHORT means to use short form."
          (end (nth 1 file-range))
          (expected-pdf-pages (bates--expected-pdf-pages file-range)))
     (unless (equal expected-pdf-pages (pdf-cache-number-of-pages))
-      (user-error "Based on a start of `%s' and an end of %d, we expected %d pages but found %d"
+      (user-error "Based on a start of `%s' and an end of `%s', we expected %d pages but found %d"
                   start end expected-pdf-pages (pdf-cache-number-of-pages)))
 
     (cl-incf (bates-page-no start) (- (pdf-view-current-page) 1))
@@ -282,13 +282,10 @@ PAGE will be used to calculate the bates number."
        (let ((start (nth 0 file-range))
              (end (nth 1 file-range))
              (expected-pdf-pages (bates--expected-pdf-pages file-range)))
-         (message "start: %s" start)
-         (message "end: %s" end)
-         (message "expected: %s" expected-pdf-pages)
 
          (with-current-buffer (org-noter--session-doc-buffer session)
            (unless (equal expected-pdf-pages (pdf-cache-number-of-pages))
-             (user-error "Based on a start of `%s' and an end of %d, we expected %d pages but found %d"
+             (user-error "Based on a start of `%s' and an end of `%s', we expected %d pages but found %d"
                          start end expected-pdf-pages (pdf-cache-number-of-pages))))
 
          (let ((bts (create-bates-page
