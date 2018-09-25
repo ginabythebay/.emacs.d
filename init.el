@@ -408,6 +408,7 @@ the syntax class ')'."
 (use-package flycheck
   :ensure t
   :config
+    (setq flycheck-global-modes '(not org-mode))
     (global-flycheck-mode)
     (setq flycheck-go-vet-shadow t))
 
