@@ -174,6 +174,49 @@ the syntax class ')'."
               ("Y" . dired-ranger-paste)
 	      ("`" . dired-ranger-bookmark-visit)))
 
+
+(defun my-kill-all-pdf-view-buffers ()
+  "Iterate through all buffers and kill the ones with major mode pdf-view-mode."
+  (interactive)
+  (let ((buffers (buffer-list)))
+    (while buffers
+      (with-current-buffer (car buffers)
+        (when (string= "pdf-view-mode" major-mode)
+          (kill-buffer)))
+      (setq buffers (cdr buffers)))))
+
+(defun my-wdired-finish-edit ()
+  "Kill any open pdf view buffers then call wdired-finish-edit."
+  (interactive)
+  (my-kill-all-pdf-view-buffers)
+  (wdired-finish-edit))
+
+(defun my-dired-display-file ()
+  "Open file cursor is on in other window and return to current window."
+  (interactive)
+  (let ((orig-window (selected-window)))
+    (dired-find-file-other-window)
+    (select-window orig-window)))
+
+
+(defun my-dired-move-beginning-line ()
+  "Move point to beginning of file name or beginning of line.
+Inspired by crux-beginning-of-line."
+  (interactive)
+  (let ((orig-point (point)))
+    (dired-move-to-filename)
+    (when (= orig-point (point))
+      (move-beginning-of-line 1))))
+
+(require 'wdired)
+(add-hook 'wdired-mode-hook
+           (lambda ()
+	     (local-set-key (kbd "C-a") 'my-dired-move-beginning-line)
+	     (local-set-key (kbd "C-o") 'my-dired-display-file)
+	     (local-set-key (kbd "C-c C-c") 'my-wdired-finish-edit)))
+
+(advice-add 'dired-do-flagged-delete :before (lambda (&optional blah) (my-kill-all-pdf-view-buffers)))
+
 ;; This package is a little janky, but probably better than me doing it all manually
 ;; Under the covers, this runs shell initialization, and copies the values of the resulting
 ;; environment variables back up into emacs.  Useful in the land of mac, where
@@ -564,6 +607,9 @@ the syntax class ')'."
   (setq org-latex-default-table-environment "longtable")
   (setq org-table-copy-increment nil)
 
+  (setq org-use-speed-commands
+      (lambda () (and (looking-at org-outline-regexp) (looking-back "^\**"))))
+
   (setq org-file-apps
         '(("\\.docx\\'" . default)
           ("\\.mm\\'" . default)
@@ -726,6 +772,11 @@ the syntax class ')'."
     (when (org-at-timestamp-p 'lax)
       (org-timestamp-change 0 'day))))
 
+(defun my-find-org-agenda-files ()
+  "Find all agenda files."
+  (interactive)
+  (dolist (f org-agenda-files)
+    (find-file-noselect f)))
 
 (use-package gina-keymap
   :load-path "lisp"
@@ -746,7 +797,7 @@ the syntax class ')'."
 ;; (ac-config-default)
 ;;
 ;; (autoload 'gtags-mode "gtags" "" t)
-;; 
+;;
 ;; (require 'deft)
 ;; (setq deft-directory "/home/gina/docs/deft")
 ;; (setq deft-extension "org")

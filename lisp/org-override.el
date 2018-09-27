@@ -194,5 +194,115 @@ Any match of REMOVE-RE will be removed from TXT."
 	  'format org-prefix-format-compiled
 	  'dotime dotime)))))
 
+
+(defmacro org-odt--export-wrap (out-file &rest body)
+  `(let* ((--out-file ,out-file)
+	  (out-file-type (file-name-extension --out-file))
+	  (org-odt-xml-files '("META-INF/manifest.xml" "content.xml"
+			       "meta.xml" "styles.xml"))
+	  ;; Initialize temporary workarea.  All files that end up in
+	  ;; the exported document get parked/created here.
+	  (org-odt-zip-dir (file-name-as-directory
+			    (make-temp-file (format "%s-" out-file-type) t)))
+	  (org-odt-manifest-file-entries nil)
+	  (--cleanup-xml-buffers
+	   (lambda ()
+	     ;; Kill all XML buffers.
+	     (dolist (file org-odt-xml-files)
+	       (let ((buf (find-buffer-visiting
+			   (concat org-odt-zip-dir file))))
+		 (when buf
+		   (with-current-buffer buf
+		     (set-buffer-modified-p nil)
+		     (kill-buffer buf)))))
+	     ;; Delete temporary directory and also other embedded
+	     ;; files that get copied there.
+	     (delete-directory org-odt-zip-dir t))))
+     (condition-case err
+	 (progn
+	   (unless (executable-find "7za")
+	     ;; Not at all OSes ship with zip by default
+	     (error "Executable \"7za\" needed for creating OpenDocument files"))
+	   ;; Do export.  This creates a bunch of xml files ready to be
+	   ;; saved and zipped.
+	   (progn ,@body)
+	   ;; Create a manifest entry for content.xml.
+	   (org-odt-create-manifest-file-entry "text/xml" "content.xml")
+	   ;; Write mimetype file
+	   (let* ((mimetypes
+		   '(("odt" . "application/vnd.oasis.opendocument.text")
+		     ("odf" .  "application/vnd.oasis.opendocument.formula")))
+		  (mimetype (cdr (assoc-string out-file-type mimetypes t))))
+	     (unless mimetype
+	       (error "Unknown OpenDocument backend %S" out-file-type))
+	     (write-region mimetype nil (concat org-odt-zip-dir "mimetype"))
+	     (org-odt-create-manifest-file-entry mimetype "/" "1.2"))
+	   ;; Write out the manifest entries before zipping
+	   (org-odt-write-manifest-file)
+	   ;; Save all XML files.
+	   (dolist (file org-odt-xml-files)
+	     (let ((buf (find-buffer-visiting
+			 (concat org-odt-zip-dir file))))
+	       (when buf
+		 (with-current-buffer buf
+		   ;; Prettify output if needed.
+		   (when org-odt-prettify-xml
+		     (indent-region (point-min) (point-max)))
+		   (save-buffer 0)))))
+	   ;; Run zip.
+	   (let* ((target --out-file)
+		  (target-name (file-name-nondirectory target))
+		  (cmds `(("7za" "-mx=0" ,target-name "mimetype")
+			  ("7za" "-r -sdel -y" ,target-name "."))))
+	     ;; If a file with same name as the desired output file
+	     ;; exists, remove it.
+	     (when (file-exists-p target)
+	       (delete-file target))
+	     ;; Zip up the xml files.
+	     (let ((coding-system-for-write 'no-conversion) exitcode err-string)
+	       (message "Creating ODT file...")
+	       ;; Switch temporarily to content.xml.  This way Zip
+	       ;; process will inherit `org-odt-zip-dir' as the current
+	       ;; directory.
+	       (with-current-buffer
+		   (find-file-noselect (concat org-odt-zip-dir "content.xml") t)
+		 (dolist (cmd cmds)
+		   (message "Running %s" (mapconcat 'identity cmd " "))
+		   (setq err-string
+			 (with-output-to-string
+			   (setq exitcode
+				 (apply 'call-process (car cmd)
+					nil standard-output nil (cdr cmd)))))
+		   (or (zerop exitcode)
+		       (error (concat "Unable to create OpenDocument file."
+				      "  Zip failed with error (%s)")
+			      err-string)))))
+	     ;; Move the zip file from temporary work directory to
+	     ;; user-mandated location.
+	     (rename-file (concat org-odt-zip-dir target-name) target)
+	     (message "Created %s" (expand-file-name target))
+	     ;; Cleanup work directory and work files.
+	     (funcall --cleanup-xml-buffers)
+	     ;; Open the OpenDocument file in archive-mode for
+	     ;; examination.
+	     (find-file-noselect target t)
+	     ;; Return exported file.
+	     (cond
+	      ;; Case 1: Conversion desired on exported file.  Run the
+	      ;; converter on the OpenDocument file.  Return the
+	      ;; converted file.
+	      (org-odt-preferred-output-format
+	       (or (org-odt-convert target org-odt-preferred-output-format)
+		   target))
+	      ;; Case 2: No further conversion.  Return exported
+	      ;; OpenDocument file.
+	      (t target))))
+       (error
+	;; Cleanup work directory and work files.
+	(funcall --cleanup-xml-buffers)
+	(message "OpenDocument export failed: %s"
+		 (error-message-string err))))))
+
+
 (provide 'org-override)
 ;;; org-override.el ends here
