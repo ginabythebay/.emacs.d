@@ -215,7 +215,13 @@ Inspired by crux-beginning-of-line."
 	     (local-set-key (kbd "C-o") 'my-dired-display-file)
 	     (local-set-key (kbd "C-c C-c") 'my-wdired-finish-edit)))
 
-(advice-add 'dired-do-flagged-delete :before (lambda (&optional blah) (my-kill-all-pdf-view-buffers)))
+(advice-add
+ 'dired-do-flagged-delete
+ :before (lambda (&optional blah) (my-kill-all-pdf-view-buffers)))
+
+(advice-add
+ 'dired-ranger-move
+ :before (lambda (&optional blah) (my-kill-all-pdf-view-buffers)))
 
 ;; This package is a little janky, but probably better than me doing it all manually
 ;; Under the covers, this runs shell initialization, and copies the values of the resulting
