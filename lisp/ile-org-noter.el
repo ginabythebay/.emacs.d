@@ -24,6 +24,9 @@
      "\\b"
      ;; e.g. August 13, 1984
      "([a-zA-Z]+\\s+\\d{1,2},?\\s+\\d{4})"
+     ;; e.g. August 06 , 1984
+     "|"
+     "([a-zA-Z]+\\s+\\d{1,2}\\s*,\\s+\\d{4})"
      ;; e.g. 03/04/2014
      "|"
      "(\\d{1,2}/\\d{1,2}/\\d{4})"
@@ -62,6 +65,7 @@ then insert it in the notes buffer."
                   (ile--find-one-match (let-alist x .text)))
                 all-results)))
 
+         (message "%s" all-results)
          (let ((choice
                 (completing-read
                  (format "date for page %d" page)
