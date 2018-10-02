@@ -648,7 +648,12 @@ Inspired by crux-beginning-of-line."
   :load-path "lisp"
   :ensure nil)
 
+;; TODO(gina) Figure out how to combine these into a single package.
+;; See https://www.gnu.org/software/emacs/manual/html_node/elisp/Packaging.html#Packaging
 (use-package ile-org-noter
+  :load-path "lisp"
+  :ensure nil)
+(use-package ile-pdf-separate
   :load-path "lisp"
   :ensure nil)
 
