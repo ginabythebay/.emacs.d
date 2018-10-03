@@ -793,7 +793,8 @@ Inspired by crux-beginning-of-line."
   :load-path "lisp"
   :ensure nil)
 
-(server-start)
+(unless noninteractive
+  (server-start))
 
 
 (provide 'init)
