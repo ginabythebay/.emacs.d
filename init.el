@@ -797,6 +797,39 @@ Inspired by crux-beginning-of-line."
   (dolist (f org-agenda-files)
     (find-file-noselect f)))
 
+;; adapted from https://emacs.stackexchange.com/questions/2259/how-to-export-top-level-headings-of-org-mode-buffer-to-separate-files
+(defun my-org-export-all-html (pub-dir)
+  "Export all subtrees that are tagged with :export: to separate files.
+
+PUB-DIR is the directory to publish to.
+
+Subtrees that do not have the :EXPORT_FILE_NAME: property set
+are exported to a filename derived from the headline text."
+  (interactive "DPublish directory: ")
+  (let ((fn 'org-html-export-to-html)
+        (modifiedp (buffer-modified-p)))
+    (save-excursion
+      (org-map-entries
+       (lambda ()
+         (let* ((orig-export-file (org-entry-get (point) "EXPORT_FILE_NAME"))
+                (new-export-file
+                 (if orig-export-file
+                     (concat pub-dir (file-name-nondirectory orig-export-file))
+                   (concat
+                    pub-dir
+                    (file-name-nondirectory
+                     (replace-regexp-in-string
+                      " "
+                      "_"
+                      (nth 4 (org-heading-components))))))))
+             (org-set-property "EXPORT_FILE_NAME" new-export-file)
+             (funcall fn nil t)
+             (if orig-export-file
+                 (org-set-property "EXPORT_FILE_NAME" orig-export-file)
+               (org-delete-property "EXPORT_FILE_NAME"))
+           (set-buffer-modified-p modifiedp)))
+       "+export" 'file))))
+
 (use-package gina-keymap
   :load-path "lisp"
   :ensure nil)
