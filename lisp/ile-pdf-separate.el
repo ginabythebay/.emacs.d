@@ -71,6 +71,46 @@ an end page."
              ile-pdf-separate--output-buffer)))
   (message "Extracted pages to %s" (file-name-nondirectory out-file)))
 
+(defun ile-pdf--parse-page-ranges (page-ranges)
+  "Parse PAGE-RANGES.
+PAGE-RANGES will be converted to the form expected by
+'ile-pdf--extract-pages.  If PAGE-RANGES is already a list,
+it will be returned as-is."
+  (if (listp page-ranges)
+      page-ranges
+    (let ((tokens (split-string page-ranges ";" t "[[:space:]]+")))
+      (cl-loop
+       for tks in tokens
+       collect
+       (if (string-match-p "^[[:digit:]]+$" tks)
+           (cons (string-to-number tks) (string-to-number tks))
+         (let ((pages (split-string tks "-" t "[[:space:]]+")))
+           (unless (equal (length pages) 2)
+             (user-error "Unable to parse [%s] as a range of pages in [%s].  Expected 2 numbers separated by a - character" pages page-ranges))
+           (cons
+            (string-to-number (nth 0 pages))
+            (string-to-number (nth 1 pages)))))))))
+
+(ert-deftest ile-pdf--parse-page-ranges ()
+  "Test page range parsing."
+  (should (equal
+           '((7 . 9) (12 . 44))
+           (ile-pdf--parse-page-ranges "7-9; 12- 44")))
+  (should (equal
+           '((40 . 40))
+           (ile-pdf--parse-page-ranges "40"))))
+
+
+(defun ile-pdf-extract-pages (out-file page-ranges)
+  "Extract pages after prompting the user for what to extract.
+OUT-FILE is the name of the file to write to.
+PAGE-RANGES is one or more page ranges, separated by a semicolon.
+Each page range can be a single page number of two pages
+separated by a dash (-)."
+  (interactive "FOutput file: \nMPage ranges (e.g. 1-9; 13; 45-70) ")
+  (let ((page-ranges (ile-pdf--parse-page-ranges page-ranges))
+        (in-file (buffer-file-name)))
+    (ile-pdf--extract-pages in-file page-ranges out-file)))
 
 ;; The stuff below is just some working code I can hack on later
 

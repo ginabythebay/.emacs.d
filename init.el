@@ -545,7 +545,11 @@ Inspired by crux-beginning-of-line."
  ;; open pdfs scaled to fit page
  (setq-default pdf-view-display-size 'fit-page)
  ;; automatically annotate highlights
- (setq pdf-annot-activate-created-annotations t))
+ (setq pdf-annot-activate-created-annotations t)
+
+ (bind-keys
+  :map pdf-view-mode-map
+  ("G" . pdf-view-last-page)))
 
 (use-package htmlize)
 
@@ -655,7 +659,11 @@ Inspired by crux-beginning-of-line."
   :ensure nil)
 (use-package ile-pdf-separate
   :load-path "lisp"
-  :ensure nil)
+  :ensure nil
+  :config
+  (bind-keys
+   :map pdf-view-mode-map
+   ("e" . ile-pdf-extract-pages)))
 
 (require 'org-collector)
 
