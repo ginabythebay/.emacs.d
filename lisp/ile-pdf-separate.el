@@ -57,7 +57,9 @@ OUT-FILE will be overwritten if it already exists.
 PAGE-RANGES is expected to be a list and defines which pages to extract.
 Each entry of PAGE-RANGES should be a cons cell with a start page and
 an end page."
-  (kill-buffer ile-pdf-separate--output-buffer)
+  (when (get-buffer ile-pdf-separate--output-buffer)
+    (kill-buffer ile-pdf-separate--output-buffer))
+
   (let* ((args (ile-pdf--extract-pages-args in-file page-ranges out-file))
          (status (apply
                   #'call-process
@@ -107,7 +109,14 @@ OUT-FILE is the name of the file to write to.
 PAGE-RANGES is one or more page ranges, separated by a semicolon.
 Each page range can be a single page number of two pages
 separated by a dash (-)."
-  (interactive "FOutput file: \nMPage ranges (e.g. 1-9; 13; 45-70) ")
+  (interactive
+   (list
+    (read-file-name "Output file: ")
+    (read-string (format "Page ranges e.g. 1-9; 13; 45-70.  Default %d: " (pdf-view-current-page))
+                 nil
+                 nil
+                 (number-to-string (pdf-view-current-page)))))
+  ;;(interactive "FOutput file: \nMPage ranges (e.g. 1-9; 13; 45-70) ")
   (let ((page-ranges (ile-pdf--parse-page-ranges page-ranges))
         (in-file (buffer-file-name)))
     (ile-pdf--extract-pages in-file page-ranges out-file)))
