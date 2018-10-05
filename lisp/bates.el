@@ -104,6 +104,10 @@ decoding it into ('PITCHESS' 10229 10736)."
            (list (create-bates-page "COB" 2421 nil)
                  (create-bates-page "COB" 3964 nil))))
   (should (equal
+           (bates--decode-bates-range "GANTT 563-894 Communications, etc")
+           (list (create-bates-page "GANTT" 563 nil)
+                 (create-bates-page "GANTT" 894 nil))))
+  (should (equal
            (bates--decode-bates-range "16-0433 PITCHESS 10229-10736")
            (list (create-bates-page "PITCHESS" 10229 nil)
                  (create-bates-page "PITCHESS" 10736 nil)))))
