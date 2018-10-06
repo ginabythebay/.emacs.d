@@ -153,7 +153,9 @@ the syntax class ')'."
   :config
   (projectile-mode t)
   (setq projectile-create-missing-test-files t)
-  (setq projectile-switch-project-action #'projectile-commander))
+  (setq projectile-switch-project-action #'projectile-commander)
+  :bind-keymap
+  ("M-p" . projectile-command-map))
 
 (use-package multiple-cursors
   :ensure t
