@@ -154,6 +154,7 @@ the syntax class ')'."
   (projectile-mode t)
   (setq projectile-create-missing-test-files t)
   (setq projectile-switch-project-action #'projectile-commander)
+  (setq projectile-completion-system 'helm)
   :bind-keymap
   ("M-p" . projectile-command-map))
 
@@ -684,6 +685,8 @@ Inspired by crux-beginning-of-line."
 
 (use-package helm-projectile
   :ensure t
+  :config
+  (helm-projectile-on)
 )
 
 (global-set-key [f2] 'mode-line-other-buffer)
@@ -698,7 +701,7 @@ Inspired by crux-beginning-of-line."
 
 (setenv "LANG" "en_US")
 (setq ispell-really-hunspell t)
-(setq ispell-program-name "hunspell.exe")
+(setq ispell-program-name "hunspell")
 (setq ispell-dictionary "en_US")
 
 (delete-selection-mode t)
