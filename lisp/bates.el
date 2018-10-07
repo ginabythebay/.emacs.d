@@ -64,7 +64,7 @@ found, the numeric portions must have the same length" name))
             "16-0433 PITCHESS 0010229-0010736" "0010229" "0010736")
            7)))
 
-(defun bates--decode-bates-range (name)
+(defun bates-parse-filename-to-range (name)
   "Decodes a NAME like 'COB0002421-COB0003964' into ('COB' 2421 3964).
 Can also handle something like '16-0433 PITCHESS 10229-10736', \
 decoding it into ('PITCHESS' 10229 10736)."
@@ -89,26 +89,26 @@ decoding it into ('PITCHESS' 10229 10736)."
                   ))
           (t (user-error "Unable to decode `%s': Expected something like COB0002421-COB0003964" name)))))
 
-(ert-deftest bates--decode-bates-range ()
+(ert-deftest bates-parse-filename-to-range ()
   "Tests bates file base name decoding"
   (should (equal
-           (bates--decode-bates-range "COB0002421-COB0003964")
+           (bates-parse-filename-to-range "COB0002421-COB0003964")
            (list (create-bates-page "COB" 2421 7)
                  (create-bates-page "COB" 3964 7))))
   (should (equal
-           (bates--decode-bates-range "COB0002421 - COB0003964")
+           (bates-parse-filename-to-range "COB0002421 - COB0003964")
            (list (create-bates-page "COB" 2421 7)
                  (create-bates-page "COB" 3964 7))))
   (should (equal
-           (bates--decode-bates-range "COB2421-COB3964")
+           (bates-parse-filename-to-range "COB2421-COB3964")
            (list (create-bates-page "COB" 2421 nil)
                  (create-bates-page "COB" 3964 nil))))
   (should (equal
-           (bates--decode-bates-range "GANTT 563-894 Communications, etc")
+           (bates-parse-filename-to-range "GANTT 563-894 Communications, etc")
            (list (create-bates-page "GANTT" 563 nil)
                  (create-bates-page "GANTT" 894 nil))))
   (should (equal
-           (bates--decode-bates-range "16-0433 PITCHESS 10229-10736")
+           (bates-parse-filename-to-range "16-0433 PITCHESS 10229-10736")
            (list (create-bates-page "PITCHESS" 10229 nil)
                  (create-bates-page "PITCHESS" 10736 nil)))))
 
@@ -153,7 +153,7 @@ Optional parameter SHORT means to use short form."
                   (create-bates-page "COB" 2424 nil))))))
 
 (defun bates--ring-new (e)
-  "Add E to bates--ring, ensuring only 2 items at most are retained."
+  "Add E to ‘bates--ring’, ensuring only 2 items at most are retained."
   (setq bates--ring (append  bates--ring (list e)))
   (when (> (length bates--ring) 2)
     (setq bates--ring (seq-subseq bates--ring -2))))
@@ -175,8 +175,8 @@ Optional parameter SHORT means to use short form."
   (should (equal 2425 (bates-page-no (car (last bates--ring))))))
 
 (defun bates--copy ()
-  "Copy the current bates entry to the bates--ring."
-  (let* ((file-range (bates--decode-bates-range(file-name-base (buffer-file-name))))
+  "Copy the current bates entry to the ‘bates--ring’."
+  (let* ((file-range (bates-parse-filename-to-range(file-name-base (buffer-file-name))))
          (start (nth 0 file-range))
          (end (nth 1 file-range))
          (expected-pdf-pages (bates--expected-pdf-pages file-range)))
@@ -191,7 +191,7 @@ Optional parameter SHORT means to use short form."
     (message "stored %s" (bates--format start))))
 
 (defun bates--ordered-ring ()
-  "Return the contents of the bates--ring in order."
+  "Return the contents of the ‘bates--ring’ in order."
   (let ((a (nth 0 bates--ring))
         (b (nth 1 bates--ring)))
     (unless (equal (bates-page-prefix a) (bates-page-prefix b))
@@ -204,7 +204,7 @@ Optional parameter SHORT means to use short form."
       (list b a))))
 
 (defun bates--paste-text ()
-  "Get the text to paste based on the bates--ring."
+  "Get the text to paste based on the ‘bates--ring’."
   (unless (> (length bates--ring) 1)
     (user-error "Not enough entries.  Run this command in pdf-view-mode at least twice first"))
 
@@ -306,7 +306,7 @@ PAGE will be used to calculate the bates number."
   "Do."
   (interactive)
   (org-noter--with-valid-session
-   (let ((file-range (bates--decode-bates-range
+   (let ((file-range (bates-parse-filename-to-range
                       (file-name-base
                        (buffer-file-name
                         (org-noter--session-doc-buffer session))))))
@@ -318,10 +318,10 @@ PAGE will be used to calculate the bates number."
          (bates-initialize-props file-range "description" page))))))
 
 (defun bates-insert-note ()
-  "Run org-noter-insert-note and then insert the extra fields we care about."
+  "Run ‘org-noter-insert-note’ and then insert the extra fields we care about."
   (interactive)
   (org-noter--with-valid-session
-   (let ((file-range (bates--decode-bates-range
+   (let ((file-range (bates-parse-filename-to-range
                       (file-name-base
                        (buffer-file-name
                         (org-noter--session-doc-buffer session))))))
@@ -358,7 +358,7 @@ Only available with PDF Tools."
                        ("Both" . (outline annots))))
             answer output-data file-range)
        (with-current-buffer (org-noter--session-doc-buffer session)
-         (setq file-range (bates--decode-bates-range(file-name-base (buffer-file-name))))
+         (setq file-range (bates-parse-filename-to-range(file-name-base (buffer-file-name))))
 
          (setq answer (assoc (completing-read "What do you want to import? " options nil t) options))
 
