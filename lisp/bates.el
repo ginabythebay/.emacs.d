@@ -65,9 +65,10 @@ found, the numeric portions must have the same length" name))
            7)))
 
 (defun bates-parse-filename-to-range (name)
-  "Decodes a NAME like 'COB0002421-COB0003964' into ('COB' 2421 3964).
+  "Decode a NAME like 'COB0002421-COB0003964' into ('COB' 2421 3964).
 Can also handle something like '16-0433 PITCHESS 10229-10736', \
-decoding it into ('PITCHESS' 10229 10736)."
+decoding it into ('PITCHESS' 10229 10736).
+Return nil if the filename has an unexpected format."
   (let ((case-fold-search nil))
     (cond ((string-match "\\([A-Z]+\\)\\([0-9]+\\)[^A-Z]*\\([A-Z]+\\)\\([0-9]+\\)" name)
            (let* ((prefix1 (match-string 1 name))
@@ -87,7 +88,7 @@ decoding it into ('PITCHESS' 10229 10736)."
              (list (create-bates-page prefix (string-to-number start) width)
                    (create-bates-page prefix (string-to-number end ) width))
                   ))
-          (t (user-error "Unable to decode `%s': Expected something like COB0002421-COB0003964" name)))))
+          (t nil))))
 
 (ert-deftest bates-parse-filename-to-range ()
   "Tests bates file base name decoding"
@@ -176,19 +177,23 @@ Optional parameter SHORT means to use short form."
 
 (defun bates--copy ()
   "Copy the current bates entry to the ‘bates--ring’."
-  (let* ((file-range (bates-parse-filename-to-range(file-name-base (buffer-file-name))))
-         (start (nth 0 file-range))
-         (end (nth 1 file-range))
-         (expected-pdf-pages (bates--expected-pdf-pages file-range)))
-    (unless (equal expected-pdf-pages (pdf-cache-number-of-pages))
-      (user-error "Based on a start of `%s' and an end of `%s', we expected %d pages but found %d"
-                  start end expected-pdf-pages (pdf-cache-number-of-pages)))
+  (let* ((name (file-name-base (buffer-file-name)))
+         (file-range (bates-parse-filename-to-range name)))
+    (unless file-range
+      (user-error "Unable to decode `%s': Expected something like COB0002421-COB0003964" name))
 
-    (cl-incf (bates-page-no start) (- (pdf-view-current-page) 1))
-    (bates--ring-new start)
-    (setq bates--max-bates-no (bates-page-no end))
+    (let* ((start (nth 0 file-range))
+           (end (nth 1 file-range))
+           (expected-pdf-pages (bates--expected-pdf-pages file-range)))
+      (unless (equal expected-pdf-pages (pdf-cache-number-of-pages))
+               (user-error "Based on a start of `%s' and an end of `%s', we expected %d pages but found %d"
+                           start end expected-pdf-pages (pdf-cache-number-of-pages)))
 
-    (message "stored %s" (bates--format start))))
+      (cl-incf (bates-page-no start) (- (pdf-view-current-page) 1))
+      (bates--ring-new start)
+      (setq bates--max-bates-no (bates-page-no end))
+
+      (message "stored %s" (bates--format start)))))
 
 (defun bates--ordered-ring ()
   "Return the contents of the ‘bates--ring’ in order."
@@ -302,29 +307,16 @@ PAGE will be used to calculate the bates number."
          ("REVISIT" . "")
          ("NOTES" . ""))))))
 
-(defun bates-test ()
-  "Do."
-  (interactive)
-  (org-noter--with-valid-session
-   (let ((file-range (bates-parse-filename-to-range
-                      (file-name-base
-                       (buffer-file-name
-                        (org-noter--session-doc-buffer session))))))
-     (message "file range: %s" file-range)
-
-     (with-current-buffer (org-noter--session-notes-buffer session)
-       (let ((page (string-to-number (org-entry-get nil org-noter-property-note-location))))
-         (message "page: %s" page)
-         (bates-initialize-props file-range "description" page))))))
-
 (defun bates-insert-note ()
   "Run ‘org-noter-insert-note’ and then insert the extra fields we care about."
   (interactive)
   (org-noter--with-valid-session
-   (let ((file-range (bates-parse-filename-to-range
-                      (file-name-base
-                       (buffer-file-name
-                        (org-noter--session-doc-buffer session))))))
+   (let* ((name (file-name-base
+                 (buffer-file-name
+                  (org-noter--session-doc-buffer session))))
+          (file-range (bates-parse-filename-to-range name)))
+     (unless file-range
+       (user-error "Unable to decode `%s': Expected something like COB0002421-COB0003964" name))
      (org-noter-insert-note)
 
      (with-current-buffer (org-noter--session-notes-buffer session)
@@ -358,7 +350,10 @@ Only available with PDF Tools."
                        ("Both" . (outline annots))))
             answer output-data file-range)
        (with-current-buffer (org-noter--session-doc-buffer session)
-         (setq file-range (bates-parse-filename-to-range(file-name-base (buffer-file-name))))
+         (let ((name (file-name-base (buffer-file-name))))
+           (setq file-range (bates-parse-filename-to-range name))
+           (unless file-range
+             (user-error "Unable to decode `%s': Expected something like COB0002421-COB0003964" name)))
 
          (setq answer (assoc (completing-read "What do you want to import? " options nil t) options))
 
