@@ -113,6 +113,26 @@ Return nil if the filename has an unexpected format."
            (list (create-bates-page "PITCHESS" 10229 nil)
                  (create-bates-page "PITCHESS" 10736 nil)))))
 
+(defun bates-file-contains-p (f prefix no)
+  "Return t if F contain the page represented by PREFIX and NO."
+  (let ((range (bates-parse-filename-to-range (file-name-nondirectory f))))
+    (when (and range
+               (equal prefix (bates-page-prefix (nth 0 range)))
+               (<= (bates-page-no (nth 0 range))
+                   no
+                   (bates-page-no (nth 1 range))))
+      f)))
+
+(defun bates-find-page (f bates-no)
+  "Return the page in F where BATES-NO is.
+Returns nil if bates-no is not in F."
+  (let ((range (bates-parse-filename-to-range (file-name-nondirectory f))))
+    (when (and range
+               (<= (bates-page-no (nth 0 range))
+                   bates-no
+                   (bates-page-no (nth 1 range))))
+      (1+ (- bates-no (bates-page-no (nth 0 range)))))))
+
 (defun bates--format (val &optional short)
   "Format VAL for printing.
 Optional parameter SHORT means to use short form."

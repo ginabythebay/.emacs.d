@@ -669,6 +669,13 @@ Inspired by crux-beginning-of-line."
   (bind-keys
    :map pdf-view-mode-map
    ("e" . ile-pdf-extract-pages)))
+(use-package ile-discovery
+  :load-path "lisp"
+  :ensure nil
+  :config
+  (bind-keys
+   :map pdf-view-mode-map
+   ("b" . ile-jump-bates)))
 
 (require 'org-collector)
 

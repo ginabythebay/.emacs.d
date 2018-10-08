@@ -89,10 +89,7 @@ lists"
                 (append
                  (map-elt m1 k () #'equal)
                  (map-elt m2 k () #'equal))
-                #'ile--file-name-sort-p))
-      )
-    )
-  )
+                #'ile--file-name-sort-p)))))
 
 (ert-deftest ile--merge-discovery-lists ()
   "Tests grouping"
@@ -102,9 +99,9 @@ lists"
                ("OCA" "OCA 51-562.pdf" "OCA 1-50.pdf" "OCA 563-894.pdf"))
             '(("GANTT" "GANTT 51-51.pdf" "GANTT 1-50.pdf")
                ("OCA" "OCA 895-895.pdf")))
-           '(("GANTT" "GANTT 51-51.pdf" "GANTT 1-50.pdf")
-             ("OCA" "OCA 51-562.pdf" "OCA 1-50.pdf" "OCA 563-894.pdf" "OCA 895-895.pdf")
-             ("PITCHESS" "PITCHESS 51-51.pdf" "PITCHESS 1-50.pdf")))))
+           '(("GANTT" "GANTT 1-50.pdf" "GANTT 51-51.pdf")
+             ("OCA" "OCA 1-50.pdf" "OCA 51-562.pdf" "OCA 563-894.pdf" "OCA 895-895.pdf")
+             ("PITCHESS" "PITCHESS 1-50.pdf" "PITCHESS 51-51.pdf")))))
 
 (defun ile--find-case-productions (&optional project-dir)
   "Look for any pdf files that appear to be document productions in PROJECT-DIR.
@@ -146,7 +143,110 @@ All directory names will be compared in a case-insensitive way."
                   (directory-files (concat discovery-dir d) t)))))
         result))))
 
-(ile--find-case-productions "~/syb/Gantt/")
+(defun ile--united-name (files)
+  "Calculate the base name (without the directory) of the united file.
+
+FILES is expected to a be a list of file names in sorted order,
+with each being compatible with ‘bates-parse-filename-to-range’.
+If there are gaps in the file ranges, that is considered an
+error."
+
+  (let (prefix prev-end-no first-no prev-file)
+    (dolist (f files)
+      (let* ((range (bates-parse-filename-to-range f))
+             (start (nth 0 range))
+             (end (nth 1 range)))
+        (unless prefix
+          (setq prefix (bates-page-prefix start)))
+        (unless first-no
+          (setq first-no (bates-page-no start)))
+        (when prev-end-no
+          (unless (equal (1+ prev-end-no) (bates-page-no start))
+            (user-error "There is apparently a bates number gap before [%s].  Expected it to start with %s.  Previous file is [%s]" f (1+ prev-end-no)  prev-file)))
+
+        (setq prev-end-no (bates-page-no end))
+        (setq prev-file f)))
+    (format "united %s %d-%d.pdf" prefix first-no prev-end-no)))
+
+(ert-deftest ile--united-name ()
+  "Tests ile--united-name"
+  (should (equal
+           (ile--united-name '("OCA 17-24.pdf" "OCA 25-30.pdf" "OCA 31-50.pdf"))
+           "united OCA 17-50.pdf")))
+
+(defun ile--file-older-p (target dependencies)
+  "Return t if TARGET is older than any file in the DEPENDENCIES list."
+  (let ((target-time '(0 0 0 0))
+        (attributes (file-attributes target))
+        (result nil))
+    (when attributes
+      (setq target-time (nth 5 attributes)))
+
+    (cl-loop
+     for dep in dependencies
+     do (when (time-less-p target-time (nth 5 (file-attributes dep)))
+          (setq result t)))
+    result))
+
+(defun ile-make-united-discovery (&optional project-dir)
+  "Generate/Regenerate all united discovery files as needed.
+
+If a united discover file exists timestamps will be compared to
+see if it needs to be regenerated.  All files are placed in
+PROJECT-DIR/Discovery/united/.  If PROJECT-DIR is not
+specified, projectile will be consulted to determine it."
+  (interactive)
+  (unless project-dir
+    (setq project-dir (projectile-project-root)))
+  (let* ((all-productions (ile--find-case-productions project-dir))
+         (keys (map-keys all-productions))
+         (united-dir (concat project-dir "Discovery/united/"))
+         regenerated)
+    (dolist (k keys)
+      (let* ((dependencies (map-elt all-productions k () #'equal))
+             (united-file (ile--united-name dependencies)))
+        (when (ile--file-older-p (concat united-dir united-file) dependencies)
+          (push united-file regenerated)
+          (ile-pdf-unite (concat united-dir united-file) dependencies))))
+    (if regenerated
+        (message "(Re)generated %s" regenerated)
+      (message "Nothing to regenerate"))))
+
+(defun ile--file-united-file (prefix no project-dir)
+  "Find a united file.
+
+We look for files in PROJECT-DIR/Discovery/united that contains PREFIX and NO."
+  (let ((files (directory-files (concat project-dir "Discovery/united/") t)))
+    (cl-some (lambda (f) (bates-file-contains-p f prefix no)) files)))
+
+(defun ile-jump-discovery (bates &optional project-dir)
+  "Open united file matching BATES, jump to the correct page.
+
+If PROJECT-DIR is not specified, projectile will be consulted to
+determine it."
+  (interactive "MBates Number (like OCA 739): ")
+  (unless project-dir
+    (setq project-dir (projectile-project-root)))
+
+  (let ((tokens (split-string bates)))
+    (unless (equal 2 (length tokens))
+      (user-error "Unexpected bates value [%s].  Should be something like [OCA 739]" bates))
+
+    (let ((prefix (nth 0 tokens))
+          (no (string-to-number (nth 1 tokens))))
+      (when (equal 0 no)
+        (user-error "Unexpected bates value [%s].  Should be something like [OCA 739]" bates))
+
+      (let ((united-file (ile--file-united-file prefix no project-dir)))
+        (unless united-file
+          (user-error "Unable to find united file for %s" bates))
+        (find-file united-file)
+        (pdf-view-goto-page (bates-find-page united-file no))))))
+
+(defun ile-jump-bates (bates-no)
+  "Jump to the bates number specified by BATES-NO in the current pdf."
+  (interactive "nBates number: ")
+  (pdf-view-goto-page (bates-find-page (buffer-file-name) bates-no)))
 
 (provide 'ile-discovery)
 ;;; ile-discovery.el ends here

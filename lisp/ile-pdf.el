@@ -136,8 +136,7 @@ separated by a dash (-)."
                   args)))
     (unless (equal status 0)
       (error "Failed uniting files.  See buffer %s for more detail "
-             ile-pdf--output-buffer)))
-  (message "United pages to %s" (file-name-nondirectory out-file)))
+             ile-pdf--output-buffer))))
 
 (provide 'ile-pdf)
 ;;; ile-pdf.el ends here
