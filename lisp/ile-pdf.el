@@ -121,41 +121,23 @@ separated by a dash (-)."
         (in-file (buffer-file-name)))
     (ile-pdf--extract-pages in-file page-ranges out-file)))
 
-;; The stuff below is just some working code I can hack on later
+(defun ile-pdf-unite (out-file in-files)
+  "Concatenate all files in IN-FILES to produce OUT-FILE."
+  (when (get-buffer ile-pdf--output-buffer)
+    (kill-buffer ile-pdf--output-buffer))
 
-(defun my-extractor-junk (dir in-file page-ranges out-prefix)
-  "Extract stuff."
-  (let ((in-file (concat dir in-file))
-        (out-file (concat dir out-prefix in-file)))
-    (ile-pdf--extract-pages in-file page-ranges out-file)
-  ))
-
-;; (progn
-;;   (my-extractor-junk
-;;    "c:/Users/gina/Documents/Gina/Gantt/Discovery/Defendants Production/"
-;;    "14-0980 PITCHESS 12391-12799.pdf"
-;;    '( (2 . 30) (275 . 282)  (301 . 400))
-;;    "eyes-only ")
-
-;;   (my-extractor-junk
-;;    "c:/Users/gina/Documents/Gina/Gantt/Discovery/Defendants Production/"
-;;    "16-0433 PITCHESS 10229-10736.pdf"
-;;    '( (11 . 14) (129 . 134)  (262 . 265) (386 . 389) (412 . 420))
-;;    "eyes-only ")
-
-;;   (my-extractor-junk
-;;    "c:/Users/gina/Documents/Gina/Gantt/Discovery/Defendants Production/"
-;;    "16-0501 PITCHESS 10737-11382.pdf"
-;;    '( (18 . 31) (335 . 348))
-;;    "eyes-only ")
-
-;;   (my-extractor-junk
-;;    "c:/Users/gina/Documents/Gina/Gantt/Discovery/Defendants Production/"
-;;    "16-0833 PITCHESS 11622-12390.pdf"
-;;    '( (25 . 26) (345 . 346) (657 . 658) (715 . 716))
-;;    "eyes-only ")
-;; )
-
+  (let* ((args (append in-files (list "cat" "output" out-file)))
+         (status (apply
+                  #'call-process
+                  ile-pdf-pdftk
+                  nil
+                  ile-pdf--output-buffer
+                  nil
+                  args)))
+    (unless (equal status 0)
+      (error "Failed uniting files.  See buffer %s for more detail "
+             ile-pdf--output-buffer)))
+  (message "United pages to %s" (file-name-nondirectory out-file)))
 
 (provide 'ile-pdf)
 ;;; ile-pdf.el ends here
