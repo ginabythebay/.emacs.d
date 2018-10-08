@@ -1,4 +1,4 @@
-;;; ile-pdf-separate.el --- Integrated Legal Environment
+;;; ile-pdf.el --- Integrated Legal Environment
 
 ;; Copyright (C) 2018  Gina White
 
@@ -16,16 +16,16 @@
 
 (require 'cl-lib)
 
-(defgroup ile-pdf-separate nil
+(defgroup ile-pdf nil
   "Separate PDF pages."
   :group 'convenience)
 
-(defcustom ile-pdf-separate-pdftk (executable-find "pdftk")
+(defcustom ile-pdf-pdftk (executable-find "pdftk")
   "Path to pdftk executable."
   :group 'ile-pdf-separate
   :type 'string)
 
-(defconst ile-pdf-separate--output-buffer "*ile-pdf-separate*")
+(defconst ile-pdf--output-buffer "*ile-pdf*")
 
 (defun ile-pdf--extract-pages-args (in-file page-ranges out-file)
   "Build the arguments portion of the command to extract one or more pages.
@@ -57,20 +57,20 @@ OUT-FILE will be overwritten if it already exists.
 PAGE-RANGES is expected to be a list and defines which pages to extract.
 Each entry of PAGE-RANGES should be a cons cell with a start page and
 an end page."
-  (when (get-buffer ile-pdf-separate--output-buffer)
-    (kill-buffer ile-pdf-separate--output-buffer))
+  (when (get-buffer ile-pdf--output-buffer)
+    (kill-buffer ile-pdf--output-buffer))
 
   (let* ((args (ile-pdf--extract-pages-args in-file page-ranges out-file))
          (status (apply
                   #'call-process
-                  ile-pdf-separate-pdftk
+                  ile-pdf-pdftk
                   nil
-                  ile-pdf-separate--output-buffer
+                  ile-pdf--output-buffer
                   nil
                   args)))
     (unless (equal status 0)
       (error "Failed extracting pages.  See buffer %s for more detail "
-             ile-pdf-separate--output-buffer)))
+             ile-pdf--output-buffer)))
   (message "Extracted pages to %s" (file-name-nondirectory out-file)))
 
 (defun ile-pdf--parse-page-ranges (page-ranges)
@@ -157,5 +157,5 @@ separated by a dash (-)."
 ;; )
 
 
-(provide 'ile-pdf-separate)
-;;; ile-pdf-separate.el ends here
+(provide 'ile-pdf)
+;;; ile-pdf.el ends here

@@ -662,7 +662,7 @@ Inspired by crux-beginning-of-line."
 (use-package ile-org-noter
   :load-path "lisp"
   :ensure nil)
-(use-package ile-pdf-separate
+(use-package ile-pdf
   :load-path "lisp"
   :ensure nil
   :config
