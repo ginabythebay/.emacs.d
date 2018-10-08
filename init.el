@@ -179,7 +179,7 @@ the syntax class ')'."
 
 
 (defun my-kill-all-pdf-view-buffers ()
-  "Iterate through all buffers and kill the ones with major mode pdf-view-mode."
+  "Iterate through all buffers and kill the ones with major mode ‘pdf-view-mode’."
   (interactive)
   (let ((buffers (buffer-list)))
     (while buffers
@@ -189,7 +189,7 @@ the syntax class ')'."
       (setq buffers (cdr buffers)))))
 
 (defun my-wdired-finish-edit ()
-  "Kill any open pdf view buffers then call wdired-finish-edit."
+  "Kill any open pdf view buffers then call ‘wdired-finish-edit’."
   (interactive)
   (my-kill-all-pdf-view-buffers)
   (wdired-finish-edit))
