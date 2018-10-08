@@ -647,6 +647,8 @@ Inspired by crux-beginning-of-line."
 (global-set-key "\C-cc" 'org-capture)
 (global-set-key "\C-cb" 'org-switchb)
 
+(global-set-key "\C-h\C-f" #'find-function)
+
 (use-package org-noter
   :config
   (add-hook 'org-noter-notes-mode-hook (lambda () (require 'org-noter-override))))
