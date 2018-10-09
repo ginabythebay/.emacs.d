@@ -326,7 +326,7 @@ PAGE will be used to calculate the bates number."
          ("DATE" . "")
          ("REVISIT" . "")
          ("NOTES" . "")
-         ("TIMELINE_WITNESSES" . "")
+         ("TIMELINE_" . "")
          ("TIMELINE_DESCRIPTION" . "")
          ("TIMELINE_SRC_DESCRIPTION" . ""))))))
 
