@@ -207,10 +207,11 @@ specified, projectile will be consulted to determine it."
              (united-file (ile--united-name dependencies)))
         (when (ile--file-older-p (concat united-dir united-file) dependencies)
           (push united-file regenerated)
+          (message "Discovery unification...building %s..." united-file)
           (ile-pdf-unite (concat united-dir united-file) dependencies))))
     (if regenerated
-        (message "(Re)generated %s" regenerated)
-      (message "Nothing to regenerate"))))
+        (message "Discovery unification...done building %s" regenerated)
+      (message "Discovery unification...nothing to do"))))
 
 (defun ile--file-united-file (prefix no project-dir)
   "Find a united file.
