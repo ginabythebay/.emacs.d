@@ -325,7 +325,10 @@ PAGE will be used to calculate the bates number."
       `( ("DESCRIPTION" . ,title)
          ("DATE" . "")
          ("REVISIT" . "")
-         ("NOTES" . ""))))))
+         ("NOTES" . "")
+         ("TIMELINE_" . "")
+         ("TIMELINE_DESCRIPTION" . "")
+         ("TIMELINE_SRC_DESCRIPTION" . ""))))))
 
 (defun bates-insert-note ()
   "Run ‘org-noter-insert-note’ and then insert the extra fields we care about."
