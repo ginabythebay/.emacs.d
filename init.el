@@ -686,7 +686,9 @@ Inspired by crux-beginning-of-line."
   (bind-key "M-x" 'helm-M-x)
   (bind-key "C-x r b" 'helm-filtered-bookmarks)
   (bind-key "C-h a" 'helm-apropos)
-  (bind-key "C-x C-f" 'helm-find-files))
+  (bind-key "C-x C-f" 'helm-find-files)
+  (bind-key "C-x r l" 'helm-bookmarks)
+  )
 
 (use-package helm-google
   :ensure t
