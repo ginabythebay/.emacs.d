@@ -167,6 +167,11 @@ the syntax class ')'."
 	      ("m" . mc/edit-lines)
 	      ("a" . mc/mark-all-like-this))))
 
+(use-package dired
+  :ensure nil
+  :config
+  (require 'dired-x))
+
 ; see http://pragmaticemacs.com/emacs/copy-and-paste-files-with-dired-ranger/
 (use-package dired-ranger
   :ensure t
@@ -687,8 +692,7 @@ Inspired by crux-beginning-of-line."
   (bind-key "C-x r b" 'helm-filtered-bookmarks)
   (bind-key "C-h a" 'helm-apropos)
   (bind-key "C-x C-f" 'helm-find-files)
-  (bind-key "C-x r l" 'helm-bookmarks)
-  )
+  (bind-key "C-x r l" 'helm-bookmarks))
 
 (use-package helm-google
   :ensure t
