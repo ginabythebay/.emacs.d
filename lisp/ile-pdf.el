@@ -80,7 +80,7 @@ PAGE-RANGES will be converted to the form expected by
 it will be returned as-is."
   (if (listp page-ranges)
       page-ranges
-    (let ((tokens (split-string page-ranges ";" t "[[:space:]]+")))
+    (let ((tokens (split-string page-ranges ";\\|," t "[[:space:]]+")))
       (cl-loop
        for tks in tokens
        collect
@@ -95,6 +95,10 @@ it will be returned as-is."
 
 (ert-deftest ile-pdf--parse-page-ranges ()
   "Test page range parsing."
+  (should (equal
+           '((33 . 33) (36 . 36) (44 . 44) (83 . 83) (84 . 84) (85 . 85)
+             (86 . 86) (87 . 87) (88 . 88) (89 . 89))
+           (ile-pdf--parse-page-ranges "33,36,44,83,84,85,86,87,88,89")))
   (should (equal
            '((7 . 9) (12 . 44))
            (ile-pdf--parse-page-ranges "7-9; 12- 44")))
@@ -116,7 +120,6 @@ separated by a dash (-)."
                  nil
                  nil
                  (number-to-string (pdf-view-current-page)))))
-  ;;(interactive "FOutput file: \nMPage ranges (e.g. 1-9; 13; 45-70) ")
   (let ((page-ranges (ile-pdf--parse-page-ranges page-ranges))
         (in-file (buffer-file-name)))
     (ile-pdf--extract-pages in-file page-ranges out-file)))
