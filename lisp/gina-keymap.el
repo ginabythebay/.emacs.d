@@ -29,5 +29,10 @@
 (define-key gina-map (kbd "d") #'ile-duplicate)
 (define-key gina-map (kbd "b") #'ile-jump-discovery)
 
+
+(define-key gina-map (kbd "p") #'ile-org-noter-prev-page)
+(define-key gina-map (kbd "n") #'ile-org-noter-next-page)
+
+
 (provide 'gina-keymap)
 ;;; gina-keymap.el ends here

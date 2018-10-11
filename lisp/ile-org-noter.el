@@ -46,6 +46,22 @@
       (setq start 0))
     (substring text start end)))
 
+(defun ile-org-noter-next-page ()
+  "Move the doc buffer to the next page."
+  (interactive)
+  (org-noter--with-valid-session
+   (let ((location-cons (org-noter--doc-approx-location)))
+     (setf (car location-cons) (1+ (car location-cons)))
+     (org-noter--doc-goto-location location-cons))))
+
+(defun ile-org-noter-prev-page ()
+  "Move the doc buffer to the previous page."
+  (interactive)
+  (org-noter--with-valid-session
+   (let ((location-cons (org-noter--doc-approx-location)))
+     (setf (car location-cons) (1- (car location-cons)))
+     (org-noter--doc-goto-location location-cons))))
+
 (defun ile-org-noter-dates ()
   "Find dates in the current document page and prompts the user to pick one, \
 then insert it in the notes buffer."
