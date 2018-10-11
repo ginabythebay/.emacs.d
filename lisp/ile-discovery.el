@@ -249,5 +249,22 @@ determine it."
   (interactive "nBates number: ")
   (pdf-view-goto-page (bates-find-page (buffer-file-name) bates-no)))
 
+(defun ile-org-table-column-next-duplicate ()
+  "Move the cursor down to the cells in the current column until we leave the current table or we find the next duplicate entry."
+  (interactive)
+  (unless (org-table-p)
+    (user-error "Must be in a table"))
+  (save-excursion (org-table-align))
+  (let ((last-field (org-trim (save-excursion (org-table-get-field)))))
+    (next-line)
+    (cl-loop
+     for current-field = (org-trim (save-excursion (org-table-get-field)))
+     then (progn (next-line) (org-trim (save-excursion (org-table-get-field))))
+     until (or (not (org-table-p)) (string= current-field last-field))
+     do (setq last-field current-field)
+     )
+    )
+  )
+
 (provide 'ile-discovery)
 ;;; ile-discovery.el ends here

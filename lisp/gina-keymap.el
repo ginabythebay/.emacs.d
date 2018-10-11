@@ -33,6 +33,7 @@
 (define-key gina-map (kbd "p") #'ile-org-noter-prev-page)
 (define-key gina-map (kbd "n") #'ile-org-noter-next-page)
 
+(define-key gina-map (kbd "z") #'ile-org-table-column-next-duplicate)
 
 (provide 'gina-keymap)
 ;;; gina-keymap.el ends here
