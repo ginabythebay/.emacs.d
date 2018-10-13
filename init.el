@@ -680,7 +680,7 @@ Inspired by crux-beginning-of-line."
   :config
   (bind-keys
    :map pdf-view-mode-map
-   ("b" . ile-jump-bates)))
+   ("b" . ile-jump-bates-number)))
 
 (require 'org-collector)
 

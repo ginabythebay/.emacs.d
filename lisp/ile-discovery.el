@@ -220,31 +220,7 @@ We look for files in PROJECT-DIR/Discovery/united that contains PREFIX and NO."
   (let ((files (directory-files (concat project-dir "Discovery/united/") t)))
     (cl-some (lambda (f) (bates-file-contains-p f prefix no)) files)))
 
-(defun ile-jump-discovery (bates &optional project-dir)
-  "Open united file matching BATES, jump to the correct page.
-
-If PROJECT-DIR is not specified, projectile will be consulted to
-determine it."
-  (interactive "MBates Number (like OCA 739): ")
-  (unless project-dir
-    (setq project-dir (projectile-project-root)))
-
-  (let ((tokens (split-string bates)))
-    (unless (equal 2 (length tokens))
-      (user-error "Unexpected bates value [%s].  Should be something like [OCA 739]" bates))
-
-    (let ((prefix (nth 0 tokens))
-          (no (string-to-number (nth 1 tokens))))
-      (when (equal 0 no)
-        (user-error "Unexpected bates value [%s].  Should be something like [OCA 739]" bates))
-
-      (let ((united-file (ile--file-united-file prefix no project-dir)))
-        (unless united-file
-          (user-error "Unable to find united file for %s" bates))
-        (find-file united-file)
-        (pdf-view-goto-page (bates-find-page united-file no))))))
-
-(defun ile-jump-bates (bates-no)
+(defun ile-jump-bates-number (bates-no)
   "Jump to the bates number specified by BATES-NO in the current pdf."
   (interactive "nBates number: ")
   (pdf-view-goto-page (bates-find-page (buffer-file-name) bates-no)))
@@ -277,34 +253,96 @@ determine it."
 We derive CASE using the current directory if not specified."
   (format "%s-%s" (ile-org--derive-case case) suffix))
 
-(defun ile-org-lookup-date (&optional case)
+
+(defconst ile-org--bates-re "[A-Z]+ [0-9]+")
+(defconst ile-org--date-re "[0-9]\\{4,4\\}-[0-9]\\{2,2\\}-[0-9]\\{2,2\\}")
+
+(defun ile-org-bates-at-point ()
+  "Return the bates number (e.g. OCA 400) at point, or nil if none is found."
+  (let ((case-fold-search nil))
+    (when (thing-at-point-looking-at ile-org--bates-re 10)
+      (buffer-substring (match-beginning 0) (match-end 0)))))
+
+(defun ile-org-date-at-point ()
+  "Return the date at point, or nil if none is found."
+  (when (thing-at-point-looking-at ile-org--date-re 10)
+     (buffer-substring (match-beginning 0) (match-end 0))))
+
+
+(defun ile-org-lookup-date (target &optional case)
   "Look up a TARGET date and show related CASE information for it.
 Case is just our client name, e.g. 'gantt'.  We will attempt to
 derive it using projectile if not specified."
-  (interactive)
+  (interactive (list (let* ((def (ile-org-date-at-point))
+                            (def (and def (substring-no-properties def)))
+                            (prompt (if def
+                                        (format "Date to look for (%s): " def)
+                                      "Date to look for: ")))
+                       (read-string prompt nil nil def))))
   (org-id-goto (ile-org--make-case-id "timeline" case))
   (org-narrow-to-subtree)
   (let ((ast (org-element-parse-buffer))
-        accum row-no col-no)
-    (message "%s"
-    (org-element-map ast '(table-cell table-row)
-      (lambda (el)
-        (let ((el-type (org-element-type el)))
-        (cond ((eq el-type 'table-row)
-               (setq row-no (1+ row-no) col-no 0)
-               nil)
-              ((eq el-type 'table-cell)
-                (setq col-no (1+ col-no))
-                (when (equal col-no 1)
-                  (push (org-element-contents el) accum)
-                  (when (> (length accum) 12)
-                    accum)
-                  )
-                )
-               )
-               ))
-      nil t)
-      )))
+        (row-no 0)
+        (col-no 0))
+    (let ((pos (org-element-map ast '(table-cell table-row)
+                 (lambda (el)
+                   (let ((el-type (org-element-type el)))
+                     (cond ((eq el-type 'table-row)
+                            (setq row-no (1+ row-no) col-no 0)
+                            nil)
+                           ((eq el-type 'table-cell)
+                            (setq col-no (1+ col-no))
+                            (when (equal col-no 1)
+                              (let ((contents (substring-no-properties (car (org-element-contents el)))))
+                                (when (/= 0 (string-to-number contents))
+                                  (when (or (string= contents target) (string< target contents))
+                                    (org-element-property :contents-begin el)))))))))
+                 nil t)))
+          (when pos
+            (goto-char pos))))
+  (widen))
+
+(defun ile-jump-bates (bates &optional project-dir)
+  "Open united file matching BATES, jump to the correct page.
+
+If PROJECT-DIR is not specified, projectile will be consulted to
+determine it."
+  (interactive (list (let* ((def (ile-org-bates-at-point))
+                            (def (and def (substring-no-properties def)))
+                            (prompt (if def
+                                        (format "Bates number (%s): " def)
+                                      "Bates number: ")))
+                     (read-string prompt nil nil def))))
+  (unless project-dir
+    (setq project-dir (projectile-project-root)))
+
+  (let ((tokens (split-string bates)))
+    (unless (equal 2 (length tokens))
+      (user-error "Unexpected bates value [%s].  Should be something like [OCA 739]" bates))
+
+    (let ((prefix (nth 0 tokens))
+          (no (string-to-number (nth 1 tokens))))
+      (when (equal 0 no)
+        (user-error "Unexpected bates value [%s].  Should be something like [OCA 739]" bates))
+
+      (let ((united-file (ile--file-united-file prefix no project-dir)))
+        (unless united-file
+          (user-error "Unable to find united file for %s" bates))
+        (find-file united-file)
+        (pdf-view-goto-page (bates-find-page united-file no))))))
+
+(defun ile-jump-discovery (target)
+  "Jump to TARGET where target can be a date or a bates number."
+  (interactive (list (let* ((def (or (ile-org-bates-at-point) (ile-org-date-at-point)))
+                            (def (and def (substring-no-properties def)))
+                            (prompt (if def
+                                        (format "Date or bates number (%s): " def)
+                                      "Date or bates number: ")))
+                       (read-string prompt nil nil def))))
+  (cond ((string-match ile-org--bates-re target)
+         (ile-jump-bates target))
+        ((string-match ile-org--date-re target)
+         (ile-org-lookup-date target))))
 
 (provide 'ile-discovery)
 ;;; ile-discovery.el ends here
