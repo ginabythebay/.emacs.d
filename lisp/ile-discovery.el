@@ -266,5 +266,45 @@ determine it."
     )
   )
 
+(defun ile-org--derive-case (&optional case)
+  "Return CASE if specified, else try to figure it out."
+  (if case
+      case
+    (downcase (file-name-nondirectory (directory-file-name (projectile-project-root))))))
+
+(defun ile-org--make-case-id (suffix &optional case)
+  "Make an id composed of the CASE and the SUFFIX.
+We derive CASE using the current directory if not specified."
+  (format "%s-%s" (ile-org--derive-case case) suffix))
+
+(defun ile-org-lookup-date (&optional case)
+  "Look up a TARGET date and show related CASE information for it.
+Case is just our client name, e.g. 'gantt'.  We will attempt to
+derive it using projectile if not specified."
+  (interactive)
+  (org-id-goto (ile-org--make-case-id "timeline" case))
+  (org-narrow-to-subtree)
+  (let ((ast (org-element-parse-buffer))
+        accum row-no col-no)
+    (message "%s"
+    (org-element-map ast '(table-cell table-row)
+      (lambda (el)
+        (let ((el-type (org-element-type el)))
+        (cond ((eq el-type 'table-row)
+               (setq row-no (1+ row-no) col-no 0)
+               nil)
+              ((eq el-type 'table-cell)
+                (setq col-no (1+ col-no))
+                (when (equal col-no 1)
+                  (push (org-element-contents el) accum)
+                  (when (> (length accum) 12)
+                    accum)
+                  )
+                )
+               )
+               ))
+      nil t)
+      )))
+
 (provide 'ile-discovery)
 ;;; ile-discovery.el ends here
