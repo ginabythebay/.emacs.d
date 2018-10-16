@@ -302,6 +302,65 @@ derive it using projectile if not specified."
             (goto-char pos))))
   (widen))
 
+(defun ile-org--parse-current-discovery-table (noun-hdr def-hdr)
+  "Parse the first table in the current element.
+NOUN-HDR is the name of the column we will use as the thing we are defining.
+DEF-HDR is the name of the column we will use as the definition.
+
+Return value will be hash table mapping from noun to definition.
+
+We expect that the first line of the table is a header line."
+  (let ((result (make-hash-table :test #'equal)))
+    (save-restriction
+      (org-narrow-to-subtree)
+      (let ((ast (org-element-parse-buffer))
+            (row-no 0)
+            (col-no 0)
+            (table-no 0)
+            (checked-header nil)
+            checked-header cur-noun cur-def noun-col def-col)
+        (org-element-map ast '(table-row table-cell table)
+          (lambda (el)
+            (cl-case (org-element-type el)
+              ('table
+               (setq table-no (1+ table-no))
+               (when (> table-no 1)
+                 t)
+               nil)
+              ('table-row
+               (setq col-no 0
+                     row-no (1+ row-no))
+               nil)
+              ('table-cell
+               (setq col-no (1+ col-no))
+               (let ((cell-contents (substring-no-properties
+                                     (car (org-element-contents el)))))
+                 (if (= row-no 1)
+                     (cond ((string= cell-contents noun-hdr)
+                            (setq noun-col col-no))
+                           ((string= cell-contents def-hdr)
+                            (setq def-col col-no)))
+                   (when (and (not checked-header) (>= row-no 2))
+                     (unless noun-col
+                       (user-error "Could not find noun header %s" noun-hdr))
+                     (unless def-col
+                       (user-error "Could not find definition header %s" def-col))
+                     (setq checked-header t))
+
+                   (cond ((= noun-col col-no)
+                          (setq cur-noun cell-contents))
+                         ((= def-col col-no)
+                          (setq cur-def cell-contents)))
+
+                   (when (and cur-noun cur-def)
+                     (puthash cur-noun cur-def result)
+                     (setq cur-noun nil
+                           cur-def nil))
+                   nil))))
+            nil t)))
+      result)))
+
+
 (defun ile-jump-bates (bates &optional project-dir)
   "Open united file matching BATES, jump to the correct page.
 
@@ -343,6 +402,26 @@ determine it."
          (ile-jump-bates target))
         ((string-match ile-org--date-re target)
          (ile-org-lookup-date target))))
+
+(require 'company)
+
+(defconst sample-completions
+  '("alan" "john" "ada" "don"))
+
+
+(defun company-sample-backend (command &optional arg &rest ignored)
+  (interactive (list 'interactive))
+
+  (cl-case command
+    (interactive (company-begin-backend 'company-sample-backend))
+    (prefix (and (eq major-mode 'fundamental-mode)
+                 (company-grab-symbol)))
+    (candidates
+     (cl-remove-if-not
+      (lambda (c) (string-prefix-p arg c))
+      sample-completions))))
+
+(add-to-list 'company-backends 'company-sample-backend)
 
 (provide 'ile-discovery)
 ;;; ile-discovery.el ends here
