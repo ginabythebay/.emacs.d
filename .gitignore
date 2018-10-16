@@ -1,4 +1,6 @@
+.cask/
 elpa/
+.org-id-locations
 ac-comphist.dat
 custom.el
 *~
