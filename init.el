@@ -308,6 +308,16 @@ Inspired by crux-beginning-of-line."
   (setq company-dabbrev-downcase nil)
   (global-company-mode))
 
+
+(use-package company-quickhelp
+  :after (company)
+  :config
+  (setq company-quickhelp-delay .1)
+  :bind (:map company-active-map
+              ("C-c h" . company-quickhelp-manual-begin)))
+
+
+
 ;; 8/23/16: Not sure if I like this, but giving it a try
 ;;
 ;; see https://github.com/Fuco1/smartparens
