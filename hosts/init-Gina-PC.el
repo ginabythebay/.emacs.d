@@ -27,6 +27,12 @@
         ))
 (pr-update-menus t)
 
+
+(use-package w32-browser
+  :ensure t
+  :bind (:map dired-mode-map
+              ("M-RET" . dired-w32-browser)))
+
 (setq-default  ispell-program-name "c:/mingw64/bin/hunspell.exe")
 
 (defun org-user-idle-seconds ()
