@@ -869,6 +869,17 @@ are exported to a filename derived from the headline text."
   :load-path "lisp"
   :ensure nil)
 
+
+;; see https://www.emacswiki.org/emacs/UnfillParagraph
+(defun unfill-paragraph (&optional region)
+  "Take a multi-line paragraph and make it into a single line of text.
+If REGION is set, we use that instead of trying to guess the paragraph."
+  (interactive (progn (barf-if-buffer-read-only) '(t)))
+  (let ((fill-column (point-max))
+        ;; This would override `fill-column' if it's an integer.
+        (emacs-lisp-docstring-fill-column t))
+    (fill-paragraph nil region)))
+
 (unless noninteractive
   (server-start))
 
