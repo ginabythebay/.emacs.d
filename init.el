@@ -742,7 +742,7 @@ Inspired by crux-beginning-of-line."
 ; https://emacs.stackexchange.com/questions/16640/can-i-export-a-specific-table-in-an-org-file-to-csv-from-the-command-line
 (defun my-tbl-export (name)
   "Search for table named `NAME` and export."
-  (interactive "s")
+  (interactive "sName of table: ")
   (show-all)
   (let ((case-fold-search t))
     (if (search-forward (concat "#+TBLNAME: " name))
@@ -752,7 +752,7 @@ Inspired by crux-beginning-of-line."
 
 (defun my-named-subtree-export (name)
   "Search for table named `NAME` and export the subtree."
-  (interactive "s")
+  (interactive "sName of table: ")
   (show-all)
   (let ((case-fold-search t))
     (if (search-forward (concat "#+TBLNAME: " name))
