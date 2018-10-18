@@ -113,7 +113,7 @@ a column, or through the generation of an error.")
   "collect the column specification from the #+cols line
 preceeding the dblock, then update the contents of the dblock."
   (interactive)
-  (unwind-protect
+  (save-restriction
       (let ((cols (plist-get params :cols))
 	    (inherit (plist-get params :inherit))
 	    (conds (plist-get params :conds))
@@ -123,6 +123,7 @@ preceeding the dblock, then update the contents of the dblock."
 	    (colnames (plist-get params :colnames))
 	    (defaultval (plist-get params :defaultval))
 	    (content-lines (org-split-string (plist-get params :content) "\n"))
+            (sort (plist-get params :sort))
 	    id table line pos)
 	(save-excursion
 	  (when (setq id (plist-get params :id))
@@ -149,8 +150,14 @@ preceeding the dblock, then update the contents of the dblock."
 	  (when (string-match "^#" line)
 	    (insert "\n" line)))
 	(goto-char pos)
-	(org-table-recalculate 'all))
-    (widen)))
+	(org-table-recalculate 'all)
+        (when sort
+          (unless (= 3 (length sort))
+            (user-error "Could not parse :sort parameter %S.  Should be in the format (<col-no> <with-case> <sorting-type>)" sort)
+            )
+          (org-table-goto-line 3)
+          (org-table-goto-column (nth 0 sort))
+          (org-table-sort-lines (nth 1 sort) (nth 2 sort))))))
 
 (defun org-propview-eval-w-props (props body)
   "evaluate the BODY-FORMS binding the variables using the
