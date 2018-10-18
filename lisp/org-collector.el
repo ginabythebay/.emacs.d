@@ -113,7 +113,7 @@ a column, or through the generation of an error.")
   "collect the column specification from the #+cols line
 preceeding the dblock, then update the contents of the dblock."
   (interactive)
-  (condition-case er
+  (unwind-protect
       (let ((cols (plist-get params :cols))
 	    (inherit (plist-get params :inherit))
 	    (conds (plist-get params :conds))
@@ -150,8 +150,7 @@ preceeding the dblock, then update the contents of the dblock."
 	    (insert "\n" line)))
 	(goto-char pos)
 	(org-table-recalculate 'all))
-    (org-collector-error (widen) (error "%s" er))
-    (error (widen) (error "%s" er))))
+    (widen)))
 
 (defun org-propview-eval-w-props (props body)
   "evaluate the BODY-FORMS binding the variables using the
