@@ -155,7 +155,7 @@ preceeding the dblock, then update the contents of the dblock."
           (unless (= 3 (length sort))
             (user-error "Could not parse :sort parameter %S.  Should be in the format (<col-no> <with-case> <sorting-type>)" sort)
             )
-          (org-table-goto-line 3)
+          (org-table-goto-line 2)
           (org-table-goto-column (nth 0 sort))
           (org-table-sort-lines (nth 1 sort) (nth 2 sort))))))
 
