@@ -664,7 +664,7 @@ Inspired by crux-beginning-of-line."
 ;;   :ensure t)
 ;; (let ((org-super-agenda-groups
 ;;        '((:auto-category t))))
-;;   (org-super-agenda-mode 1) 
+;;   (org-super-agenda-mode 1)
 ;;   (org-agenda-list))
 
 (global-set-key "\C-cl" 'org-store-link)
