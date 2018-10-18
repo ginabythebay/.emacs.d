@@ -654,6 +654,11 @@ Inspired by crux-beginning-of-line."
   (setq org-refile-targets (quote ((nil :maxlevel . 9)
                                    (org-agenda-files :maxlevel . 9)))))
 
+(use-package org-collector
+  :load-path "lisp"
+  :after (org-mode)
+  :ensure nil)
+
 ;; Not quite ready yet.  Doesn't seem to display all agenda files?
 ;; (use-package org-super-agenda
 ;;   :ensure t)
