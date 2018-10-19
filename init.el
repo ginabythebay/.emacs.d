@@ -391,6 +391,10 @@ Inspired by crux-beginning-of-line."
     (indent-according-to-mode))
   )
 
+
+(use-package suggest
+  :ensure t)
+
 ;; js2 (javascript) mode
 
 (use-package js2-mode
