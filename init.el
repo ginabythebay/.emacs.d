@@ -120,11 +120,12 @@ the syntax class ')'."
 
 
 (use-package helpful
+  :ensure t
   :bind
   ("C-h f" . helpful-callable)
   ("C-h v" . helpful-variable)
   ("C-h k" . helpful-key)
-  )
+  ("C-c C-d" . helpful-at-point))
 
 (use-package counsel
   :ensure t
@@ -151,6 +152,8 @@ the syntax class ')'."
 (use-package zenburn-theme
   :ensure t)
 (use-package solarized-theme
+  :ensure t)
+(use-package tangotango-theme
   :ensure t)
 ;; Our default, for now
 (load-theme 'zenburn)
@@ -316,7 +319,7 @@ Inspired by crux-beginning-of-line."
         company-minimum-prefix-length 2
         company-show-numbers t
         company-selection-wrap-around t)
-  
+
 
   (setq company-dabbrev-downcase nil)
   (global-company-mode))
