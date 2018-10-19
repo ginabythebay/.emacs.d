@@ -351,21 +351,41 @@ Inspired by crux-beginning-of-line."
   ("C-c u" . sp-unwrap-sexp)
   :demand
   :config
+  (bind-keys
+   :map smartparens-mode-map
+   ;; (foo| bar) -> foo bar
+   ("M-s" . sp-splice-sexp)
+
+   ;; (foo| bar) -> [foo bar]
+   ("M-S" . sp-rewrap-sexp)
+
+
+   ;; (|foo) bar -> (|foo bar)
+   ("<C-right>" . sp-forward-slurp-sexp)
+
+   ;; (|foo bar) -> (|foo) bar
+   ("<C-left>" . sp-forward-barf-sexp)
+
+   ;; foo(1, |[2, 3], 4) -> foo(1, |, 2)
+   ("C-M-k" . sp-kill-sexp)
+   ("s-k" . sp-kill-sexp))
+
   (show-smartparens-global-mode 1)
-  (add-hook 'prog-mode-hook 'turn-on-smartparens-mode)
-  (add-hook 'markdown-mode-hook 'turn-on-smartparens-mode)
+  (add-hook 'prog-mode-hook #'turn-on-smartparens-mode)
+  (add-hook 'emacs-lisp-mode-hook #'turn-on-smartparens-strict-mode)
+  (add-hook 'markdown-mode-hook #'turn-on-smartparens-mode)
 
   (defmacro def-pairs (pairs)
     `(progn
        ,@(cl-loop for (key . val) in pairs
-	       collect
-	       `(defun ,(read (concat
-			       "wrap-with-"
-			       (prin1-to-string key)
-			       "s"))
-		    (&optional arg)
-		  (interactive "p")
-		  (sp-wrap-with-pair ,val)))))
+	          collect
+	          `(defun ,(read (concat
+			          "wrap-with-"
+			          (prin1-to-string key)
+			          "s"))
+		       (&optional arg)
+		     (interactive "p")
+		     (sp-wrap-with-pair ,val)))))
 
   (def-pairs ((paren        . "(")
 	      (bracket      . "[")
@@ -381,6 +401,7 @@ Inspired by crux-beginning-of-line."
 
   ;; see https://github.com/Fuco1/smartparens/wiki/Permissions
   (sp-local-pair 'emacs-lisp-mode "'" nil :actions nil)           ;; no '' pair in emacs-lisp-mode
+  (sp-local-pair 'emacs-lisp-mode "`" nil :actions nil)           ;; no `` pair in emacs-lisp-mode
   (sp-local-pair 'markdown-mode "`" nil :actions '(insert))       ;; only use ` for auto insertion in markdown-mode
 
   (defun my-create-newline-and-enter-sexp (&rest _ignored)
@@ -388,8 +409,7 @@ Inspired by crux-beginning-of-line."
     (newline)
     (indent-according-to-mode)
     (forward-line -1)
-    (indent-according-to-mode))
-  )
+    (indent-according-to-mode)))
 
 
 (use-package suggest
