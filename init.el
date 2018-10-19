@@ -118,6 +118,14 @@ the syntax class ')'."
   (add-to-list 'load-path host-dir)
   (require init-host-feature))
 
+
+(use-package helpful
+  :bind
+  ("C-h f" . helpful-callable)
+  ("C-h v" . helpful-variable)
+  ("C-h k" . helpful-key)
+  )
+
 (use-package counsel
   :ensure t
   :bind
@@ -639,6 +647,7 @@ Inspired by crux-beginning-of-line."
   (setq org-startup-folded (quote showeverything))
   (setq org-latex-default-table-environment "longtable")
   (setq org-table-copy-increment nil)
+  (setq org-return-follows-link t)
 
   (setq org-use-speed-commands
       (lambda () (and (looking-at org-outline-regexp) (looking-back "^\**"))))
@@ -656,8 +665,16 @@ Inspired by crux-beginning-of-line."
 
 (use-package org-collector
   :load-path "lisp"
-  :after (org-mode)
+  :after (org)
   :ensure nil)
+
+;; See http://emacs-fu.blogspot.com/2009/08/managing-e-mail-addresses-with-bbdb.html for further notes
+(use-package bbdb
+  :ensure t)
+
+(use-package helm-bbdb
+  :ensure t
+  :after (bbdb helm))
 
 ;; Not quite ready yet.  Doesn't seem to display all agenda files?
 ;; (use-package org-super-agenda
