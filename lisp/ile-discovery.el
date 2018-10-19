@@ -360,6 +360,64 @@ We expect that the first line of the table is a header line."
             nil t)))
       result)))
 
+(require 'pdf-outline)
+(require 'let-alist)
+
+
+(defun ile-discovery--get-outline-link (pos dummy-page)
+  "Return info for the link at POS.
+
+The return value will be a cons cell where the car is a title and
+the cdr is a page.  The page will be nil if, e.g. the type of
+the link is not 'goto-dest.
+
+DUMMY-PAGE will be used if there is no link at the POS."
+  (let ((link (pdf-outline-link-at-pos pos)))
+    (if link
+        (let-alist link
+          `(, .title . ,(if (eq .type 'goto-dest) .page nil)))
+      `("dummy entry" . , dummy-page)
+        )
+    )
+  )
+
+(defun ile-discovery-copy-jury-instructions ()
+  "Put a table in the kill ring based on the selected pdf outline entries.
+
+There must be an active region and it must select one or more pdf
+outline entries."
+  (interactive)
+  (unless (equal major-mode 'pdf-outline-buffer-mode)
+    (user-error "You must run this command in a pdf outline buffer"))
+  (unless (use-region-p)
+    (user-error "No region found.  You must select one or more pdf outline entries"))
+
+  (save-window-excursion
+    (save-excursion
+      (let* ((start (region-beginning))
+             (end (region-end))
+             (lastpage (pdf-info-number-of-pages
+                        (window-buffer (pdf-outline-get-pdf-window))))
+             (links (cl-loop initially (goto-char start)
+                             collect (ile-discovery--get-outline-link
+                                      (point) lastpage)
+                             do (forward-line 1)
+                             until (> (point) end)))
+             (ranges (cl-loop with prev-page = nil
+                          with prev-title = nil
+                          for l in links
+                          if prev-page
+                          collect (list prev-page (1- (cdr l)) prev-title)
+                          do (setq prev-page (cdr l)
+                                   prev-title (car l)))))
+
+        (with-temp-buffer
+          (org-mode)
+          (dolist (r ranges)
+            (insert (format "%s-%s\t%s\n" (nth 0 r) (nth 1 r) (nth 2 r))))
+          (org-table-convert-region (point-min) (point-max))
+          (kill-ring-save (point-min) (point-max)))))))
+
 
 (defun ile-jump-bates (bates &optional project-dir)
   "Open united file matching BATES, jump to the correct page.
