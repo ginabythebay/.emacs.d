@@ -16,7 +16,10 @@
 
 (require 'cl-macs)
 (require 'org-noter)
+(require 'pdf-cache)
+(require 'pdf-view)
 (require 'seq)
+(require 'subr-x)
 
 (defvar bates--ring '()
   "Stores the last few (up to two) bates numbers marked.")
