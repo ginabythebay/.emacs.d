@@ -118,6 +118,11 @@ the syntax class ')'."
   (add-to-list 'load-path host-dir)
   (require init-host-feature))
 
+(use-package delight
+  :ensure t)
+
+(use-package autorevert
+  :delight auto-revert-mode)
 
 (use-package helpful
   :ensure t
@@ -170,9 +175,10 @@ the syntax class ')'."
   :ensure t
   :config
   (projectile-mode t)
-  (setq projectile-create-missing-test-files t)
-  (setq projectile-switch-project-action #'projectile-commander)
-  (setq projectile-completion-system 'helm)
+  (setq projectile-create-missing-test-files t
+        projectile-switch-project-action #'projectile-commander
+        projectile-completion-system 'helm
+        projectile-mode-line '(:eval (format " [%s]" (projectile-project-name))))
   :bind-keymap
   ("M-p" . projectile-command-map))
 
@@ -314,6 +320,7 @@ Inspired by crux-beginning-of-line."
 
 (use-package company
   :ensure t
+  :diminish company-mode
   :config
   ;; when running mnt-gdrive inside emacs (for development) and trying
   ;; to test things inside emacs, in shell mode, emacs locks up if
@@ -325,10 +332,8 @@ Inspired by crux-beginning-of-line."
   (setq company-idle-delay 0
         company-minimum-prefix-length 2
         company-show-numbers t
-        company-selection-wrap-around t)
-
-
-  (setq company-dabbrev-downcase nil)
+        company-selection-wrap-around t
+        company-dabbrev-downcase nil)
   (global-company-mode))
 
 
@@ -759,6 +764,7 @@ Inspired by crux-beginning-of-line."
 
 (use-package helm
   :ensure t
+  :diminish helm-mode
   :config
   (helm-mode 1)
   (bind-key "M-x" 'helm-M-x)
