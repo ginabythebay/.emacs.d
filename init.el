@@ -158,6 +158,13 @@ the syntax class ')'."
 ;; Our default, for now
 (load-theme 'tangotango)
 
+(use-package undo-tree
+  :ensure t
+  :config
+  (global-undo-tree-mode)
+  (setq undo-tree-visualizer-timestamps t)
+  :diminish undo-tree-mode)
+
 ;; Project management.
 (use-package projectile
   :ensure t
