@@ -12,7 +12,7 @@
 
 ;; Support functions
 
-(add-to-list 'load-path "~/.emacs.d/lisp/")
+(add-to-list 'load-path "~/.emacs.d/lisp")
 
 (defun path-contains (haystack needle)
   "Return t if HAYSTACK has a path element NEEDLE."
@@ -182,7 +182,7 @@ the syntax class ')'."
         projectile-completion-system 'helm
         projectile-mode-line '(:eval (format " [%s]" (projectile-project-name))))
   :bind-keymap
-  ("M-p" . projectile-command-map))
+  ("s-p" . projectile-command-map))
 
 (use-package multiple-cursors
   :ensure t
@@ -770,6 +770,9 @@ Inspired by crux-beginning-of-line."
    :map pdf-view-mode-map
    ("e" . ile-pdf-extract-pages)))
 (use-package ile-discovery
+  :load-path "lisp"
+  :ensure nil)
+(use-package ile-navigation
   :load-path "lisp"
   :ensure nil
   :config
