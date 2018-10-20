@@ -345,6 +345,21 @@ Inspired by crux-beginning-of-line."
               ("C-c h" . company-quickhelp-manual-begin)))
 
 
+(use-package rainbow-delimiters
+  :ensure t
+  :config
+  (add-hook 'emacs-lisp-mode-hook 'rainbow-delimiters-mode)
+
+  (set-face-foreground 'rainbow-delimiters-depth-1-face "white")
+  (set-face-foreground 'rainbow-delimiters-depth-2-face "cyan")
+  (set-face-foreground 'rainbow-delimiters-depth-3-face "yellow")
+  (set-face-foreground 'rainbow-delimiters-depth-4-face "green")
+  (set-face-foreground 'rainbow-delimiters-depth-5-face "orange")
+  (set-face-foreground 'rainbow-delimiters-depth-6-face "purple")
+  (set-face-foreground 'rainbow-delimiters-depth-7-face "white")
+  (set-face-foreground 'rainbow-delimiters-depth-8-face "cyan")
+  (set-face-foreground 'rainbow-delimiters-depth-9-face "yellow")
+  (set-face-foreground 'rainbow-delimiters-unmatched-face "red"))
 
 ;; 8/23/16: Not sure if I like this, but giving it a try
 ;;
