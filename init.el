@@ -31,6 +31,8 @@
 (setq vc-follow-symlinks t)
 
 
+(global-auto-revert-mode 1)
+
 ;; from https://aur.archlinux.org/packages/go-fonts-git/
 ;; Note that on linux I had 12 points, but on windows 11 felt better.
 ;; Might need to make this dependant on the screen or something.
