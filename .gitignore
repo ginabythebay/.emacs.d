@@ -1,6 +1,7 @@
 .cask/
 elpa/
 .org-id-locations
+projectile.cache
 ac-comphist.dat
 custom.el
 *~
