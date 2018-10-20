@@ -12,7 +12,7 @@
 
 ;; Support functions
 
-(add-to-list 'load-path "~/.emacs.d/lisp")
+(add-to-list 'load-path (concat user-emacs-directory "lisp/"))
 
 (defun path-contains (haystack needle)
   "Return t if HAYSTACK has a path element NEEDLE."
@@ -390,10 +390,10 @@ Inspired by crux-beginning-of-line."
 
 
    ;; (|foo) bar -> (|foo bar)
-   ("<C-right>" . sp-forward-slurp-sexp)
+   ("<s-right>" . sp-forward-slurp-sexp)
 
    ;; (|foo bar) -> (|foo) bar
-   ("<C-left>" . sp-forward-barf-sexp)
+   ("<s-left>" . sp-forward-barf-sexp)
 
    ;; foo(1, |[2, 3], 4) -> foo(1, |, 2)
    ("C-M-k" . sp-kill-sexp)
