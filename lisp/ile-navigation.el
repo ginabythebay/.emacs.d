@@ -173,6 +173,18 @@ determine it."
         ((string-match ile-org--date-re target)
          (ile-org-lookup-date target))))
 
+(defun ile-nav-visit-id (id)
+  "Similar to 'org-id-goto, but we don't pop to the buffer when we find ID.
+Returns the buffer."
+  (let ((m (org-id-find id 'marker)))
+    (unless m
+      (error "Cannot find entry with ID \"%s\"" id))
+    (let ((buf (marker-buffer m)))
+      (set-buffer (marker-buffer m))
+      (goto-char m)
+      (move-marker m nil)
+      (org-show-context)
+      buf)))
 
 (defun ile-discovery-indirect-buffer-for-id (id)
   "Pop to an indirect buffer narrowed to the headline associated with ID.
@@ -181,15 +193,12 @@ not found, one will be created."
   (interactive)
   (let* ((buf-name (format "*%s*" id))
          (buf (get-buffer buf-name)))
-    (unless buf
-      (org-id-goto id)
-      (setq buf (clone-indirect-buffer buf-name nil))
-      (set-buffer buf)
-      (org-narrow-to-subtree)
-      )
-    (pop-to-buffer-same-window buf)))
-
-
+    (if buf
+        (pop-to-buffer-same-window buf)
+      (let ((base-buf (with-current-buffer
+                  (ile-nav-visit-id id))))
+        (pop-to-buffer-same-window (make-indirect-buffer base-buf buf-name t)))
+      (org-narrow-to-subtree))))
 
 (defun ile-org-lookup-date (target &optional case)
   "Look up a TARGET date and show related CASE information for it.
@@ -201,8 +210,7 @@ derive it using projectile if not specified."
                                         (format "Date to look for (%s): " def)
                                       "Date to look for: ")))
                        (read-string prompt nil nil def))))
-  (org-id-goto (ile-org--make-case-id "timeline" case))
-  (org-narrow-to-subtree)
+  (ile-discovery-indirect-buffer-for-id (ile-org--make-case-id "timeline" case))
   (let ((ast (org-element-parse-buffer))
         (row-no 0)
         (col-no 0))
@@ -221,8 +229,7 @@ derive it using projectile if not specified."
                                     (org-element-property :contents-begin el)))))))))
                  nil t)))
           (when pos
-            (goto-char pos))))
-  (widen))
+            (goto-char pos)))))
 
 (provide 'ile-navigation)
 ;;; ile-navigation.el ends here
