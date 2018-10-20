@@ -156,7 +156,7 @@ the syntax class ')'."
 (use-package tangotango-theme
   :ensure t)
 ;; Our default, for now
-(load-theme 'zenburn)
+(load-theme 'tangotango)
 
 ;; Project management.
 (use-package projectile
@@ -697,7 +697,9 @@ Inspired by crux-beginning-of-line."
 
 ;; See http://emacs-fu.blogspot.com/2009/08/managing-e-mail-addresses-with-bbdb.html for further notes
 (use-package bbdb
-  :ensure t)
+  :ensure t
+  :config
+  (setq bbdb-file "~/bbdb"))
 
 (use-package helm-bbdb
   :ensure t
