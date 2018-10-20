@@ -777,6 +777,9 @@ Inspired by crux-beginning-of-line."
 
 (require 'org-collector)
 
+(use-package free-keys
+  :ensure t)
+
 (use-package helm
   :ensure t
   :diminish helm-mode
