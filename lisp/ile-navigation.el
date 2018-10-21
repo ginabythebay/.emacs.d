@@ -182,25 +182,25 @@ determine it."
              (projectile-current-project-files)))))
 
 (defun ile-nav-case-ids ()
-  "Return a list of ids found in current case org files."
+  "Return an alist of cons cells representing ids in case org files.
+Each cons cell will be (id . filename)"
   (save-mark-and-excursion
     (let ((files (ile-nav-case-org-files))
           (case-fold-search t)
 	  (re (org-re-property "ID")))
-      (delete-dups (cl-loop with values
-                            for f in files
-                            do
-                            (set-buffer (or (find-buffer-visiting f)
-                                            (find-file-noselect f)))
-                              (goto-char (point-min))
-                              (while (re-search-forward re nil t)
-                                (push (org-entry-get (point) "ID") values))
-                            finally return values)))))
+      (cl-loop with values
+               for f in files
+               do (set-buffer (or (find-buffer-visiting f)
+                                  (find-file-noselect f)))
+                  (goto-char (point-min))
+                  (while (re-search-forward re nil t)
+                    (push (cons (org-entry-get (point) "ID") f) values))
+               finally return values))))
 
-(defun ile-nav-visit-id (id)
+(defun ile-nav-visit-id (id file)
   "Similar to 'org-id-goto, but we don't pop to the buffer when we find ID.
-Returns the buffer."
-  (let ((m (org-id-find id 'marker)))
+Returns the buffer.  FILE is the file to look in."
+  (let ((m (org-id-find-id-in-file id file 'marker)))
     (unless m
       (error "Cannot find entry with ID \"%s\"" id))
     (let ((buf (marker-buffer m)))
@@ -210,17 +210,23 @@ Returns the buffer."
       (org-show-context)
       buf)))
 
-(defun ile-discovery-indirect-buffer-for-id (id)
+(defun ile-nav-indirect-buffer-for-id (&optional id)
   "Pop to an indirect buffer narrowed to the headline associated with ID.
 Start by looking for an existing buffer of the form *<id>*.  If
 not found, one will be created."
-  (interactive (list (completing-read "Choose id: " (ile-nav-case-ids))))
-  (let* ((buf-name (format "*%s*" id))
-         (buf (get-buffer buf-name)))
+  (interactive)
+  (let* ((pairs (ile-nav-case-ids))
+         (ids (delete-dups (mapcar (lambda (el) (car el)) pairs)))
+         (id (or id (completing-read "Choose id: " ids nil t)))
+         (buf-name (format "*%s*" id))
+         (buf (get-buffer buf-name))
+         (found (assoc id pairs)))
+    (unless found
+      (user-error "Unable to find %S in case" id))
     (if buf
         (pop-to-buffer-same-window buf)
       (let ((base-buf (with-current-buffer
-                  (ile-nav-visit-id id))))
+                          (ile-nav-visit-id id (cdr found)))))
         (pop-to-buffer-same-window (make-indirect-buffer base-buf buf-name t)))
       (org-narrow-to-subtree))))
 
@@ -234,7 +240,7 @@ derive it using projectile if not specified."
                                         (format "Date to look for (%s): " def)
                                       "Date to look for: ")))
                        (read-string prompt nil nil def))))
-  (ile-discovery-indirect-buffer-for-id (ile-org--make-case-id "timeline" case))
+  (ile-nav-indirect-buffer-for-id (ile-org--make-case-id "timeline" case))
   (let ((ast (org-element-parse-buffer))
         (row-no 0)
         (col-no 0))
