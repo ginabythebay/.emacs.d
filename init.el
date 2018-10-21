@@ -431,6 +431,8 @@ Inspired by crux-beginning-of-line."
   ;; see https://github.com/Fuco1/smartparens/wiki/Permissions
   (sp-local-pair 'emacs-lisp-mode "'" nil :actions nil)           ;; no '' pair in emacs-lisp-mode
   (sp-local-pair 'emacs-lisp-mode "`" nil :actions nil)           ;; no `` pair in emacs-lisp-mode
+  (sp-local-pair 'suggest-mode "'" nil :actions nil)
+  (sp-local-pair 'suggest-mode "`" nil :actions nil)
   (sp-local-pair 'markdown-mode "`" nil :actions '(insert))       ;; only use ` for auto insertion in markdown-mode
 
   (defun my-create-newline-and-enter-sexp (&rest _ignored)

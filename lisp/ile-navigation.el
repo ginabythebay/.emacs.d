@@ -16,6 +16,7 @@
 
 (require 'bates)
 (require 'cl-lib)
+(require 'dash)
 (require 'projectile)
 
 
@@ -142,8 +143,7 @@ determine it."
                                         (format "Bates number (%s): " def)
                                       "Bates number: ")))
                      (read-string prompt nil nil def))))
-  (unless project-dir
-    (setq project-dir (projectile-project-root)))
+  (unless project-dir (setq project-dir (projectile-project-root)))
 
   (let ((tokens (split-string bates)))
     (unless (equal 2 (length tokens))
@@ -173,6 +173,30 @@ determine it."
         ((string-match ile-org--date-re target)
          (ile-org-lookup-date target))))
 
+(defun ile-nav-case-org-files ()
+  "Return a list of all org files in the current case."
+  (let ((root (projectile-root-bottom-up default-directory)))
+    (mapcar (lambda (f) (concat root f))
+            (-filter
+             (lambda (f) (string-suffix-p ".org" f))
+             (projectile-current-project-files)))))
+
+(defun ile-nav-case-ids ()
+  "Return a list of ids found in current case org files."
+  (save-mark-and-excursion
+    (let ((files (ile-nav-case-org-files))
+          (case-fold-search t)
+	  (re (org-re-property "ID")))
+      (delete-dups (cl-loop with values
+                            for f in files
+                            do
+                            (set-buffer (or (find-buffer-visiting f)
+                                            (find-file-noselect f)))
+                              (goto-char (point-min))
+                              (while (re-search-forward re nil t)
+                                (push (org-entry-get (point) "ID") values))
+                            finally return values)))))
+
 (defun ile-nav-visit-id (id)
   "Similar to 'org-id-goto, but we don't pop to the buffer when we find ID.
 Returns the buffer."
@@ -190,7 +214,7 @@ Returns the buffer."
   "Pop to an indirect buffer narrowed to the headline associated with ID.
 Start by looking for an existing buffer of the form *<id>*.  If
 not found, one will be created."
-  (interactive)
+  (interactive (list (completing-read "Choose id: " (ile-nav-case-ids))))
   (let* ((buf-name (format "*%s*" id))
          (buf (get-buffer buf-name)))
     (if buf
