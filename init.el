@@ -780,7 +780,24 @@ Inspired by crux-beginning-of-line."
   :config
   (bind-keys
    :map pdf-view-mode-map
-   ("b" . ile-jump-bates-number)))
+   ("b" . ile-jump-bates-number))
+
+  ;; TODO(gina) move this into ILE after I figure out the right way to packageize it.
+  (defvar ile-map nil
+    "ILE keymap.")
+  (define-prefix-command 'ile-map)
+  (define-key ile-map (kbd "c") #'my-cleanup-region-date)
+  (define-key ile-map (kbd "d") #'ile-duplicate)
+  (define-key ile-map (kbd "i") #'ile-nav-indirect-buffer-for-id)
+  (define-key ile-map (kbd "t") #'ile-org-noter-dates)
+  (define-key ile-map (kbd "v") #'ile-jump-discovery)
+
+  ;; This part would remain out here somewhere
+  (global-unset-key (kbd "C-l"))
+  (global-set-key (kbd "C-l") 'ile-map)
+  (define-key ile-map (kbd "l") #'recenter-top-bottom))
+
+
 
 (require 'org-collector)
 
