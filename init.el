@@ -33,6 +33,8 @@
 
 (global-auto-revert-mode 1)
 
+(winner-mode 1)
+
 ;; from https://aur.archlinux.org/packages/go-fonts-git/
 ;; Note that on linux I had 12 points, but on windows 11 felt better.
 ;; Might need to make this dependant on the screen or something.
@@ -588,6 +590,12 @@ Inspired by crux-beginning-of-line."
 (use-package magit
   :ensure t
   :bind ("C-x g" . magit-status))
+
+(use-package fullframe
+  :after (magit)
+  :ensure t
+  :config
+  (fullframe magit-status magit-mode-quit-window))
 
 (setq-default show-trailing-whitespace t)
 
