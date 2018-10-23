@@ -339,8 +339,8 @@ Inspired by crux-beginning-of-line."
   (when (equal my-host "octavia")
     (setq company-global-modes `(not shell-mode ledger-mode))
     )
-  (setq company-idle-delay 0
-        company-minimum-prefix-length 2
+  (setq company-idle-delay .2
+        company-minimum-prefix-length 3
         company-show-numbers t
         company-selection-wrap-around t
         company-dabbrev-downcase nil)
