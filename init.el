@@ -861,9 +861,9 @@ _k_: kill        _s_: split                   _{_: wrap with { }
   ;; This part would remain out here somewhere
   (global-unset-key (kbd "C-l"))
   (global-set-key (kbd "C-l") 'ile-map)
-  (define-key ile-map (kbd "l") #'recenter-top-bottom))
+  (define-key ile-map (kbd "l") #'recenter-top-bottom)
 
-
+  (global-set-key (kbd "C-x 8 s") (lambda () (interactive) (insert "§"))))
 
 (require 'org-collector)
 
@@ -874,6 +874,7 @@ _k_: kill        _s_: split                   _{_: wrap with { }
   :ensure t
   :diminish helm-mode
   :config
+
   (helm-mode 1)
   (bind-key "M-x" 'helm-M-x)
   (bind-key "C-x r b" 'helm-filtered-bookmarks)
