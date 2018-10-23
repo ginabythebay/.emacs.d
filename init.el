@@ -122,6 +122,14 @@ the syntax class ')'."
   (add-to-list 'load-path host-dir)
   (require init-host-feature))
 
+(use-package deadgrep
+  :ensure t
+  :bind
+  ("s-d" . deadgrep))
+
+(use-package hydra
+  :ensure t)
+
 (use-package delight
   :ensure t)
 
@@ -149,14 +157,12 @@ the syntax class ')'."
   ;("[f2] u" . counsel-unicode-char)
   ("C-c g" . counsel-git)
   ("C-c j" . counsel-git-grep)
-  ("C-c k" . counsel-ag)
   ("C-x l" . counsel-locate)
   ("C-S-o" . counsel-rhythmbox))
   ; these also don't work
   ;("C-z f" . counsel-describe-function)
   ;("C-z v" . counsel-describe-variable)
-  ;("C-c k" . counsel-ag))
-
+  
 ;; Themes
 (use-package zenburn-theme
   :ensure t)
@@ -380,8 +386,60 @@ Inspired by crux-beginning-of-line."
   ("C-c \"" . wrap-with-double-quotes)
   ("C-c `" . wrap-with-back-quotes)
   ("C-c u" . sp-unwrap-sexp)
+  ("C-c k" . lunaryorn-smartparens/body)
   :demand
   :config
+;; Hydra for Smartparens, from https://github.com/lunaryorn/old-emacs-configuration/blob/1d9f6656877386273e000a30cb67670d64b73759/init.el
+  (defhydra lunaryorn-smartparens (:hint nil)
+    "
+Sexps (quit with _q_)
+^Nav^            ^Barf/Slurp^                 ^Depth^
+^---^------------^----------^-----------------^-----^-----------------
+_f_: forward     _<left>_:    slurp forward   _R_:      splice
+_b_: backward    _<right>_:   barf forward    _r_:      raise
+_u_: backward ↑  _C-<left>_:  slurp backward  _<up>_:   raise backward
+_d_: forward ↓   _C-<right>_: barf backward   _<down>_: raise forward
+_p_: backward ↓
+_n_: forward ↑
+^Kill^           ^Misc^                       ^Wrap^
+^----^-----------^----^-----------------------^----^------------------
+_w_: copy        _j_: join                    _(_: wrap with ( )
+_k_: kill        _s_: split                   _{_: wrap with { }
+^^               _t_: transpose               _'_: wrap with ' '
+^^               _c_: convolute               _\"_: wrap with \" \"
+^^               _i_: indent defun"
+    ("q" nil)
+    ;; Wrapping
+    ("(" (lambda (a) (interactive "P") (sp-wrap-with-pair "(")))
+    ("{" (lambda (a) (interactive "P") (sp-wrap-with-pair "{")))
+    ("'" (lambda (a) (interactive "P") (sp-wrap-with-pair "'")))
+    ("\"" (lambda (a) (interactive "P") (sp-wrap-with-pair "\"")))
+    ;; Navigation
+    ("f" sp-forward-sexp )
+    ("b" sp-backward-sexp)
+    ("u" sp-backward-up-sexp)
+    ("d" sp-down-sexp)
+    ("p" sp-backward-down-sexp)
+    ("n" sp-up-sexp)
+    ;; Kill/copy
+    ("w" sp-copy-sexp)
+    ("k" sp-kill-sexp)
+    ;; Misc
+    ("t" sp-transpose-sexp)
+    ("j" sp-join-sexp)
+    ("s" sp-split-sexp)
+    ("c" sp-convolute-sexp)
+    ("i" sp-indent-defun)
+    ;; Depth changing
+    ("R" sp-splice-sexp)
+    ("r" sp-splice-sexp-killing-around)
+    ("<up>" sp-splice-sexp-killing-backward)
+    ("<down>" sp-splice-sexp-killing-forward)
+    ;; Barfing/slurping
+    ("<right>" sp-forward-slurp-sexp)
+    ("<left>" sp-forward-barf-sexp)
+    ("C-<left>" sp-backward-barf-sexp)
+    ("C-<right>" sp-backward-slurp-sexp))
   (bind-keys
    :map smartparens-mode-map
    ;; (foo| bar) -> foo bar
