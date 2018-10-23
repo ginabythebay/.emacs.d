@@ -29,6 +29,8 @@
 
 (setq w32-apps-modifier 'super) ;; App key, aka context menu key
 
+(require 'dired)
+
 (use-package w32-browser
   :ensure t
   :bind (:map dired-mode-map
