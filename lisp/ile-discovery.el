@@ -46,6 +46,11 @@ be based on the numeric value of their starting bates numbers."
   (should (equal (ile--file-name-sort-p "OCA 1-50.pdf" "OCA 51-562.pdf") t))
   (should (equal (ile--file-name-sort-p "OCA 51-562.pdf" "OCA 51-562.pdf") nil)))
 
+(defsubst ile-skip-production-file-p (base-name)
+  "Return non-nil if we should skip BASE-NAME (e.g. it is a cover letter)."
+  (let ((case-fold-search t))
+    (string-match-p "cover letter" base-name)))
+
 (defun ile--group-productions (files)
   "Convert a list of file names in FILES to an alist.
 
@@ -60,8 +65,9 @@ it will be dropped."
      for f in files
      if (ile--f-eq "pdf" (file-name-extension f))
      do
-     (let ((bates-pair (bates-parse-filename-to-range (file-name-nondirectory f))))
-       (when bates-pair
+     (let* ((base-name (file-name-nondirectory f))
+            (bates-pair (bates-parse-filename-to-range base-name)))
+       (when (and bates-pair (not (ile-skip-production-file-p base-name)))
          (let ((key (bates-page-prefix (car bates-pair))))
          (map-put result key (cons f (map-elt result key () #'equal)) #'equal)
        )))
