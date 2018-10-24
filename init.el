@@ -395,8 +395,8 @@ Inspired by crux-beginning-of-line."
 Sexps (quit with _q_)
 ^Nav^            ^Barf/Slurp^                 ^Depth^
 ^---^------------^----------^-----------------^-----^-----------------
-_f_: forward     _<left>_:    slurp forward   _R_:      splice
-_b_: backward    _<right>_:   barf forward    _r_:      raise
+_f_: forward     _<right>_:   slurp forward   _R_:      splice
+_b_: backward    _<left>_:    barf forward    _r_:      raise
 _u_: backward ↑  _C-<left>_:  slurp backward  _<up>_:   raise backward
 _d_: forward ↓   _C-<right>_: barf backward   _<down>_: raise forward
 _p_: backward ↓
@@ -838,6 +838,9 @@ _k_: kill        _s_: split                   _{_: wrap with { }
    :map pdf-view-mode-map
    ("e" . ile-pdf-extract-pages)))
 (use-package ile-discovery
+  :load-path "lisp"
+  :ensure nil)
+(use-package ile-link
   :load-path "lisp"
   :ensure nil)
 (use-package ile-navigation
