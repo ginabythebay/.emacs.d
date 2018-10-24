@@ -35,6 +35,12 @@
 
 (winner-mode 1)
 
+;; enable gpg encryption
+;; see https://stackoverflow.com/questions/41741477/emacs-epa-and-gnupg2-no-usable-configuration?rq=1
+(require 'epa-file)
+(custom-set-variables '(epg-gpg-program (executable-find "gpg")))
+(epa-file-enable)
+
 ;; from https://aur.archlinux.org/packages/go-fonts-git/
 ;; Note that on linux I had 12 points, but on windows 11 felt better.
 ;; Might need to make this dependant on the screen or something.
