@@ -236,6 +236,49 @@ not found, one will be created."
         (pop-to-buffer-same-window (make-indirect-buffer base-buf buf-name t)))
       (org-narrow-to-subtree))))
 
+(defun ile-org-lookup-fed-rule (rule)
+  "Switch to the appropriate buffer for RULE and move the cursor to it.
+RULE should be something like FRCP 26(a)(b)."
+  (interactive
+   (list (let* ((def (ile-org-fed-rule-at-point))
+                (def (and def (substring-no-properties def)))
+                (prompt (if def
+                            (format "Rule to look for (%s): " def)
+                          "Rule to look for: ")))
+           (read-string prompt nil nil def))))
+
+  (unless (string-match "\\([A-Z]+\\) .*" rule)
+    (user-error "Unable to parse rule %S.  Expected it to start with something like FRCP" rule))
+
+  (let* ((id (match-string 1 rule))
+         (m (org-id-find id 'marker)))
+    (unless m
+      (error "Cannot find entry with ID \"%s\"" id))
+    (let ((buf (marker-buffer m)))
+      (set-buffer (marker-buffer m))
+      (goto-char m)
+      (move-marker m nil)
+
+      (let ((pos
+             (save-restriction
+               (org-narrow-to-subtree)
+               (let ((ast (org-element-parse-buffer))
+                     (best-match))
+                 (org-element-map
+                     ast
+                     '(headline)
+                   (lambda (el)
+                     ((let ((title (org-element-property :raw-value el)))
+                        (if (string-prefix-p rule title)
+                            (org-element-property :contents-begin el)
+                          ;; else try to find greatest common substring
+                          ))))
+                   nil t)))
+             ;; jump to pos
+             ))))))
+
+
+
 (defun ile-org-lookup-date (target &optional case)
   "Look up a TARGET date and show related CASE information for it.
 Case is just our client name, e.g. 'gantt'.  We will attempt to
