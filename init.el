@@ -141,6 +141,11 @@ the syntax class ')'."
   :config
   (beacon-mode 1))
 
+(use-package paradox
+  :ensure t
+  :config
+  (paradox-enable))
+
 (use-package delight
   :ensure t)
 
