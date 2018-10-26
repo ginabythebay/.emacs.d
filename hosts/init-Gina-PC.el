@@ -16,6 +16,17 @@
    kept-old-versions 0
    version-control t)       ; use versioned backups
 
+(defconst emacs-info-dir "c:/users/gina/Desktop/emacs/share/info")
+
+(defun my-fix-info-path ()
+  "Fix Info-directory-list.
+
+Something keeps stomping on it.  Until I figure out what that is,
+make it easier to fix."
+  (interactive)
+  (unless (member emacs-info-dir Info-directory-list)
+    (push emacs-info-dir Info-directory-list)))
+
 (require 'printing)
 (setq pr-path-alist
 	    '((windows   "c:/applications/executables" PATH ghostview)
