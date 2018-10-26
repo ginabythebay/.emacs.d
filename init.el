@@ -800,8 +800,8 @@ _k_: kill        _s_: split                   _{_: wrap with { }
 
   (add-hook 'org-mode-hook (lambda () (require 'org-override)))
 
-  (setq org-refile-targets (quote ((nil :maxlevel . 9)
-                                   (org-agenda-files :maxlevel . 9)))))
+  (setq org-refile-targets (quote ((nil :regexp . "Tasks")
+                                   (org-agenda-files :regexp . "Tasks")))))
 
 (use-package org-collector
   :load-path "lisp"
