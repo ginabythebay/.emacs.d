@@ -23,7 +23,7 @@
 
 (defconst ile-org--bates-re "[A-Z]+ [0-9]+")
 (defconst ile-org--date-re "[0-9]\\{4,4\\}-[0-9]\\{2,2\\}-[0-9]\\{2,2\\}")
-
+(defconst ile-org--fed-rule-re "FRE\\|FRCP [0-9]+\\(([0-9a-zA-Z])\\)*")
 
 (defun ile-org--derive-case (&optional case)
   "Return CASE if specified, else try to figure it out."
@@ -75,6 +75,11 @@ We look for files in PROJECT-DIR/Discovery/united that contains PREFIX and NO."
   "Return the date at point, or nil if none is found."
   (when (thing-at-point-looking-at ile-org--date-re 10)
      (buffer-substring (match-beginning 0) (match-end 0))))
+
+(defun ile-org-fed-rule-at-point ()
+  "Return the federal rule at point, or nil if none if found."
+  (when (thing-at-point-looking-at ile-org--fed-rule-re 10)
+    (buffer-substring (match-beginning 0) (match-end 0))))
 
 (defun ile-org--parse-current-discovery-table (noun-hdr def-hdr)
   "Parse the first table in the current element.
