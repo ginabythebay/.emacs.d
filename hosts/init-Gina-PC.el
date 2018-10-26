@@ -30,12 +30,10 @@ make it easier to fix."
 (require 'printing)
 (setq pr-path-alist
 	    '((windows   "c:/applications/executables" PATH ghostview)
-	      (ghostview "C:/Program Files/Artifex Software/gsview6.0/bin")
-	      ))
-(setq pr-ps-name       'ricoh)
+	      (ghostview "C:/Program Files/Artifex Software/gsview6.0/bin")))
+(setq pr-ps-name 'ricoh)
 (setq pr-ps-printer-alist
-      '((ricoh  "print"     nil nil "\\\\192.168.1.35\\AFICIOMP6002")
-        ))
+      '((ricoh "print" nil nil "\\\\192.168.1.35\\AFICIOMP6002")))
 (pr-update-menus t)
 
 (setq w32-apps-modifier 'super) ;; App key, aka context menu key
