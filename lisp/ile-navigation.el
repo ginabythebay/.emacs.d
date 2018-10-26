@@ -17,6 +17,7 @@
 (require 'bates)
 (require 'cl-lib)
 (require 'dash)
+(require 'org-id)
 (require 'projectile)
 
 
