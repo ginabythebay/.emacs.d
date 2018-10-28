@@ -154,6 +154,13 @@ the syntax class ')'."
 
 (use-package helpful
   :ensure t
+  :config
+  (defun my-helpful-switch-buffer (buf &optional action norecord)
+    ;; if already in a helpful buffer, stay in the same window
+    (if (equal major-mode 'helpful-mode)
+        (pop-to-buffer-same-window buf norecord)
+      (pop-to-buffer buf action norecord)))
+  (customize-set-variable helpful-switch-buffer-function #'my-helpful-switch-buffer)
   :bind
   ("C-h f" . helpful-callable)
   ("C-h v" . helpful-variable)
