@@ -266,8 +266,8 @@ RULE should be something like FRCP 26(a)(b)."
       (goto-char m)
       (move-marker m nil)
 
-      (let* ((best-len 0)  ;; length of longest match
-             (best-pos nil)    ;; position of longest match
+      (let* ((best-len 0)    ;; length of longest match
+             (best-pos nil)  ;; position of longest match
              (ast (save-restriction (org-narrow-to-subtree) (org-element-parse-buffer)))
              (pos (org-element-map
                       ast
