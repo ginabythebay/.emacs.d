@@ -17,6 +17,7 @@
 (require 'bates)
 (require 'cl-lib)
 (require 'dash)
+(require 'org-element)
 (require 'org-id)
 (require 'projectile)
 
@@ -268,16 +269,15 @@ RULE should be something like FRCP 26(a)(b)."
                      ast
                      '(headline)
                    (lambda (el)
-                     ((let ((title (org-element-property :raw-value el)))
-                        (if (string-prefix-p rule title)
-                            (org-element-property :contents-begin el)
-                          ;; else try to find greatest common substring
-                          ))))
-                   nil t)))
-             ;; jump to pos
-             ))))))
-
-
+                     (let ((title (org-element-property :raw-value el)))
+                       (if (string-prefix-p rule title)
+                           (org-element-property :begin el)
+                         ;; else try to find greatest common substring
+                         nil)))
+                   nil t)))))
+        (if pos
+            (goto-char pos)
+          (message "Unable to find match for %S" rule))))))
 
 (defun ile-org-lookup-date (target &optional case)
   "Look up a TARGET date and show related CASE information for it.
