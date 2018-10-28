@@ -164,18 +164,21 @@ determine it."
         (find-file united-file)
         (pdf-view-goto-page (bates-find-page united-file no))))))
 
-(defun ile-jump-discovery (target)
-  "Jump to TARGET where target can be a date or a bates number."
-  (interactive (list (let* ((def (or (ile-org-bates-at-point) (ile-org-date-at-point)))
+(defun ile-jump (target)
+  "Jump to TARGET where target can be a federal rule, a date or a bates number."
+  (interactive (list (let* ((def (or (ile-org-fed-rule-at-point) (ile-org-bates-at-point) (ile-org-date-at-point)))
                             (def (and def (substring-no-properties def)))
                             (prompt (if def
                                         (format "Date or bates number (%s): " def)
                                       "Date or bates number: ")))
                        (read-string prompt nil nil def))))
-  (cond ((string-match ile-org--bates-re target)
-         (ile-jump-bates target))
-        ((string-match ile-org--date-re target)
-         (ile-org-lookup-date target))))
+  (cond
+   ((string-match ile-org--fed-rule-re target)
+    (ile-org-lookup-fed-rule target))
+   ((string-match ile-org--bates-re target)
+    (ile-jump-bates target))
+   ((string-match ile-org--date-re target)
+    (ile-org-lookup-date target))))
 
 (defun ile-nav-case-org-files ()
   "Return a list of all org files in the current case."
@@ -262,7 +265,7 @@ RULE should be something like FRCP 26(a)(b)."
     (unless m
       (error "Cannot find entry with ID \"%s\"" id))
     (let ((buf (marker-buffer m)))
-      (set-buffer (marker-buffer m))
+      (pop-to-buffer-same-window (marker-buffer m))
       (goto-char m)
       (move-marker m nil)
 

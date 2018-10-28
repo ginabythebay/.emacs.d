@@ -881,8 +881,8 @@ _k_: kill        _s_: split                   _{_: wrap with { }
   (define-key ile-map (kbd "c") #'my-cleanup-region-date)
   (define-key ile-map (kbd "d") #'ile-duplicate)
   (define-key ile-map (kbd "i") #'ile-nav-indirect-buffer-for-id)
+  (define-key ile-map (kbd "j") #'ile-jump)
   (define-key ile-map (kbd "t") #'ile-org-noter-dates)
-  (define-key ile-map (kbd "v") #'ile-jump-discovery)
 
   ;; This part would remain out here somewhere
   (global-unset-key (kbd "C-l"))
