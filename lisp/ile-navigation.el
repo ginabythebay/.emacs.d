@@ -24,7 +24,7 @@
 
 (defconst ile-org--bates-re "[A-Z]+ [0-9]+")
 (defconst ile-org--date-re "[0-9]\\{4,4\\}-[0-9]\\{2,2\\}-[0-9]\\{2,2\\}")
-(defconst ile-org--fed-rule-re "FRE\\|FRCP [0-9]+\\(([0-9a-zA-Z])\\)*")
+(defconst ile-org--fed-rule-re "FRE\\|FRCP [0-9]+\\(([0-9a-zA-Z]+)\\)*")
 
 (defun ile-org--derive-case (&optional case)
   "Return CASE if specified, else try to figure it out."
@@ -61,10 +61,7 @@ We look for files in PROJECT-DIR/Discovery/united that contains PREFIX and NO."
      for current-field = (org-trim (save-excursion (org-table-get-field)))
      then (progn (next-line) (org-trim (save-excursion (org-table-get-field))))
      until (or (not (org-table-p)) (string= current-field last-field))
-     do (setq last-field current-field)
-     )
-    )
-  )
+     do (setq last-field current-field))))
 
 (defun ile-org-bates-at-point ()
   "Return the bates number (e.g. OCA 400) at point, or nil if none is found."
@@ -79,7 +76,7 @@ We look for files in PROJECT-DIR/Discovery/united that contains PREFIX and NO."
 
 (defun ile-org-fed-rule-at-point ()
   "Return the federal rule at point, or nil if none if found."
-  (when (thing-at-point-looking-at ile-org--fed-rule-re 10)
+  (when (thing-at-point-looking-at ile-org--fed-rule-re 20)
     (buffer-substring (match-beginning 0) (match-end 0))))
 
 (defun ile-org--parse-current-discovery-table (noun-hdr def-hdr)
@@ -237,6 +234,15 @@ not found, one will be created."
         (pop-to-buffer-same-window (make-indirect-buffer base-buf buf-name t)))
       (org-narrow-to-subtree))))
 
+(defsubst ile-org--prefix-match-len (s1 s2)
+  "Return the length of the common prefix for S1 and S2."
+  (let ((l 0))
+    (while (eq (elt s1 l) (elt s2 l))
+      (setq l (1+ l)))
+    (if (eq l 0)
+        nil
+      l)))
+
 (defun ile-org-lookup-fed-rule (rule)
   "Switch to the appropriate buffer for RULE and move the cursor to it.
 RULE should be something like FRCP 26(a)(b)."
@@ -260,24 +266,26 @@ RULE should be something like FRCP 26(a)(b)."
       (goto-char m)
       (move-marker m nil)
 
-      (let ((pos
-             (save-restriction
-               (org-narrow-to-subtree)
-               (let ((ast (org-element-parse-buffer))
-                     (best-match))
-                 (org-element-map
-                     ast
-                     '(headline)
-                   (lambda (el)
-                     (let ((title (org-element-property :raw-value el)))
-                       (if (string-prefix-p rule title)
-                           (org-element-property :begin el)
-                         ;; else try to find greatest common substring
-                         nil)))
-                   nil t)))))
-        (if pos
-            (goto-char pos)
-          (message "Unable to find match for %S" rule))))))
+      (let* ((best-len 0)  ;; length of longest match
+             (best-pos nil)    ;; position of longest match
+             (ast (save-restriction (org-narrow-to-subtree) (org-element-parse-buffer)))
+             (pos (org-element-map
+                      ast
+                      '(headline)
+                    (lambda (el)
+                      (if-let* ((title (org-element-property :raw-value el))
+                                ((string-prefix-p rule title)))
+                          (org-element-property :begin el)
+                        (when-let* ((l (ile-org--prefix-match-len rule title))
+                                    ((> l best-len)))
+                            (setq best-len l
+                                  best-pos (org-element-property :begin el)))
+                        nil))
+                    nil t)))
+        (cond
+         (pos (goto-char pos))
+         (best-pos (goto-char best-pos))
+         (t (message "Unable to find match for %S" rule)))))))
 
 (defun ile-org-lookup-date (target &optional case)
   "Look up a TARGET date and show related CASE information for it.
