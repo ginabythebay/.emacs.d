@@ -151,7 +151,7 @@ the syntax class ')'."
   :config
   (defun my-helpful-switch-buffer (buf &optional action norecord)
     ;; if already in a helpful buffer, stay in the same window
-    (if (equal major-mode 'helpful-mode)
+    (if (memq major-mode '(helpful-mode Info-mode))
         (pop-to-buffer-same-window buf norecord)
       (pop-to-buffer buf action norecord)))
   (customize-set-variable helpful-switch-buffer-function #'my-helpful-switch-buffer)
@@ -179,7 +179,7 @@ the syntax class ')'."
   ; these also don't work
   ;("C-z f" . counsel-describe-function)
   ;("C-z v" . counsel-describe-variable)
-  
+
 ;; Themes
 (use-package zenburn-theme
   :ensure t)
