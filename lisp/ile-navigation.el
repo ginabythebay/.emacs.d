@@ -321,5 +321,13 @@ derive it using projectile if not specified."
           (when pos
             (goto-char pos)))))
 
+(defun ile-org-fill-subtree ()
+  "Run 'org-fill-paragraph on the current subtree."
+  (interactive)
+  (save-mark-and-excursion
+    (org-mark-subtree)
+    (org-fill-paragraph nil t)))
+
+
 (provide 'ile-navigation)
 ;;; ile-navigation.el ends here
