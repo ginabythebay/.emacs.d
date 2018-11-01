@@ -1070,6 +1070,12 @@ are exported to a filename derived from the headline text."
   :load-path "lisp"
   :ensure nil)
 
+(use-package gina-launcher
+  :load-path "lisp"
+  :after (hydra)
+  :ensure nil
+  :config
+  (key-chord-define-global "jk" #'gina-launcher-hydra/body))
 
 ;; see https://www.emacswiki.org/emacs/UnfillParagraph
 (defun unfill-paragraph (&optional region)
