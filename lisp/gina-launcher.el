@@ -38,11 +38,13 @@
 (defhydra gina-launcher-hydra (:hint nil :exit t)
   "
 (quit with _q_)
-_t_: Open time sheet
-_i_: Clock in to recent task"
+_t_: open Time sheet
+_i_: clock In to recent task
+_c_: jump to Current clock"
   ("q" nil)
   ("t" gina-open-current-timesheet)
-  ("i" gina-clock-in-to-recent-task))
+  ("i" gina-clock-in-to-recent-task)
+  ("c" org-clock-jump-to-current-clock))
 
 (provide 'gina-launcher)
 ;;; gina-launcher.el ends here
