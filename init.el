@@ -116,6 +116,11 @@ the syntax class ')'."
 (require 'use-package)
 (setq use-package-always-ensure t)
 
+
+(use-package key-chord
+  :config
+  (key-chord-mode 1))
+
 ;; see https://nicolas.petton.fr/blog/per-computer-emacs-settings.html
 (defconst my-host (substring (shell-command-to-string "hostname") 0 -1))
 (let ((host-dir "~/.emacs.d/hosts/")
@@ -395,6 +400,7 @@ Inspired by crux-beginning-of-line."
 ;; see https://ebzzry.github.io/emacs-pairs.html
 (require 'help-mode) ;; smartparens cheat sheet will fail without this
 (use-package smartparens
+  :after (hydra)
   :ensure t
   :bind
   ("C-c (" . wrap-with-parens)
@@ -404,11 +410,10 @@ Inspired by crux-beginning-of-line."
   ("C-c \"" . wrap-with-double-quotes)
   ("C-c `" . wrap-with-back-quotes)
   ("C-c u" . sp-unwrap-sexp)
-  ("C-c k" . lunaryorn-smartparens/body)
   :demand
   :config
 ;; Hydra for Smartparens, from https://github.com/lunaryorn/old-emacs-configuration/blob/1d9f6656877386273e000a30cb67670d64b73759/init.el
-  (defhydra lunaryorn-smartparens (:hint nil)
+  (defhydra lunaryorn-smartparens (:hint nil :exit t)
     "
 Sexps (quit with _q_)
 ^Nav^            ^Barf/Slurp^                 ^Depth^
@@ -433,12 +438,12 @@ _k_: kill        _s_: split                   _{_: wrap with { }
     ("'" (lambda (a) (interactive "P") (sp-wrap-with-pair "'")))
     ("\"" (lambda (a) (interactive "P") (sp-wrap-with-pair "\"")))
     ;; Navigation
-    ("f" sp-forward-sexp )
-    ("b" sp-backward-sexp)
-    ("u" sp-backward-up-sexp)
-    ("d" sp-down-sexp)
-    ("p" sp-backward-down-sexp)
-    ("n" sp-up-sexp)
+    ("f" sp-forward-sexp nil :exit nil)
+    ("b" sp-backward-sexp nil :exit nil)
+    ("u" sp-backward-up-sexp nil :exit nil)
+    ("d" sp-down-sexp nil :exit nil)
+    ("p" sp-backward-down-sexp nil :exit nil)
+    ("n" sp-up-sexp nil :exit nil)
     ;; Kill/copy
     ("w" sp-copy-sexp)
     ("k" sp-kill-sexp)
@@ -458,6 +463,9 @@ _k_: kill        _s_: split                   _{_: wrap with { }
     ("<left>" sp-forward-barf-sexp)
     ("C-<left>" sp-backward-barf-sexp)
     ("C-<right>" sp-backward-slurp-sexp))
+
+  (key-chord-define-global "kk" #'lunaryorn-smartparens/body)
+
   (bind-keys
    :map smartparens-mode-map
    ;; (foo| bar) -> foo bar
@@ -478,8 +486,7 @@ _k_: kill        _s_: split                   _{_: wrap with { }
    ("s-k" . sp-kill-sexp))
 
   (show-smartparens-global-mode 1)
-  (add-hook 'prog-mode-hook #'turn-on-smartparens-mode)
-  (add-hook 'emacs-lisp-mode-hook #'turn-on-smartparens-strict-mode)
+  (add-hook 'prog-mode-hook #'turn-on-smartparens-strict-mode)
   (add-hook 'markdown-mode-hook #'turn-on-smartparens-mode)
 
   (defmacro def-pairs (pairs)
@@ -749,7 +756,7 @@ _k_: kill        _s_: split                   _{_: wrap with { }
   ; see http://cachestocaches.com/2016/9/my-workflow-org-agenda/
   (setq org-columns-default-format "%50ITEM(Task) %10CLOCKSUM %16TIMESTAMP_IA")
 
-  ; see http://cachestocaches.com/2016/9/my-workflow-org-agenda/
+  ;; see http://cachestocaches.com/2016/9/my-workflow-org-agenda/
   (setq org-capture-templates
 	'(("t" "todo" entry (file org-default-notes-file)
 	   "* TODO %?\n%u\n%a\n" :clock-in t :clock-resume t)
