@@ -743,6 +743,8 @@ _k_: kill        _s_: split                   _{_: wrap with { }
   ; see https://stackoverflow.com/questions/22720526/set-clock-table-duration-format-for-emacs-org-mode
   (setq org-duration-format (quote h:mm))
 
+  (setq org-clock-mode-line-total 'current)
+
   ;; turn off validation goo.  https://stackoverflow.com/a/15145594
   (setq org-html-validation-link nil)
 
