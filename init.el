@@ -334,7 +334,6 @@ Inspired by crux-beginning-of-line."
 ;; http://extensions.libreoffice.org/extension-center/english-dictionaries
 ;; Unzip the ofx file.  Copy *.aff and *.dic into ~/Library/Spelling/
 (add-hook 'text-mode-hook 'flyspell-mode)
-(add-hook 'org-mode-hook 'flyspell-mode)
 (add-hook 'prog-mode-hook 'flyspell-prog-mode)
 
 (use-package highlight-symbol
@@ -760,7 +759,11 @@ _k_: kill        _s_: split                   _{_: wrap with { }
   :ensure t
   :bind
   (("C-c !" . org-time-stamp-inactive)
-   ("C-x l" . org-refile-goto-last-stored))
+   ("C-x l" . org-refile-goto-last-stored)
+   ("C-c l" . org-store-link)
+   ("C-c a" . org-agenda)
+   ("C-c c" . org-capture)
+   ("C-c b" . org-switchb))
   :config
   (setq
    ;; see https://stackoverflow.com/questions/22720526/set-clock-table-duration-format-for-emacs-org-mode
@@ -813,6 +816,7 @@ _k_: kill        _s_: split                   _{_: wrap with { }
    org-refile-targets (quote ((nil :regexp . "Tasks")
                                    (org-agenda-files :regexp . "Tasks"))))
 
+  (add-hook 'org-mode-hook 'flyspell-mode)
   (add-hook 'org-mode-hook (lambda () (require 'org-override))))
 
 (use-package org-collector
@@ -838,14 +842,11 @@ _k_: kill        _s_: split                   _{_: wrap with { }
 ;;   (org-super-agenda-mode 1)
 ;;   (org-agenda-list))
 
-(global-set-key "\C-cl" 'org-store-link)
-(global-set-key "\C-ca" 'org-agenda)
-(global-set-key "\C-cc" 'org-capture)
-(global-set-key "\C-cb" 'org-switchb)
 
 (global-set-key "\C-h\C-f" #'find-function)
 
 (use-package org-noter
+  :commands org-noter
   :config
   (add-hook 'org-noter-notes-mode-hook (lambda () (require 'org-noter-override))))
 
@@ -900,8 +901,6 @@ _k_: kill        _s_: split                   _{_: wrap with { }
 
   (global-set-key (kbd "C-x 8 s") (lambda () (interactive) (insert "§"))))
 
-(require 'org-collector)
-
 (use-package free-keys
   :ensure t)
 
@@ -934,8 +933,8 @@ _k_: kill        _s_: split                   _{_: wrap with { }
 
 ; These don't really seem to do anything yet
 ; TODO(gina) continue fixing these up
-(use-package calfw)
-(use-package calfw-org)
+;;(use-package calfw)
+;;(use-package calfw-org)
 
 (setenv "LANG" "en_US")
 (setq ispell-really-hunspell t)
