@@ -708,7 +708,11 @@ _k_: kill        _s_: split                   _{_: wrap with { }
 
 (use-package anaconda-mode
   :ensure t
-  :config (add-hook 'python-mode-hook 'anaconda-mode))
+  :defer t
+  :init
+  (autoload 'anaconda-mode "anaconda-mode" nil t)
+  :config
+  (add-hook 'python-mode-hook 'anaconda-mode))
 
 (use-package company-anaconda
   :ensure t
