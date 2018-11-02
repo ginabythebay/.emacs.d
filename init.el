@@ -732,16 +732,23 @@ _k_: kill        _s_: split                   _{_: wrap with { }
       c-basic-offset 2)
 
 (use-package pdf-tools
+  :magic ("%PDF" . pdf-view-mode)
   :bind
- (:map pdf-view-mode-map
- ("G" . pdf-view-last-page))
- :config
- ;; initialise
- (pdf-tools-install)
- ;; open pdfs scaled to fit page
- (setq-default pdf-view-display-size 'fit-page)
- ;; automatically annotate highlights
- (setq pdf-annot-activate-created-annotations t))
+  (:map pdf-view-mode-map
+        ("G" . pdf-view-last-page))
+  :config
+  ;; initialise
+  (dolist
+      (pkg
+       '(pdf-annot pdf-cache pdf-dev pdf-history pdf-info pdf-isearch
+                   pdf-links pdf-misc pdf-occur pdf-outline pdf-sync
+                   pdf-util pdf-view pdf-virtual))
+    (require pkg))
+  (pdf-tools-install)
+  ;; open pdfs scaled to fit page
+  (setq-default pdf-view-display-size 'fit-page)
+  ;; automatically annotate highlights
+  (setq pdf-annot-activate-created-annotations t))
 
 (use-package htmlize)
 
