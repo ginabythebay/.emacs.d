@@ -757,6 +757,13 @@ _k_: kill        _s_: split                   _{_: wrap with { }
 
 (use-package org
   :ensure t
+  :init
+  (defun my-find-org-agenda-files ()
+    "Find all agenda files."
+    (interactive)
+    (require 'org)
+    (dolist (f org-agenda-files)
+      (find-file-noselect f)))
   :bind
   (("C-c !" . org-time-stamp-inactive)
    ("C-x l" . org-refile-goto-last-stored)
@@ -1032,12 +1039,6 @@ _k_: kill        _s_: split                   _{_: wrap with { }
 
     (when (org-at-timestamp-p 'lax)
       (org-timestamp-change 0 'day))))
-
-(defun my-find-org-agenda-files ()
-  "Find all agenda files."
-  (interactive)
-  (dolist (f org-agenda-files)
-    (find-file-noselect f)))
 
 ;; adapted from https://emacs.stackexchange.com/questions/2259/how-to-export-top-level-headings-of-org-mode-buffer-to-separate-files
 (defun my-org-export-all-html (pub-dir)
