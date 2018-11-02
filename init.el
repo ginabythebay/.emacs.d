@@ -121,6 +121,9 @@ the syntax class ')'."
   :config
   (key-chord-mode 1))
 
+(use-package use-package-chords
+  :ensure t)
+
 ;; see https://nicolas.petton.fr/blog/per-computer-emacs-settings.html
 (defconst my-host (substring (shell-command-to-string "hostname") 0 -1))
 (let ((host-dir "~/.emacs.d/hosts/")
@@ -215,9 +218,13 @@ the syntax class ')'."
   :bind-keymap
   ("s-p" . projectile-command-map))
 
+(use-package gina-keymap
+  :load-path "lisp"
+  :ensure nil)
+
 (use-package multiple-cursors
+  :after (gina-keymap)
   :ensure t
-  :demand
   :bind (
 	 ("C--" . mc/mark-next-like-this)
 	 (:map gina-map
@@ -735,84 +742,62 @@ _k_: kill        _s_: split                   _{_: wrap with { }
 
 (use-package org
   :ensure t
-  :demand t
+  :bind
+  (("C-c !" . org-time-stamp-inactive)
+   ("C-x l" . org-refile-goto-last-stored))
   :config
-  (bind-key "C-x l" 'org-refile-goto-last-stored)
-  (bind-key "C-c !" 'org-time-stamp-inactive)
+  (setq
+   ;; see https://stackoverflow.com/questions/22720526/set-clock-table-duration-format-for-emacs-org-mode
+   org-duration-format (quote h:mm)
+   org-clock-mode-line-total 'current
 
-  ; see https://stackoverflow.com/questions/22720526/set-clock-table-duration-format-for-emacs-org-mode
-  (setq org-duration-format (quote h:mm))
+   ;; turn off validation goo.  https://stackoverflow.com/a/15145594
+   org-html-validation-link nil
 
-  (setq org-clock-mode-line-total 'current)
+   org-reverse-note-order t
 
-  ;; turn off validation goo.  https://stackoverflow.com/a/15145594
-  (setq org-html-validation-link nil)
+   org-default-notes-file "c:/Users/gina/Documents/Gina/overall notes.org"
 
-  (setq org-reverse-note-order t)
+   ;; see http://doc.norang.ca/org-mode.html#FindTasksToClockIn
+   org-time-stamp-rounding-minutes (quote (1 1))
 
-  (setq org-default-notes-file "c:/Users/gina/Documents/Gina/overall notes.org")
+   ;; see http://cachestocaches.com/2016/9/my-workflow-org-agenda/
+   org-columns-default-format "%50ITEM(Task) %10CLOCKSUM %16TIMESTAMP_IA"
 
-  ; see http://doc.norang.ca/org-mode.html#FindTasksToClockIn
-  (setq org-time-stamp-rounding-minutes (quote (1 1)))
+   ;; see http://cachestocaches.com/2016/9/my-workflow-org-agenda/
+   org-capture-templates
+   '(("t" "todo" entry (file org-default-notes-file)
+      "* TODO %?\n%u\n%a\n" :clock-in t :clock-resume t)
+     ("m" "Meeting" entry (file org-default-notes-file)
+      "* MEETING with %? :MEETING:\n%t" :clock-in t :clock-resume t)
+     ("i" "Idea" entry (file org-default-notes-file)
+      "* %? :IDEA: \n%t" :clock-in t :clock-resume t)
+     ("n" "Next Task" entry (file+headline org-default-notes-file "Tasks")
+      "** TODO NEXT %? \nDEADLINE: %t" :prepend t :clock-in t :clock-resume t)
+     ("c" "Schedule court deadline in current buffer" entry (file+olp+datetree buffer-file-name "Court deadlines")
+      "** %? " :time-prompt t))
 
-  ; see http://cachestocaches.com/2016/9/my-workflow-org-agenda/
-  (setq org-columns-default-format "%50ITEM(Task) %10CLOCKSUM %16TIMESTAMP_IA")
+   org-agenda-span 700
+   org-agenda-show-all-dates nil
+   org-agenda-show-future-repeats (quote next)
+   org-startup-folded (quote showeverything)
+   org-latex-default-table-environment "longtable"
+   org-table-copy-increment nil
+   org-return-follows-link t
 
-  ;; see http://cachestocaches.com/2016/9/my-workflow-org-agenda/
-  (setq org-capture-templates
-	'(("t" "todo" entry (file org-default-notes-file)
-	   "* TODO %?\n%u\n%a\n" :clock-in t :clock-resume t)
-	  ("m" "Meeting" entry (file org-default-notes-file)
-	   "* MEETING with %? :MEETING:\n%t" :clock-in t :clock-resume t)
-	  ("i" "Idea" entry (file org-default-notes-file)
-	   "* %? :IDEA: \n%t" :clock-in t :clock-resume t)
-	  ("n" "Next Task" entry (file+headline org-default-notes-file "Tasks")
-	   "** TODO NEXT %? \nDEADLINE: %t" :prepend t :clock-in t :clock-resume t)
-	  ("c" "Schedule court deadline in current buffer" entry (file+olp+datetree buffer-file-name "Court deadlines")
-	   "** %? " :time-prompt t)))
+   org-use-speed-commands
+   (lambda () (and (looking-at org-outline-regexp) (looking-back "^\**")))
 
-  ;;(setq org-agenda-exporter-settings
-;;	'((ps-number-of-columns 2)
-;;          (ps-left-header (list 'org-agenda-write-buffer-name))
-;;          (ps-right-header
-;;           (list "/pagenumberstring load"
-;;                 (lambda () (format-time-string "%d/%m/%Y"))))
-;;          (ps-landscape-mode t)
-;;          (org-agenda-add-entry-text-maxlines 5)
-;;          (htmlize-output-type 'css)))
+   org-file-apps
+   '(("\\.docx\\'" . default)
+     ("\\.mm\\'" . default)
+     ("\\.x?html?\\'" . default)
+     (auto-mode . emacs))
 
-  ;;(setq org-agenda-exporter-settings
-  ;;      '((ps-left-header (list 'org-agenda-write-buffer-name))
-  ;;        (ps-right-header
-  ;;         (list "/pagenumberstring load"
-  ;;               (lambda () (format-time-string "%d/%m/%Y"))))
-  ;;        (ps-print-color-p 'black-white)
-  ;;        (ps-number-of-columns 2)
-  ;;        (ps-landscape-mode t)
-  ;;        (org-agenda-add-entry-text-maxlines 5)
-  ;;        (htmlize-output-type 'css)))
+   org-refile-targets (quote ((nil :regexp . "Tasks")
+                                   (org-agenda-files :regexp . "Tasks"))))
 
-  (setq org-agenda-span 700)
-  (setq org-agenda-show-all-dates nil)
-  (setq org-agenda-show-future-repeats (quote next))
-  (setq org-startup-folded (quote showeverything))
-  (setq org-latex-default-table-environment "longtable")
-  (setq org-table-copy-increment nil)
-  (setq org-return-follows-link t)
-
-  (setq org-use-speed-commands
-      (lambda () (and (looking-at org-outline-regexp) (looking-back "^\**"))))
-
-  (setq org-file-apps
-        '(("\\.docx\\'" . default)
-          ("\\.mm\\'" . default)
-          ("\\.x?html?\\'" . default)
-          (auto-mode . emacs)))
-
-  (add-hook 'org-mode-hook (lambda () (require 'org-override)))
-
-  (setq org-refile-targets (quote ((nil :regexp . "Tasks")
-                                   (org-agenda-files :regexp . "Tasks")))))
+  (add-hook 'org-mode-hook (lambda () (require 'org-override))))
 
 (use-package org-collector
   :load-path "lisp"
@@ -1068,16 +1053,12 @@ are exported to a filename derived from the headline text."
            (set-buffer-modified-p modifiedp)))
        "+export" 'file))))
 
-(use-package gina-keymap
-  :load-path "lisp"
-  :ensure nil)
-
 (use-package gina-launcher
   :load-path "lisp"
   :after (hydra)
   :ensure nil
-  :config
-  (key-chord-define-global "jk" #'gina-launcher-hydra/body))
+  :chords
+  (("jk" . gina-launcher-hydra/body)))
 
 ;; see https://www.emacswiki.org/emacs/UnfillParagraph
 (defun unfill-paragraph (&optional region)
