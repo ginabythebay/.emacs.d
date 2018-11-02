@@ -116,6 +116,11 @@ the syntax class ')'."
 (require 'use-package)
 (setq use-package-always-ensure t)
 
+(use-package benchmark-init
+  :ensure t
+  :config
+  ;; To disable collection of benchmark data after init is done.
+  (add-hook 'after-init-hook 'benchmark-init/deactivate))
 
 (use-package key-chord
   :config
@@ -146,6 +151,7 @@ the syntax class ')'."
 
 (use-package paradox
   :ensure t
+  :defer t
   :config
   (paradox-enable))
 
@@ -726,17 +732,16 @@ _k_: kill        _s_: split                   _{_: wrap with { }
       c-basic-offset 2)
 
 (use-package pdf-tools
+  :bind
+ (:map pdf-view-mode-map
+ ("G" . pdf-view-last-page))
  :config
  ;; initialise
  (pdf-tools-install)
  ;; open pdfs scaled to fit page
  (setq-default pdf-view-display-size 'fit-page)
  ;; automatically annotate highlights
- (setq pdf-annot-activate-created-annotations t)
-
- (bind-keys
-  :map pdf-view-mode-map
-  ("G" . pdf-view-last-page)))
+ (setq pdf-annot-activate-created-annotations t))
 
 (use-package htmlize)
 
@@ -833,35 +838,39 @@ _k_: kill        _s_: split                   _{_: wrap with { }
   :config
   (add-hook 'org-noter-notes-mode-hook (lambda () (require 'org-noter-override))))
 
-(use-package bates
-  :load-path "lisp"
-  :ensure nil)
 
 ;; TODO(gina) Figure out how to combine these into a single package.
 ;; See https://www.gnu.org/software/emacs/manual/html_node/elisp/Packaging.html#Packaging
+(use-package bates
+  :load-path "lisp"
+  :defer t
+  :ensure nil)
 (use-package ile-org-noter
   :load-path "lisp"
+  :defer t
   :ensure nil)
 (use-package ile-pdf
   :load-path "lisp"
+  :defer t
   :ensure nil
-  :config
-  (bind-keys
-   :map pdf-view-mode-map
-   ("e" . ile-pdf-extract-pages)))
+  :bind
+  (:map pdf-view-mode-map
+        ("e" . ile-pdf-extract-pages)))
 (use-package ile-discovery
   :load-path "lisp"
+  :defer t
   :ensure nil)
 (use-package ile-link
   :load-path "lisp"
+  :defer t
   :ensure nil)
 (use-package ile-navigation
   :load-path "lisp"
   :ensure nil
+  :bind
+  (:map pdf-view-mode-map
+        ("b" . ile-jump-bates-number))
   :config
-  (bind-keys
-   :map pdf-view-mode-map
-   ("b" . ile-jump-bates-number))
 
   ;; TODO(gina) move this into ILE after I figure out the right way to packageize it.
   (defvar ile-map nil
