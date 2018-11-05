@@ -179,18 +179,42 @@ variables and values specified in props"
 		     (when p (cons n p))))
 		 inherit))))
 
+(defun org-propview-get-contents ()
+  "Return the content of the current entry.
+This is the text of the entry, minus any properties etcetera and
+minus any headings below it."
+  (save-excursion
+    (save-match-data
+      (org-back-to-heading t)
+      (org-end-of-meta-data t)
+      (let ((start (point)))
+        (re-search-forward "^\\*+ " nil 'move)
+        (beginning-of-line)
+        (when (memq (preceding-char) '(?\n ?\^M))
+	  ;; Go to end of line before heading
+	  (forward-char -1)
+	  (when (memq (preceding-char) '(?\n ?\^M))
+	    ;; leave blank line before heading
+	    (forward-char -1)))
+        (replace-regexp-in-string
+         "\n" ""
+         (replace-regexp-in-string
+          "\n\n" "@@html:<br>@@@@html:<br>@@"
+          (string-trim
+           (buffer-substring-no-properties start (point)))))))))
+
 (defun org-propview-collect (cols stringformat &optional conds match scope inherit colnames)
   (interactive)
   ;; collect the properties from every header
   (let* ((header-props
 	  (let ((org-trust-scanner-tags t) alst)
 	    (org-map-entries
-	     (quote (cons
-                     (cons "ITEM" (org-get-heading t))
-                     (cons (cons
-                            "ENTRY"
-                            (string-trim (org-get-entry) org-property-drawer-re))
-			   (org-propview-get-with-inherited inherit))))
+             (quote
+              ;; If we decide org-propview-get-contents slows things
+              ;; down in the general case, we could only call it when
+              ;; we see it is used in 'cols'
+              (cons (cons "ENTRY" (org-propview-get-contents))
+                    (org-propview-get-with-inherited inherit)))
 	     match scope)))
 	 ;; read property values
 	 (header-props
@@ -211,9 +235,9 @@ variables and values specified in props"
        'hline) ;; ------------------------------------------------
      (mapcar ;; calculate the value of the column for each header
       (lambda (props) (mapcar (lambda (col)
-			   (let ((result (org-propview-eval-w-props props col)))
-			     (if result result org-propview-default-value)))
-			 cols))
+			        (let ((result (org-propview-eval-w-props props col)))
+			          (if result result org-propview-default-value)))
+			      cols))
       (if conds
 	  ;; eliminate the headers which don't satisfy the property
 	  (delq nil
@@ -225,7 +249,7 @@ variables and values specified in props"
 				  conds))
 		       props))
 		 header-props))
-	  header-props)))))
+	header-props)))))
 
 (defun org-propview-to-table (results stringformat)
   ;; (message (format "cols:%S" cols))
@@ -235,7 +259,7 @@ variables and values specified in props"
       (if (equal row 'hline)
 	  'hline
 	(mapcar (lambda (el) (format stringformat el)) row)))
-    (delq nil results)) '()))
+    (delq nil results)) '(:raw t)))
 
 (provide 'org-collector)
 ;;; org-collector ends here
