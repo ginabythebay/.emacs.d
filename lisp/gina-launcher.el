@@ -38,10 +38,12 @@
 (defhydra gina-launcher-hydra (:hint nil :exit t)
   "
 (quit with _q_)
+_d_: toggle debug on error
 _t_: open Time sheet
 _i_: clock In to recent task
 _c_: jump to Current clock"
   ("q" nil)
+  ("d" toggle-debug-on-error)
   ("t" gina-open-current-timesheet)
   ("i" gina-clock-in-to-recent-task)
   ("c" org-clock-jump-to-current-clock))
