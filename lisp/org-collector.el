@@ -197,7 +197,7 @@ minus any headings below it."
 	    ;; leave blank line before heading
 	    (forward-char -1)))
         (replace-regexp-in-string
-         "\n" ""
+         "\n" " "
          (replace-regexp-in-string
           "\n\n" "@@html:<br>@@@@html:<br>@@"
           (string-trim
