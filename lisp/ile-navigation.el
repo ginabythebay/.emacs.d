@@ -44,11 +44,13 @@ We look for files in PROJECT-DIR/Discovery/united that contains PREFIX and NO."
   (let ((files (directory-files (concat project-dir "Discovery/united/") t)))
     (cl-some (lambda (f) (bates-file-contains-p f prefix no)) files)))
 
+;;;###autoload
 (defun ile-jump-bates-number (bates-no)
   "Jump to the bates number specified by BATES-NO in the current pdf."
   (interactive "nBates number: ")
   (pdf-view-goto-page (bates-find-page (buffer-file-name) bates-no)))
 
+;;;###autoload
 (defun ile-org-table-column-next-duplicate ()
   "Move the cursor down to the cells in the current column until we leave the current table or we find the next duplicate entry."
   (interactive)
@@ -136,6 +138,7 @@ We expect that the first line of the table is a header line."
             nil t)))
       result)))
 
+;;;###autoload
 (defun ile-jump-bates (bates &optional project-dir)
   "Open united file matching BATES, jump to the correct page.
 
@@ -164,6 +167,7 @@ determine it."
         (find-file united-file)
         (pdf-view-goto-page (bates-find-page united-file no))))))
 
+;;;###autoload
 (defun ile-jump (target)
   "Jump to TARGET where target can be a federal rule, a date or a bates number."
   (interactive (list (let* ((def (or (ile-org-fed-rule-at-point) (ile-org-bates-at-point) (ile-org-date-at-point)))
@@ -217,6 +221,7 @@ Returns the buffer.  FILE is the file to look in."
       (org-show-context)
       buf)))
 
+;;;###autoload
 (defun ile-nav-indirect-buffer-for-id (&optional id)
   "Pop to an indirect buffer narrowed to the headline associated with ID.
 Start by looking for an existing buffer of the form *<id>*.  If
@@ -246,6 +251,7 @@ not found, one will be created."
         nil
       l)))
 
+;;;###autoload
 (defun ile-org-lookup-fed-rule (rule)
   "Switch to the appropriate buffer for RULE and move the cursor to it.
 RULE should be something like FRCP 26(a)(b)."
@@ -290,6 +296,7 @@ RULE should be something like FRCP 26(a)(b)."
          (best-pos (goto-char best-pos))
          (t (message "Unable to find match for %S" rule)))))))
 
+;;;###autoload
 (defun ile-org-lookup-date (target &optional case)
   "Look up a TARGET date and show related CASE information for it.
 Case is just our client name, e.g. 'gantt'.  We will attempt to
@@ -321,6 +328,7 @@ derive it using projectile if not specified."
           (when pos
             (goto-char pos)))))
 
+;;;###autoload
 (defun ile-org-fill-subtree ()
   "Run 'org-fill-paragraph on the current subtree."
   (interactive)

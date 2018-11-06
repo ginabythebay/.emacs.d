@@ -194,6 +194,7 @@ error."
           (setq result t)))
     result))
 
+;;;###autoload
 (defun ile-make-united-discovery (&optional project-dir)
   "Generate/Regenerate all united discovery files as needed.
 
@@ -240,6 +241,7 @@ DUMMY-PAGE will be used if there is no link at the POS."
     )
   )
 
+;;;###autoload
 (defun ile-discovery-copy-jury-instructions ()
   "Put a table in the kill ring based on the selected pdf outline entries.
 
@@ -282,7 +284,7 @@ outline entries."
 (defconst sample-completions
   '("alan" "john" "ada" "don"))
 
-
+;;;###autoload
 (defun company-sample-backend (command &optional arg &rest ignored)
   (interactive (list 'interactive))
 

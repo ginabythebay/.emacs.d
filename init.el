@@ -902,11 +902,6 @@ _k_: kill        _s_: split                   _{_: wrap with { }
   :ensure nil)
 (use-package ile-navigation
   :load-path "lisp"
-  :commands (my-cleanup-region-date
-             ile-duplicate
-             ile-nav-indirect-buffer-for-id
-             ile-org-fill-subtree
-             ile-org-noter-dates)
   :ensure nil
   :bind
   (:map pdf-view-mode-map
@@ -1110,6 +1105,17 @@ If REGION is set, we use that instead of trying to guess the paragraph."
         ;; This would override `fill-column' if it's an integer.
         (emacs-lisp-docstring-fill-column t))
     (fill-paragraph nil region)))
+
+;; adapted from https://www.emacswiki.org/emacs/UpdateAutoloads
+(defconst my-lisp-dir (concat user-emacs-directory "lisp/"))
+(defun my-update-autoloads ()
+  "Call `update-autoloads-from-directories' on my local Lisp directory."
+  (interactive)
+  (require 'autoload)
+  (let ((generated-autoload-file (concat user-emacs-directory "loaddefs.el")))
+    (update-directory-autoloads my-lisp-dir)
+    (byte-compile-file generated-autoload-file)))
+(load (concat user-emacs-directory "loaddefs.el") t)
 
 (unless noninteractive
   (server-start))

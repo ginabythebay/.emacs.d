@@ -11,3 +11,4 @@ anaconda-mode/*
 bookmarks
 server
 url/*
+/loaddefs.el
