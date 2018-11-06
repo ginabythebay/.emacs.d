@@ -840,6 +840,14 @@ _k_: kill        _s_: split                   _{_: wrap with { }
                 ("DONE" ("WAITING") ("CANCELLED") ("HOLD")))))
   (setq org-use-fast-tag-selection t)
 
+  ;; From https://www.reddit.com/r/orgmode/comments/9tljmi/faster_large_table_editing_disable_flyspell/
+  (defun my-dont-flyspell-org-tables (orig-fun &rest args)
+    (let ((flyspell-enabled (position 'flyspell-mode minor-mode-list)))
+      (flyspell-mode 0)
+      (apply orig-fun args)
+      (flyspell-mode flyspell-enabled)))
+  (advice-add 'org-cycle :around #'my-dont-flyspell-org-tables)
+
   (add-hook 'org-mode-hook 'flyspell-mode)
   (add-hook 'org-mode-hook (lambda () (require 'org-override))))
 
