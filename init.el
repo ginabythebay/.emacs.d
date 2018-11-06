@@ -617,8 +617,11 @@ _k_: kill        _s_: split                   _{_: wrap with { }
   :ensure nil
   :load-path "~/go/src/github.com/stapelberg/expanderr/lisp")
 
-(use-package go-autocomplete
-  :ensure t)
+;; TODO(gina) figure out what to use instead.  It is slow to load and
+;; is no longer maintained.  Currently its package page recommends
+;; looking at https://github.com/mdempsky/gocode
+;;(use-package go-autocomplete
+;;  :ensure t)
 
 
 ;; depends on https://github.com/cweill/gotests
