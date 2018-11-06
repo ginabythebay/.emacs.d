@@ -772,56 +772,70 @@ _k_: kill        _s_: split                   _{_: wrap with { }
    ("C-c c" . org-capture)
    ("C-c b" . org-switchb))
   :config
-  (setq
-   ;; see https://stackoverflow.com/questions/22720526/set-clock-table-duration-format-for-emacs-org-mode
-   org-duration-format (quote h:mm)
-   org-clock-mode-line-total 'current
+  ;; see https://stackoverflow.com/questions/22720526/set-clock-table-duration-format-for-emacs-org-mode
+  (setq org-duration-format (quote h:mm))
+  (setq org-clock-mode-line-total 'current)
 
-   ;; turn off validation goo.  https://stackoverflow.com/a/15145594
-   org-html-validation-link nil
+  ;; turn off validation goo.  https://stackoverflow.com/a/15145594
+  (setq org-html-validation-link nil)
 
-   org-reverse-note-order t
+  (setq org-reverse-note-order t)
 
-   org-default-notes-file "c:/Users/gina/Documents/Gina/overall notes.org"
+  (setq org-default-notes-file "c:/Users/gina/Documents/Gina/overall notes.org")
 
-   ;; see http://doc.norang.ca/org-mode.html#FindTasksToClockIn
-   org-time-stamp-rounding-minutes (quote (1 1))
+  ;; see http://doc.norang.ca/org-mode.html#FindTasksToClockIn
+  (setq org-time-stamp-rounding-minutes (quote (1 1)))
 
-   ;; see http://cachestocaches.com/2016/9/my-workflow-org-agenda/
-   org-columns-default-format "%50ITEM(Task) %10CLOCKSUM %16TIMESTAMP_IA"
+  ;; see http://cachestocaches.com/2016/9/my-workflow-org-agenda/
+  (setq org-columns-default-format "%50ITEM(Task) %10CLOCKSUM %16TIMESTAMP_IA")
 
-   ;; see http://cachestocaches.com/2016/9/my-workflow-org-agenda/
-   org-capture-templates
-   '(("t" "todo" entry (file org-default-notes-file)
-      "* TODO %?\n%u\n%a\n" :clock-in t :clock-resume t)
-     ("m" "Meeting" entry (file org-default-notes-file)
-      "* MEETING with %? :MEETING:\n%t" :clock-in t :clock-resume t)
-     ("i" "Idea" entry (file org-default-notes-file)
-      "* %? :IDEA: \n%t" :clock-in t :clock-resume t)
-     ("n" "Next Task" entry (file+headline org-default-notes-file "Tasks")
-      "** TODO NEXT %? \nDEADLINE: %t" :prepend t :clock-in t :clock-resume t)
-     ("c" "Schedule court deadline in current buffer" entry (file+olp+datetree buffer-file-name "Court deadlines")
-      "** %? " :time-prompt t))
+  ;; see http://cachestocaches.com/2016/9/my-workflow-org-agenda/
+  (setq org-capture-templates
+        '(("t" "todo" entry (file org-default-notes-file)
+           "* TODO %?\n%u\n%a\n" :clock-in t :clock-resume t)
+          ("m" "Meeting" entry (file org-default-notes-file)
+           "* MEETING with %? :MEETING:\n%t" :clock-in t :clock-resume t)
+          ("i" "Idea" entry (file org-default-notes-file)
+           "* %? :IDEA: \n%t" :clock-in t :clock-resume t)
+          ("n" "Next Task" entry (file+headline org-default-notes-file "Tasks")
+           "** TODO NEXT %? \nDEADLINE: %t" :prepend t :clock-in t :clock-resume t)
+          ("c" "Schedule court deadline in current buffer" entry (file+olp+datetree buffer-file-name "Court deadlines")
+           "** %? " :time-prompt t)))
 
-   org-agenda-span 700
-   org-agenda-show-all-dates nil
-   org-agenda-show-future-repeats (quote next)
-   org-startup-folded (quote showeverything)
-   org-latex-default-table-environment "longtable"
-   org-table-copy-increment nil
-   org-return-follows-link t
+  (setq org-agenda-span 700)
+  (setq org-agenda-show-all-dates nil)
+  (setq org-agenda-show-future-repeats (quote next))
+  (setq org-startup-folded (quote showeverything))
+  (setq org-latex-default-table-environment "longtable")
+  (setq org-table-copy-increment nil)
+  (setq org-return-follows-link t)
 
-   org-use-speed-commands
-   (lambda () (and (looking-at org-outline-regexp) (looking-back "^\**")))
+  (setq org-use-speed-commands
+        (lambda () (and (looking-at org-outline-regexp) (looking-back "^\**"))))
 
-   org-file-apps
-   '(("\\.docx\\'" . default)
-     ("\\.mm\\'" . default)
-     ("\\.x?html?\\'" . default)
-     (auto-mode . emacs))
+  (setq org-file-apps
+        '(("\\.docx\\'" . default)
+          ("\\.mm\\'" . default)
+          ("\\.x?html?\\'" . default)
+          (auto-mode . emacs)))
 
-   org-refile-targets (quote ((nil :regexp . "Tasks")
+  (setq org-refile-targets (quote ((nil :regexp . "Tasks")
                                    (org-agenda-files :regexp . "Tasks"))))
+
+
+  (setq org-todo-keywords
+        (quote ((sequence "TODO(t)" "NEXT(n)" "|" "DONE(d)")
+                (sequence "WAITING(w@/!)" "HOLD(h@/!)" "|" "CANCELLED(c@/!)" "PHONE" "MEETING"))))
+
+  (setq org-todo-state-tags-triggers
+        (quote (("CANCELLED" ("CANCELLED" . t))
+                ("WAITING" ("WAITING" . t))
+                ("HOLD" ("WAITING") ("HOLD" . t))
+                (done ("WAITING") ("HOLD"))
+                ("TODO" ("WAITING") ("CANCELLED") ("HOLD"))
+                ("NEXT" ("WAITING") ("CANCELLED") ("HOLD"))
+                ("DONE" ("WAITING") ("CANCELLED") ("HOLD")))))
+  (setq org-use-fast-tag-selection t)
 
   (add-hook 'org-mode-hook 'flyspell-mode)
   (add-hook 'org-mode-hook (lambda () (require 'org-override))))
