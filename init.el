@@ -801,7 +801,7 @@ _k_: kill        _s_: split                   _{_: wrap with { }
           ("i" "Idea" entry (file org-default-notes-file)
            "* %? :IDEA: \n%t" :clock-in t :clock-resume t)
           ("n" "Next Task" entry (file+headline org-default-notes-file "Tasks")
-           "** TODO NEXT %? \nDEADLINE: %t" :prepend t :clock-in t :clock-resume t)
+           "** NEXT %?" :prepend t :clock-in t :clock-resume t)
           ("c" "Schedule court deadline in current buffer" entry (file+olp+datetree buffer-file-name "Court deadlines")
            "** %? " :time-prompt t)))
 
