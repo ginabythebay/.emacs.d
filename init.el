@@ -902,12 +902,16 @@ _k_: kill        _s_: split                   _{_: wrap with { }
   :ensure nil)
 (use-package ile-navigation
   :load-path "lisp"
+  :commands (my-cleanup-region-date
+             ile-duplicate
+             ile-nav-indirect-buffer-for-id
+             ile-org-fill-subtree
+             ile-org-noter-dates)
   :ensure nil
   :bind
   (:map pdf-view-mode-map
         ("b" . ile-jump-bates-number))
-  :config
-
+  :init
   ;; TODO(gina) move this into ILE after I figure out the right way to packageize it.
   (defvar ile-map nil
     "ILE keymap.")
