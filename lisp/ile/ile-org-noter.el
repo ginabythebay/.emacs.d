@@ -46,6 +46,7 @@
       (setq start 0))
     (substring text start end)))
 
+;;;###autoload
 (defun ile-org-noter-next-page ()
   "Move the doc buffer to the next page."
   (interactive)
@@ -54,6 +55,7 @@
      (setf (car location-cons) (1+ (car location-cons)))
      (org-noter--doc-goto-location location-cons))))
 
+;;;###autoload
 (defun ile-org-noter-prev-page ()
   "Move the doc buffer to the previous page."
   (interactive)
@@ -62,6 +64,7 @@
      (setf (car location-cons) (1- (car location-cons)))
      (org-noter--doc-goto-location location-cons))))
 
+;;;###autoload
 (defun ile-org-noter-dates ()
   "Find dates in the current document page and prompts the user to pick one, \
 then insert it in the notes buffer."
@@ -91,6 +94,7 @@ then insert it in the notes buffer."
                       (org-read-date nil nil choice))))))))))
 
 
+;;;###autoload
 (defun ile-duplicate ()
   "Prompt the user for an entry and treat the current entry as a duplicate of that."
   (interactive)
@@ -125,6 +129,7 @@ then insert it in the notes buffer."
          (org-entry-put nil "DESCRIPTION" description)
          (org-entry-put nil "DATE" date)))))))
 
+;;;###autoload
 (defun ile-insert-and-dup ()
   "Run bates-insert-note and then ile-duplicate."
   (interactive)
