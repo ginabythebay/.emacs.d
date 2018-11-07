@@ -730,7 +730,8 @@ _k_: kill        _s_: split                   _{_: wrap with { }
   :magic ("%PDF" . pdf-view-mode)
   :bind
   (:map pdf-view-mode-map
-        ("G" . pdf-view-last-page))
+        ("G" . pdf-view-last-page)
+        ("C-s" . isearch-forward))  ;; swiper doesn't work with pdfs
   :config
   ;; initialise
   (dolist
