@@ -107,6 +107,7 @@ it will be returned as-is."
            (ile-pdf--parse-page-ranges "40"))))
 
 
+;;;###autoload
 (defun ile-pdf-extract-pages (out-file page-ranges)
   "Extract pages after prompting the user for what to extract.
 OUT-FILE is the name of the file to write to.

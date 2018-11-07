@@ -14,9 +14,10 @@
 
 ;; code goes here
 
+(require 'bates)
 (require 'cl-lib)
+(require 'ile-pdf)
 (require 'projectile)
-
 
 (defconst ile--ignored-discovery-dirs '("./" "../" "united/" "what is this/")
   "Set of child directories of the Discovery directory that we ignore.")

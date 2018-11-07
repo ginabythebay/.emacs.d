@@ -54,19 +54,6 @@ the length of START is returned.  NAME is used for errors"
 found, the numeric portions must have the same length" name))
     (string-width start)))
 
-(ert-deftest bates--calc-width ()
-  "Tests bates file width calculations"
-  (should (equal
-           (bates--calc-width
-            "16-0433 PITCHESS 10229-10736" "10229" "10736")
-           nil))
-  (should-error (bates--calc-width
-                 "16-0433 PITCHESS 010229-0010736" "010229" "0010736"))
-  (should (equal
-           (bates--calc-width
-            "16-0433 PITCHESS 0010229-0010736" "0010229" "0010736")
-           7)))
-
 (defun bates-parse-filename-to-range (name)
   "Decode a NAME like 'COB0002421-COB0003964' into ('COB' 2421 3964).
 Can also handle something like '16-0433 PITCHESS 10229-10736', \
@@ -92,29 +79,6 @@ Return nil if the filename has an unexpected format."
                    (create-bates-page prefix (string-to-number end ) width))
                   ))
           (t nil))))
-
-(ert-deftest bates-parse-filename-to-range ()
-  "Tests bates file base name decoding"
-  (should (equal
-           (bates-parse-filename-to-range "COB0002421-COB0003964")
-           (list (create-bates-page "COB" 2421 7)
-                 (create-bates-page "COB" 3964 7))))
-  (should (equal
-           (bates-parse-filename-to-range "COB0002421 - COB0003964")
-           (list (create-bates-page "COB" 2421 7)
-                 (create-bates-page "COB" 3964 7))))
-  (should (equal
-           (bates-parse-filename-to-range "COB2421-COB3964")
-           (list (create-bates-page "COB" 2421 nil)
-                 (create-bates-page "COB" 3964 nil))))
-  (should (equal
-           (bates-parse-filename-to-range "GANTT 563-894 Communications, etc")
-           (list (create-bates-page "GANTT" 563 nil)
-                 (create-bates-page "GANTT" 894 nil))))
-  (should (equal
-           (bates-parse-filename-to-range "16-0433 PITCHESS 10229-10736")
-           (list (create-bates-page "PITCHESS" 10229 nil)
-                 (create-bates-page "PITCHESS" 10736 nil)))))
 
 (defun bates-file-contains-p (f prefix no)
   "Return t if F contain the page represented by PREFIX and NO."
@@ -144,59 +108,15 @@ Optional parameter SHORT means to use short form."
                "%s %d")))
     (format fmt (bates-page-prefix val) (bates-page-no val))))
 
-(ert-deftest bates--format ()
-  "Tests bates formatting"
-  (should (equal
-           (bates--format (create-bates-page "COB" 2421 7))
-           "COB0002421"))
-  (should (equal
-           (bates--format (create-bates-page "COB" 2421 7) t)
-           "COB 2421"))
-  (should (equal
-           (bates--format (create-bates-page "COB" 2421 nil))
-           "COB 2421"))
-  (should (equal
-           (bates--format (create-bates-page "COB" 2421 nil) t)
-           "COB 2421")))
-
 (defun bates--expected-pdf-pages (file-range)
   "Return the expected number of pdf pages in FILE-RANGE."
   (+ 1 (- (bates-page-no (nth 1 file-range)) (bates-page-no (nth 0 file-range)))))
-
-(ert-deftest bates--expected-pdf-pages ()
-  "Tests bates pdf page expectations."
-  (should (equal
-           1
-           (bates--expected-pdf-pages
-            (list (create-bates-page "COB" 2421 7)
-                  (create-bates-page "COB" 2421 7)))))
-  (should (equal
-           4
-           (bates--expected-pdf-pages
-            (list (create-bates-page "COB" 2421 nil)
-                  (create-bates-page "COB" 2424 nil))))))
 
 (defun bates--ring-new (e)
   "Add E to ‘bates--ring’, ensuring only 2 items at most are retained."
   (setq bates--ring (append  bates--ring (list e)))
   (when (> (length bates--ring) 2)
     (setq bates--ring (seq-subseq bates--ring -2))))
-
-(ert-deftest bates--ring-new ()
-  "Tests bates ring adding."
-  (setq bates--ring (list))
-
-  (bates--ring-new (create-bates-page "COB" 2423 nil))
-  (should (equal 1 (length bates--ring)))
-  (should (equal 2423 (bates-page-no (car (last bates--ring)))))
-
-  (bates--ring-new (create-bates-page "COB" 2424 nil))
-  (should (equal 2 (length bates--ring)))
-  (should (equal 2424 (bates-page-no (car (last bates--ring)))))
-
-  (bates--ring-new (create-bates-page "COB" 2425 nil))
-  (should (equal 2 (length bates--ring)))
-  (should (equal 2425 (bates-page-no (car (last bates--ring))))))
 
 (defun bates--copy ()
   "Copy the current bates entry to the ‘bates--ring’."
@@ -245,21 +165,6 @@ Optional parameter SHORT means to use short form."
           atext
         (format "%s - %s" atext btext)))))
 
-(ert-deftest bates--paste-text ()
-  "Tests bates pdf page expectations."
-  (setq bates--ring (list
-                     (create-bates-page "COB" 2421 7)
-                     (create-bates-page "COB" 2421 7)))
-  (should (equal "COB 2421" (bates--paste-text)))
-  (setq bates--ring (list
-                     (create-bates-page "COB" 2421 6)
-                     (create-bates-page "COB" 2423 6)))
-  (should (equal "COB 2421 - COB 2423" (bates--paste-text)))
-  (setq bates--ring (list
-                     (create-bates-page "COB" 2423 nil)
-                     (create-bates-page "COB" 2421 nil)))
-  (should (equal "COB 2421 - COB 2423" (bates--paste-text))))
-
 (defun bates--ring-maybe-next ()
   "Put the next page in the ring if won't exceed the last entry."
   (let* ((biggest (car (last (bates--ordered-ring))))
@@ -270,16 +175,6 @@ Optional parameter SHORT means to use short form."
     (when (<= (bates-page-no new) bates--max-bates-no)
       (bates--ring-new new)
       (bates--ring-new new))))
-
-(ert-deftest bates--ring-maybe-next ()
-  "Tests bates pdf page expectations."
-  (setq bates--ring '())
-  (bates--ring-new (create-bates-page "COB" 2423 nil))
-  (bates--ring-new (create-bates-page "COB" 2421 nil))
-
-  (setq bates--max-bates-no 3000)
-  (bates--ring-maybe-next)
-  (should (equal 2424 (bates-page-no (car (last bates--ring))))))
 
 (defun bates--paste ()
   "Pastes the last two entries into the current buffer."
@@ -544,21 +439,6 @@ PREFIX is an optional prefix."
       (setq text (format "%s %s" prefix text)))
     text))
 
-(ert-deftest bates--range ()
-  "Tests bates range."
-  (should (equal
-           (bates--range "794" "795")
-           "794 - 795"))
-  (should (equal
-           (bates--range "794" "794")
-           "794"))
-  (should (equal
-           (bates--range "794" "795" "AA")
-           "AA 794 - 795"))
-  (should (equal
-           (bates--range "794" "794" "AA")
-           "AA 794")))
-
 (defun bates--range-link (file bates-start bates-end &optional params)
   "Create an org mode link for a bates range.
 
@@ -582,18 +462,6 @@ PARAMS is an optional alist of url parameters."
                      "&"))))
          (link (concat file suffix)))
     (format "[[%s][%s]]" link text)))
-
-(ert-deftest bates--range-link ()
-  "Tests bates range linking."
-  (should (equal
-           (bates--range-link "foo.pdf" "794" "795")
-           "[[foo.pdf][794 - 795]]"))
-  (should (equal
-           (bates--range-link "foo.pdf" "794" "794")
-           "[[foo.pdf][794]]"))
-  (should (equal
-           (bates--range-link "foo.pdf" "794" "794" '(("page" . 3) ("zoom" . 100)))
-           "[[foo.pdf#zoom=100&page=3][794]]")))
 
 (defun bates-props-foo ()
   "Do something with bates ranges."

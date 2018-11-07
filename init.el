@@ -885,34 +885,13 @@ _k_: kill        _s_: split                   _{_: wrap with { }
 
 ;; TODO(gina) Figure out how to combine these into a single package.
 ;; See https://www.gnu.org/software/emacs/manual/html_node/elisp/Packaging.html#Packaging
-(use-package bates
-  :load-path "lisp"
-  :defer t
-  :ensure nil)
-(use-package ile-org-noter
-  :load-path "lisp"
-  :defer t
-  :ensure nil)
-(use-package ile-pdf
-  :load-path "lisp"
+(use-package ile
+  :load-path "lisp/ile"
   :defer t
   :ensure nil
   :bind
   (:map pdf-view-mode-map
-        ("e" . ile-pdf-extract-pages)))
-(use-package ile-discovery
-  :load-path "lisp"
-  :defer t
-  :ensure nil)
-(use-package ile-link
-  :load-path "lisp"
-  :defer t
-  :ensure nil)
-(use-package ile-navigation
-  :load-path "lisp"
-  :ensure nil
-  :bind
-  (:map pdf-view-mode-map
+        ("e" . ile-pdf-extract-pages)
         ("b" . ile-jump-bates-number))
   :init
   ;; TODO(gina) move this into ILE after I figure out the right way to packageize it.
@@ -1123,7 +1102,7 @@ If REGION is set, we use that instead of trying to guess the paragraph."
   (let ((generated-autoload-file (concat user-emacs-directory "loaddefs.el")))
     (update-directory-autoloads my-lisp-dir)
     (byte-compile-file generated-autoload-file)))
-(load (concat user-emacs-directory "loaddefs.el") t)
+;;(load (concat user-emacs-directory "loaddefs.el") t)
 
 (unless noninteractive
   (server-start))
