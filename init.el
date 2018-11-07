@@ -126,6 +126,11 @@ the syntax class ')'."
   :config
   (key-chord-mode 1))
 
+(use-package avy
+  :ensure t
+  :chords
+  (("df" . avy-goto-char-timer)))
+
 (use-package use-package-chords
   :ensure t)
 
