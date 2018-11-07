@@ -846,6 +846,11 @@ _k_: kill        _s_: split                   _{_: wrap with { }
   :config
   (setq bbdb-file "~/bbdb"))
 
+(use-package swiper
+  :ensure t
+  :bind
+  (("C-s" . swiper)))
+
 (use-package helm-bbdb
   :ensure t
   :after (bbdb helm))
