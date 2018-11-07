@@ -128,8 +128,8 @@ the syntax class ')'."
 
 (use-package avy
   :ensure t
-  :chords
-  (("df" . avy-goto-char-timer)))
+  :bind
+  (("M-s" . avy-goto-char)))
 
 (use-package use-package-chords
   :ensure t)
@@ -485,9 +485,6 @@ _k_: kill        _s_: split                   _{_: wrap with { }
 
   (bind-keys
    :map smartparens-mode-map
-   ;; (foo| bar) -> foo bar
-   ("M-s" . sp-splice-sexp)
-
    ;; (foo| bar) -> [foo bar]
    ("M-S" . sp-rewrap-sexp)
 
@@ -754,6 +751,7 @@ _k_: kill        _s_: split                   _{_: wrap with { }
 (use-package htmlize)
 
 (use-package org
+  :after (avy)
   :ensure t
   :init
   (defun my-find-org-agenda-files ()
