@@ -681,6 +681,11 @@ _k_: kill        _s_: split                   _{_: wrap with { }
 
 (setq-default show-trailing-whitespace t)
 
+(use-package shell-pop
+  :ensure t
+  :bind
+  (("C-t" . shell-pop)))
+
 (defun my-shell-setup ()
   "Turn off trailing whitespace here."
   (setq show-trailing-whitespace nil))
