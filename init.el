@@ -741,7 +741,7 @@ _k_: kill        _s_: split                   _{_: wrap with { }
     (require pkg))
   (pdf-tools-install)
   ;; open pdfs scaled to fit page
-  (setq-default pdf-view-display-size 'fit-page)
+  (setq pdf-view-display-size 'fit-page)
   ;; automatically annotate highlights
   (setq pdf-annot-activate-created-annotations t))
 
