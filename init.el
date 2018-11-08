@@ -747,6 +747,7 @@ _k_: kill        _s_: split                   _{_: wrap with { }
 (use-package htmlize)
 
 (use-package org
+  :after (ile)
   :ensure t
   :init
   (defun my-find-org-agenda-files ()
@@ -839,6 +840,7 @@ _k_: kill        _s_: split                   _{_: wrap with { }
   (advice-add 'org-cycle :around #'my-dont-flyspell-org-tables)
 
   (add-hook 'org-mode-hook 'flyspell-mode)
+  (add-hook 'org-mode-hook 'ile-mode)
   (add-hook 'org-mode-hook (lambda () (require 'org-override))))
 
 (use-package org-collector
