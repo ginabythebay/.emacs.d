@@ -129,7 +129,7 @@ the syntax class ')'."
 (use-package avy
   :ensure t
   :bind
-  (("M-s" . avy-goto-char)))
+  (("C-'" . avy-goto-char)))
 
 (use-package use-package-chords
   :ensure t)
@@ -832,6 +832,8 @@ _k_: kill        _s_: split                   _{_: wrap with { }
                 ("NEXT" ("WAITING") ("CANCELLED") ("HOLD"))
                 ("DONE" ("WAITING") ("CANCELLED") ("HOLD")))))
   (setq org-use-fast-tag-selection t)
+
+  (unbind-key "C-'" org-mode-map)
 
   ;; From https://www.reddit.com/r/orgmode/comments/9tljmi/faster_large_table_editing_disable_flyspell/
   (defun my-dont-flyspell-org-tables (orig-fun &rest args)
