@@ -543,6 +543,7 @@ _k_: kill        _s_: split                   _{_: wrap with { }
 
 
 (use-package suggest
+  :commands (suggest)
   :ensure t)
 
 ;; js2 (javascript) mode
