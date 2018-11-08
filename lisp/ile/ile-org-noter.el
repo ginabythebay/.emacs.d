@@ -1,4 +1,4 @@
-;;; ile-org-noter.el --- Integrated Legal Environment
+;;; ile-org-noter.el --- Integrated Legal Environment -*- lexical-binding: t -*-
 
 ;; Copyright (C) 2018  Gina White
 
