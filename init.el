@@ -752,7 +752,6 @@ _k_: kill        _s_: split                   _{_: wrap with { }
 (use-package htmlize)
 
 (use-package org
-  :after (avy)
   :ensure t
   :init
   (defun my-find-org-agenda-files ()
