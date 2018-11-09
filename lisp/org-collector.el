@@ -141,9 +141,8 @@ preceeding the dblock, then update the contents of the dblock."
 					       (if colnames colnames cols)) stringformat)))
 	  (widen))
 	(setq pos (point))
-	(when content-lines
-	  (while (string-match "^#" (car content-lines))
-	    (insert (pop content-lines) "\n")))
+        (while (and content-lines (string-match "^#" (car content-lines)))
+          (insert (pop content-lines) "\n"))
 	(insert table) (insert "\n|--") (org-cycle) (move-end-of-line 1)
 	(message (format "point-%d" pos))
 	(while (setq line (pop content-lines))
