@@ -749,7 +749,6 @@ _k_: kill        _s_: split                   _{_: wrap with { }
 (use-package htmlize)
 
 (use-package org
-  :after (ile)
   :ensure t
   :preface
   (defun my-find-org-agenda-files ()
