@@ -226,6 +226,10 @@ the syntax class ')'."
         projectile-switch-project-action #'projectile-commander
         projectile-completion-system 'helm
         projectile-mode-line '(:eval (format " [%s]" (projectile-project-name))))
+  (use-package helm-projectile
+    :ensure t
+    :config
+    (helm-projectile-on))
   :bind-keymap
   ("s-p" . projectile-command-map))
 
@@ -597,12 +601,15 @@ _k_: kill        _s_: split                   _{_: wrap with { }
 	      (add-hook 'before-save-hook 'gofmt-before-save)
 	      (setq tab-width 4)
 	      (setq gofmt-command "goimports")
-	      (setq indent-tabs-mode 1))))
+	      (setq indent-tabs-mode 1)))
+  (use-package go-guru
+    :ensure t
+    :config
+    (add-hook 'go-mode-hook #'go-guru-hl-identifier-mode))
+  (use-package go-expanderr
+    :ensure nil
+    :load-path "~/go/src/github.com/stapelberg/expanderr/lisp"))
 
-
-(use-package go-expanderr
-  :ensure nil
-  :load-path "~/go/src/github.com/stapelberg/expanderr/lisp")
 
 ;; TODO(gina) figure out what to use instead.  It is slow to load and
 ;; is no longer maintained.  Currently its package page recommends
@@ -615,11 +622,6 @@ _k_: kill        _s_: split                   _{_: wrap with { }
 (use-package gotests
   :ensure nil
   :load-path "lisp")
-
-(use-package go-guru
-  :ensure t
-  :config
-  (add-hook 'go-mode-hook #'go-guru-hl-identifier-mode))
 
 (eval-and-compile
   (defun go-lint-load-path ()
@@ -749,7 +751,7 @@ _k_: kill        _s_: split                   _{_: wrap with { }
 (use-package org
   :after (ile)
   :ensure t
-  :init
+  :preface
   (defun my-find-org-agenda-files ()
     "Find all agenda files."
     (interactive)
@@ -859,9 +861,9 @@ _k_: kill        _s_: split                   _{_: wrap with { }
   :bind
   (("C-s" . swiper)))
 
-(use-package helm-bbdb
-  :ensure t
-  :after (bbdb helm))
+;;(use-package helm-bbdb
+;;  :ensure t
+;;  :after (bbdb helm))
 
 ;; Not quite ready yet.  Doesn't seem to display all agenda files?
 ;; (use-package org-super-agenda
@@ -915,24 +917,13 @@ _k_: kill        _s_: split                   _{_: wrap with { }
 (use-package helm
   :ensure t
   :diminish helm-mode
+  :bind (("M-x" . helm-M-x)
+         ("C-x r b" . helm-filtered-bookmarks)
+         ("C-h a" . helm-apropos)
+         ("C-x C-f" . helm-find-files)
+         ("C-x r l" . helm-bookmarks))
   :config
-
-  (helm-mode 1)
-  (bind-key "M-x" 'helm-M-x)
-  (bind-key "C-x r b" 'helm-filtered-bookmarks)
-  (bind-key "C-h a" 'helm-apropos)
-  (bind-key "C-x C-f" 'helm-find-files)
-  (bind-key "C-x r l" 'helm-bookmarks))
-
-(use-package helm-google
-  :ensure t
-)
-
-(use-package helm-projectile
-  :ensure t
-  :config
-  (helm-projectile-on)
-)
+  (helm-mode 1))
 
 (global-set-key [f2] 'mode-line-other-buffer)
 
