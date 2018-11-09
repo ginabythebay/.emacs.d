@@ -14,6 +14,7 @@
 
 ;; code goes here
 
+(require 'bates)
 (require 'cl-lib)
 (require 'let-alist)
 (require 'org-noter)

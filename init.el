@@ -841,8 +841,37 @@ _k_: kill        _s_: split                   _{_: wrap with { }
       (flyspell-mode flyspell-enabled)))
   (advice-add 'org-cycle :around #'my-dont-flyspell-org-tables)
 
+  (use-package ile
+    :load-path "lisp/ile"
+    :commands ile-mode
+    :ensure nil
+    :demand t
+    :bind
+    (:map pdf-view-mode-map
+          ("e" . ile-pdf-extract-pages)
+          ("b" . ile-jump-bates-number))
+    :init
+    ;; TODO(gina) move this into ILE after I figure out the right way to packageize it.
+    (defvar ile-map nil
+      "ILE keymap.")
+    (define-prefix-command 'ile-map)
+    (define-key ile-map (kbd "c") #'my-cleanup-region-date)
+    (define-key ile-map (kbd "d") #'ile-duplicate)
+    (define-key ile-map (kbd "i") #'ile-nav-indirect-buffer-for-id)
+    (define-key ile-map (kbd "j") #'ile-jump)
+    (define-key ile-map (kbd "q") #'ile-org-fill-subtree)
+    (define-key ile-map (kbd "t") #'ile-org-noter-dates)
+
+    ;; This part would remain out here somewhere
+    (global-unset-key (kbd "C-l"))
+    (global-set-key (kbd "C-l") 'ile-map)
+    (define-key ile-map (kbd "l") #'recenter-top-bottom)
+
+    (global-set-key (kbd "C-x 8 s") (lambda () (interactive) (insert "§")))
+    :config
+    (add-hook 'org-mode-hook 'ile-mode))
+
   (add-hook 'org-mode-hook 'flyspell-mode)
-  (add-hook 'org-mode-hook 'ile-mode)
   (add-hook 'org-mode-hook (lambda () (require 'org-override))))
 
 (use-package org-collector
@@ -880,36 +909,6 @@ _k_: kill        _s_: split                   _{_: wrap with { }
   :commands org-noter
   :config
   (add-hook 'org-noter-notes-mode-hook (lambda () (require 'org-noter-override))))
-
-
-;; TODO(gina) Figure out how to combine these into a single package.
-;; See https://www.gnu.org/software/emacs/manual/html_node/elisp/Packaging.html#Packaging
-(use-package ile
-  :load-path "lisp/ile"
-  :defer t
-  :ensure nil
-  :bind
-  (:map pdf-view-mode-map
-        ("e" . ile-pdf-extract-pages)
-        ("b" . ile-jump-bates-number))
-  :init
-  ;; TODO(gina) move this into ILE after I figure out the right way to packageize it.
-  (defvar ile-map nil
-    "ILE keymap.")
-  (define-prefix-command 'ile-map)
-  (define-key ile-map (kbd "c") #'my-cleanup-region-date)
-  (define-key ile-map (kbd "d") #'ile-duplicate)
-  (define-key ile-map (kbd "i") #'ile-nav-indirect-buffer-for-id)
-  (define-key ile-map (kbd "j") #'ile-jump)
-  (define-key ile-map (kbd "q") #'ile-org-fill-subtree)
-  (define-key ile-map (kbd "t") #'ile-org-noter-dates)
-
-  ;; This part would remain out here somewhere
-  (global-unset-key (kbd "C-l"))
-  (global-set-key (kbd "C-l") 'ile-map)
-  (define-key ile-map (kbd "l") #'recenter-top-bottom)
-
-  (global-set-key (kbd "C-x 8 s") (lambda () (interactive) (insert "§"))))
 
 (use-package free-keys
   :ensure t)
