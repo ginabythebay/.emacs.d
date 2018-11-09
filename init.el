@@ -870,8 +870,9 @@ _k_: kill        _s_: split                   _{_: wrap with { }
     :config
     (add-hook 'org-mode-hook 'ile-mode))
 
-  (add-hook 'org-mode-hook 'flyspell-mode)
-  (add-hook 'org-mode-hook (lambda () (require 'org-override))))
+    (add-hook 'org-mode-hook #'flyspell-mode)
+    (add-hook 'org-mode-hook #'auto-fill-mode)
+    (add-hook 'org-mode-hook (lambda () (require 'org-override))))
 
 (use-package org-collector
   :load-path "lisp"
