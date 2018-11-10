@@ -174,7 +174,7 @@ the syntax class ')'."
     (if (memq major-mode '(helpful-mode Info-mode))
         (pop-to-buffer-same-window buf norecord)
       (pop-to-buffer buf action norecord)))
-  (customize-set-variable helpful-switch-buffer-function #'my-helpful-switch-buffer)
+  (setq helpful-switch-buffer-function #'my-helpful-switch-buffer)
   :bind
   ("C-h f" . helpful-callable)
   ("C-h v" . helpful-variable)
