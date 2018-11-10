@@ -201,10 +201,10 @@ the syntax class ')'."
   ;("C-z v" . counsel-describe-variable)
 
 ;; Themes
-(use-package zenburn-theme
-  :ensure t)
-(use-package solarized-theme
-  :ensure t)
+;(use-package zenburn-theme
+;  :ensure t)
+;(use-package solarized-theme
+;  :ensure t)
 (use-package tangotango-theme
   :ensure t)
 ;; Our default, for now
@@ -640,7 +640,8 @@ _k_: kill        _s_: split                   _{_: wrap with { }
   (dolist (m '((emacs-lisp-mode-hook . emacs-lisp-mode-map)
                (haskell-mode-hook    . haskell-mode-map)
                (js2-mode-hook        . js2-mode-map)
-               (c-mode-common-hook   . c-mode-base-map)))
+               (c-mode-common-hook   . c-mode-base-map)
+               (ledger-mode-hook     . ledger-mode-map)))
     (add-hook (car m)
               `(lambda ()
                  (flycheck-mode 1)
