@@ -634,10 +634,20 @@ _k_: kill        _s_: split                   _{_: wrap with { }
 
 (use-package flycheck
   :ensure t
+  :commands (flycheck-mode
+             flycheck-next-error
+             flycheck-previous-error)
+  :init
+  (dolist (m '((emacs-lisp-mode-hook . emacs-lisp-mode-map)
+               (haskell-mode-hook    . haskell-mode-map)
+               (js2-mode-hook        . js2-mode-map)
+               (c-mode-common-hook   . c-mode-base-map)))
+    (add-hook (car m)
+              `(lambda ()
+                 (bind-key "M-n" #'flycheck-next-error ,(cdr m))
+                 (bind-key "M-p" #'flycheck-previous-error ,(cdr m)))))
   :config
-    (setq flycheck-global-modes '(not org-mode))
-    (global-flycheck-mode)
-    (setq flycheck-go-vet-shadow t))
+  (setq flycheck-go-vet-shadow t))
 
 (use-package yaml-mode
   :ensure t
