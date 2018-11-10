@@ -575,12 +575,11 @@ _k_: kill        _s_: split                   _{_: wrap with { }
 
 (use-package json-mode
   :mode (("\\.json" . json-mode))
-  :ensure t)
-
-(use-package flymake-json
   :ensure t
-  :config (add-hook 'js-mode-hook 'flymake-json-maybe-load))
-
+  :config
+  (use-package flymake-json
+    :ensure t
+    :config (add-hook 'js-mode-hook 'flymake-json-maybe-load)))
 
 ;; BEGIN GO CONFIGURATION
 
@@ -644,6 +643,7 @@ _k_: kill        _s_: split                   _{_: wrap with { }
                (c-mode-common-hook   . c-mode-base-map)))
     (add-hook (car m)
               `(lambda ()
+                 (flycheck-mode 1)
                  (bind-key "M-n" #'flycheck-next-error ,(cdr m))
                  (bind-key "M-p" #'flycheck-previous-error ,(cdr m)))))
   :config
