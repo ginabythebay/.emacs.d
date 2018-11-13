@@ -16,13 +16,27 @@
 
 (require 'ile-navigation)
 
-(defmacro ile--highlights (re)
-  "Create an entry for 'font-lock-keywords based on the regular expression RE."
-  `(list ,re 0 font-lock-comment-face 'prepend))
+(defconst ile--exclude-bates-names
+  '("CA"                                ;; our fair state
+    ;; todo keywords
+    "TODO" "NEXT" "DONE" "WAITING" "HOLD" "CANCELLED" "PHONE" "MEETING"))
+
+(defun ile--bates-matcher (limit)
+  "Decide if we match a potential bates value, for font locking.
+
+LIMIT is the limit of the search."
+  (when (search-forward-regexp ile-org--bates-re limit t)
+    (let ((name (match-string 1)))
+      (unless (member name ile--exclude-bates-names)
+        t))))
+
+(defmacro ile--highlights (matcher)
+  "Create an entry for 'font-lock-keywords based on the regular expression MATCHER."
+  `(list ,matcher 0 font-lock-comment-face 'prepend))
 
 (defconst ile--keywords
   (list
-   (ile--highlights ile-org--bates-re)
+   (list 'ile--bates-matcher 0 font-lock-comment-face 'prepend)
    ;; avoid highlighting dates that are part of clock entries or
    ;; scheduling entries
    (ile--highlights (concat "[^[<]" ile-org--date-re))
