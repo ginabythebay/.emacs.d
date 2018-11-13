@@ -680,7 +680,7 @@ Inspired by crux-beginning-of-line."
   :bind
   (:map pdf-view-mode-map
         ("G" . pdf-view-last-page)
-        ("C-s" . isearch-forward))  ;; swiper doesn't work with pdfs
+        ("C-s" . isearch-forward)) ;; swiper doesn't work with pdfs
   :config
   ;; initialise
   (dolist
@@ -693,7 +693,10 @@ Inspired by crux-beginning-of-line."
   ;; open pdfs scaled to fit page
   (setq pdf-view-display-size 'fit-page)
   ;; automatically annotate highlights
-  (setq pdf-annot-activate-created-annotations t))
+  (setq pdf-annot-activate-created-annotations t)
+  ;; blink-cursor-mode can cause flickering of pdfs:
+  ;; https://emacs.stackexchange.com/a/28599/767
+  (add-hook 'pdf-view-mode-hook (lambda () (blink-cursor-mode 0))))
 
 (use-package htmlize)
 
