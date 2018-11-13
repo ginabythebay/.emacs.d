@@ -933,6 +933,8 @@ Inspired by crux-beginning-of-line."
 (defun my-print-each-agenda (dir)
   "Create an html file for every agenda file in DIR."
   (interactive "Postscript file to Save to: ")
+  (require 'org)                        ;; we use org-agenda-files
+                                        ;; variable below
   (save-excursion
     (let ((cnt 0))
       ;; TODO(gina) see if there is some code I can lift to deal, with, e.g. directory names
