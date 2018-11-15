@@ -35,6 +35,11 @@
        (pp-to-string candidates)))
     (w32-browser (car candidates))))
 
+(defun gina-open-case-list ()
+  "Open the case list on Dan's PC."
+  (interactive)
+  (w32-browser "//Dan-PC/Users/Dan/Documents/Case List/Case List (2).doc"))
+
 (defhydra gina-launcher-hydra (:hint nil :exit t)
   "
 (quit with _q_)
@@ -42,12 +47,14 @@ _b_: bury buffer
 _d_: toggle debug on error
 _t_: open Time sheet
 _i_: clock In to recent task
+_l_: open case list
 _c_: jump to Current clock"
   ("q" nil)
   ("b" bury-buffer)
   ("d" toggle-debug-on-error)
   ("t" gina-open-current-timesheet)
   ("i" gina-clock-in-to-recent-task)
+  ("l" gina-open-case-list)
   ("c" org-clock-jump-to-current-clock))
 
 (provide 'gina-launcher)
