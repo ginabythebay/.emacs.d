@@ -22,7 +22,7 @@
 (require 'projectile)
 
 
-(defconst ile-org--bates-re "\\([A-Z]+\\) \\([0-9]+\\)")
+(defconst ile-org--bates-re "\\([A-Z]\\{2,\\}\\) \\([0-9]+\\)")
 (defconst ile-org--date-re "[0-9]\\{4,4\\}-[0-9]\\{2,2\\}-[0-9]\\{2,2\\}")
 (defconst ile-org--fed-rule-re "FRE\\|FRCP [0-9]+\\(([0-9a-zA-Z]+)\\)*")
 
