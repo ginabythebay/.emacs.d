@@ -16,6 +16,7 @@
 
 (require 'bates)
 (require 'cl-lib)
+(require 'ile-note-view)
 (require 'let-alist)
 (require 'org-noter)
 
@@ -107,28 +108,33 @@ then insert it in the notes buffer."
 
          (let ((choices
                 (cl-loop with page-no = 0
-                         with description = ""
+                         with contents = ""
                          while t do
                            (org-previous-visible-heading 1)
                            (setq page-no (org-entry-get nil "NOTER_PAGE"))
-                           (setq description (org-entry-get nil "DESCRIPTION"))
+                           (setq contents
+                                 (replace-regexp-in-string
+                                  "\n" "_nl_"
+                                  (ile-notesview-get-contents)))
                          if (not page-no)
                            return temp
                          else
-                          if (not (string-prefix-p "dup of" description t))
+                          if (not (string-prefix-p "dup of" contents t))
                             collect (format
                                      "Dup of %s %s|%s"
                                      (org-entry-get nil "BATES_START")
-                                     description
+                                     contents
                                      (org-entry-get nil "DATE")) into temp)))
            (setq chosen (completing-read "Duplicate of" choices))))
 
        (if (not (string-match "^\\(.*\\)|\\(.*\\)$" chosen))
            (error "Internal error parsing %s" chosen)
-         (let ((description (match-string 1 chosen))
+         (let ((contents (replace-regexp-in-string
+                          "_nl_" "\n" (match-string 1 chosen)))
                (date (match-string 2 chosen)))
-         (org-entry-put nil "DESCRIPTION" description)
-         (org-entry-put nil "DATE" date)))))))
+           (org-entry-put nil "DATE" date)
+           (org-end-of-meta-data t)
+           (insert contents "\n")))))))
 
 ;;;###autoload
 (defun ile-insert-and-dup ()

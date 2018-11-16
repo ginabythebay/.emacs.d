@@ -219,9 +219,11 @@ PAGE will be used to calculate the bates number."
                      (bates-page-prefix start) (- (+ page (bates-page-no start)) 1) nil)))
            (org-entry-put nil "BATES_START" (bates--format bts)))))
 
+     (when (not (string-blank-p title))
+       (ile--set-props
+        `( ("DESCRIPTION" . ,title))))
      (ile--set-props
-      `( ("DESCRIPTION" . ,title)
-         ("DATE" . "")
+      '( ("DATE" . "")
          ("NOTES" . ""))))))
 
 (defun bates-insert-note ()
