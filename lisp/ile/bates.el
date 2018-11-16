@@ -222,11 +222,7 @@ PAGE will be used to calculate the bates number."
      (ile--set-props
       `( ("DESCRIPTION" . ,title)
          ("DATE" . "")
-         ("REVISIT" . "")
-         ("NOTES" . "")
-         ("TIMELINE_WITNESSES" . "")
-         ("TIMELINE_DESCRIPTION" . "")
-         ("TIMELINE_SRC_DESCRIPTION" . ""))))))
+         ("NOTES" . ""))))))
 
 (defun bates-insert-note ()
   "Run ‘org-noter-insert-note’ and then insert the extra fields we care about."
@@ -245,10 +241,6 @@ PAGE will be used to calculate the bates number."
          (bates-initialize-props file-range " " page))
 
        (search-backward ":DATE:")
-       (end-of-line)
-       (insert " ")
-
-       (search-backward ":DESCRIPTION:")
        (end-of-line)
        (insert " ")))))
 
