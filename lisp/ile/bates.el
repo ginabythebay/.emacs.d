@@ -433,43 +433,71 @@ PREFIX is an optional prefix."
       (setq text (format "%s %s" prefix text)))
     text))
 
-(defun bates--range-link (file bates-start bates-end &optional params)
+(defun bates--range-link (file prefix start-no end-no &optional params)
   "Create an org mode link for a bates range.
 
 FILE is the file to link to.
-BATES-START is the start of the bates range.
-BATES-END is the end of the bates range.
+PREFIX is the 'name' part of the bates numbers.
+START-NO is the start of the bates range.
+END-NO is the end of the bates range.
 PARAMS is an optional alist of url parameters."
   (unless params
     (setq params ()))
-  (let* ((text (if (equal bates-start bates-end)
-                  bates-start
-                 (format "%s - %s" bates-start bates-end)))
+  (let* ((text (if (equal start-no end-no)
+                   (format "%s %s" prefix start-no)
+                 (format "%s %s - %s" prefix start-no end-no)))
          (suffix (if (equal 0 (length params))
                      ""
                    (concat "#"
-                    (string-join
-                     (let ((l ()))
-                       (dolist (e params)
-                         (push (format "%s=%s" (car e) (cdr e)) l))
-                       l)
-                     "&"))))
+                           (string-join
+                            (let ((l ()))
+                              (dolist (e params)
+                                (push (format "%s=%s" (car e) (cdr e)) l))
+                              l)
+                            "&"))))
          (link (concat file suffix)))
     (format "[[%s][%s]]" link text)))
 
-(defun bates-props-foo ()
+(defun bates-find-org-noter-document ()
+  "Search headlines for org noter document."
+  (save-mark-and-excursion
+    (if-let (doc (org-entry-get nil "NOTER_DOCUMENT"))
+        doc
+      (let ((level (org-current-level)))
+        (if (or (not level) (eq 1 level))
+            nil
+          (outline-up-heading 1 t)
+          (bates-find-org-noter-document))))))
+
+(defun bates-props-fill-bates ()
   "Do something with bates ranges."
   (interactive)
   (save-excursion
     (org-back-to-heading 1)
-    (org-previous-visible-heading 1)
-    (let ((cnt 0))
+    (let ((cnt 0)
+          (doc (bates-find-org-noter-document)))
+      (unless doc
+        (user-error "Unable to find noter doc"))
       (let ((page-no (org-entry-get nil "NOTER_PAGE")))
         (while page-no
           (setq cnt (+ 1 cnt))
-          (let* ((start-no (nth 1 (split-string (org-entry-get nil "BATES_START"))))
-                 (end-no (nth 1 (split-string(org-entry-get nil "BATES_END")))))
-            (org-entry-put nil "BATES" (bates--range-link "file:Defendants production/COB0002421-COB0003964.pdf" start-no end-no (list (cons "page" page-no) (cons "zoom" "100")))))
+          (let* ((bates-start (split-string (org-entry-get nil "BATES_START")))
+                 (start-prefix (car bates-start))
+                 (start-no (nth 1 bates-start))
+                 (bates-end (split-string (org-entry-get nil "BATES_END")))
+                 (end-no (nth 1 bates-end)))
+            (unless (string= start-prefix (car bates-end))
+              (user-error "Unexpected BATES_START of %S and BATES_END of %S.  They don't appear to share a common prefix"
+                          (org-entry-get nil "BATES_START")
+                          (org-entry-get nil "BATES_END")))
+            (org-entry-put nil "BATES" (bates--range-link
+                                        (concat "file:" doc)
+                                        start-prefix
+                                        start-no
+                                        end-no
+                                        (list
+                                         (cons "page" page-no)
+                                         (cons "zoom" "100")))))
           (org-previous-visible-heading 1)
           (setq page-no (org-entry-get nil "NOTER_PAGE"))))
       (message "Processed %d entries" cnt))))
