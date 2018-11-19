@@ -1011,6 +1011,34 @@ are exported to a filename derived from the headline text."
            (set-buffer-modified-p modifiedp)))
        "+export" 'file))))
 
+(defun my-org-export-all-pdf (pub-dir &optional no-split)
+  "Export each subtree to one or more pdf files.
+
+PUB-DIR is the directory to publish to.
+
+Subtrees that do not have the :EXPORT_FILE_NAME: property set
+are exported to a filename derived from the headline text.
+
+If NO-SPLIT is set, then we will produce a single pdf with the
+file name based on the buffer name.  If it is nil, then we will
+produce one pdf files for each exported subtree."
+  (interactive "DPublish directory: ")
+  (let ((tdir (concat (make-temp-file "pdfworkarea" t) "/")))
+    (my-org-export-all-html tdir)
+    (let ((html-files (directory-files tdir t "\\.html$")))
+      (if no-split
+          (let* ((base-buffer-name (file-name-nondirectory (buffer-name)))
+                 (base-pdf (concat (file-name-sans-extension base-buffer-name) ".pdf"))
+                 (out (concat pub-dir base-pdf)))
+            (ile-pdf-from-html html-files out)
+            (message "Produced %s" out))
+        (cl-loop for f in html-files
+                 do (let* ((base-html (file-name-nondirectory f))
+                           (base-pdf (concat (file-name-sans-extension base-html) ".pdf"))
+                           (out (concat pub-dir base-pdf)))
+                      (ile-pdf-from-html f out)))
+        (message "Produced %d pdf files" (length html-files))))))
+
 (use-package gina-launcher
   :load-path "lisp"
   :after (hydra)
