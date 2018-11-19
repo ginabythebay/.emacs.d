@@ -490,14 +490,12 @@ PARAMS is an optional alist of url parameters."
               (user-error "Unexpected BATES_START of %S and BATES_END of %S.  They don't appear to share a common prefix"
                           (org-entry-get nil "BATES_START")
                           (org-entry-get nil "BATES_END")))
-            (org-entry-put nil "BATES" (bates--range-link
-                                        (concat "file:" doc)
-                                        start-prefix
-                                        start-no
-                                        end-no
-                                        (list
-                                         (cons "page" page-no)
-                                         (cons "zoom" "100")))))
+            (org-entry-put
+             nil
+             "BATES"
+             (if (equal start-no end-no)
+                 (format "%s %s" start-prefix start-no)
+               (format "%s %s - %s" start-prefix start-no end-no))))
           (org-previous-visible-heading 1)
           (setq page-no (org-entry-get nil "NOTER_PAGE"))))
       (message "Processed %d entries" cnt))))
