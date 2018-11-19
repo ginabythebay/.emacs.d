@@ -1037,7 +1037,8 @@ produce one pdf files for each exported subtree."
                            (base-pdf (concat (file-name-sans-extension base-html) ".pdf"))
                            (out (concat pub-dir base-pdf)))
                       (ile-pdf-from-html f out)))
-        (message "Produced %d pdf files" (length html-files))))))
+        (message "Produced %d pdf files" (length html-files))))
+    (delete-directory tdir t)))
 
 (use-package gina-launcher
   :load-path "lisp"
