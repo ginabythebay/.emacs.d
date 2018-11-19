@@ -68,7 +68,8 @@ executable."
 
   (let ((args
          '("--orientation" "Landscape"
-           "--no-background")))
+           "--no-background"
+           "--no-outline")))
     (when footer-left
       (setq args (append args `("--footer-left" ,footer-left))))
     (when footer-right
