@@ -230,7 +230,7 @@ not found, one will be created."
   (let* ((pairs (ile-nav-case-ids))
          (ids (delete-dups (mapcar (lambda (el) (car el)) pairs)))
          (id (or id (completing-read "Choose id: " ids nil t)))
-         (buf-name (format "*%s*" id))
+         (buf-name (format "(%s)" id))
          (buf (get-buffer buf-name))
          (found (assoc id pairs)))
     (unless found
