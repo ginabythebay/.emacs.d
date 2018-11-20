@@ -176,6 +176,7 @@ the syntax class ')'."
       (pop-to-buffer buf action norecord)))
   (setq helpful-switch-buffer-function #'my-helpful-switch-buffer)
   :bind
+  ("C-h c" . helpful-command)
   ("C-h f" . helpful-callable)
   ("C-h v" . helpful-variable)
   ("C-h k" . helpful-key)
