@@ -208,19 +208,6 @@ Each cons cell will be (id . filename)"
                     (push (cons (org-entry-get (point) "ID") f) values))
                finally return values))))
 
-(defun ile-nav-visit-id (id file)
-  "Similar to 'org-id-goto, but we don't pop to the buffer when we find ID.
-Returns the buffer.  FILE is the file to look in."
-  (let ((m (org-id-find-id-in-file id file 'marker)))
-    (unless m
-      (error "Cannot find entry with ID \"%s\"" id))
-    (let ((buf (marker-buffer m)))
-      (set-buffer (marker-buffer m))
-      (goto-char m)
-      (move-marker m nil)
-      (org-show-context)
-      buf)))
-
 ;;;###autoload
 (defun ile-nav-indirect-buffer-for-id (&optional id)
   "Pop to an indirect buffer narrowed to the headline associated with ID.
@@ -235,11 +222,16 @@ not found, one will be created."
          (found (assoc id pairs)))
     (unless found
       (user-error "Unable to find %S in case" id))
-    (if buf
-        (pop-to-buffer-same-window buf)
-      (let ((base-buf (with-current-buffer
-                          (ile-nav-visit-id id (cdr found)))))
-        (pop-to-buffer-same-window (make-indirect-buffer base-buf buf-name t)))
+    (let ((m (org-id-find-id-in-file id (cdr found) 'marker)))
+      (if buf
+          (progn
+            (pop-to-buffer-same-window buf)
+            (widen))
+        (let ((base-buf (marker-buffer m)))
+          (pop-to-buffer-same-window
+           (make-indirect-buffer base-buf buf-name t))
+          (widen)))
+      (goto-char m)
       (org-narrow-to-subtree))))
 
 (defsubst ile-org--prefix-match-len (s1 s2)
@@ -249,7 +241,7 @@ not found, one will be created."
       (setq l (1+ l)))
     (if (eq l 0)
         nil
-      l)))
+       l)))
 
 ;;;###autoload
 (defun ile-org-lookup-fed-rule (rule)
@@ -270,31 +262,30 @@ RULE should be something like FRCP 26(a)(b)."
          (m (org-id-find id 'marker)))
     (unless m
       (error "Cannot find entry with ID \"%s\"" id))
-    (let ((buf (marker-buffer m)))
-      (pop-to-buffer-same-window (marker-buffer m))
-      (goto-char m)
-      (move-marker m nil)
+    (pop-to-buffer-same-window (marker-buffer m))
+    (goto-char m)
+    (move-marker m nil)
 
-      (let* ((best-len 0)    ;; length of longest match
-             (best-pos nil)  ;; position of longest match
-             (ast (save-restriction (org-narrow-to-subtree) (org-element-parse-buffer)))
-             (pos (org-element-map
-                      ast
-                      '(headline)
-                    (lambda (el)
-                      (if-let* ((title (org-element-property :raw-value el))
-                                ((string-prefix-p rule title)))
-                          (org-element-property :begin el)
-                        (when-let* ((l (ile-org--prefix-match-len rule title))
-                                    ((> l best-len)))
-                            (setq best-len l
-                                  best-pos (org-element-property :begin el)))
-                        nil))
-                    nil t)))
-        (cond
-         (pos (goto-char pos))
-         (best-pos (goto-char best-pos))
-         (t (message "Unable to find match for %S" rule)))))))
+    (let* ((best-len 0)   ;; length of longest match
+           (best-pos nil) ;; position of longest match
+           (ast (save-restriction (org-narrow-to-subtree) (org-element-parse-buffer)))
+           (pos (org-element-map
+                    ast
+                    '(headline)
+                  (lambda (el)
+                    (if-let* ((title (org-element-property :raw-value el))
+                              ((string-prefix-p rule title)))
+                        (org-element-property :begin el)
+                      (when-let* ((l (ile-org--prefix-match-len rule title))
+                                  ((> l best-len)))
+                        (setq best-len l
+                              best-pos (org-element-property :begin el)))
+                      nil))
+                  nil t)))
+      (cond
+       (pos (goto-char pos))
+       (best-pos (goto-char best-pos))
+       (t (message "Unable to find match for %S" rule))))))
 
 ;;;###autoload
 (defun ile-org-lookup-date (target &optional case)
