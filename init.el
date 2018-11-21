@@ -30,6 +30,16 @@
 ;; Stop asking me this already
 (setq vc-follow-symlinks t)
 
+;; Avoid accidentally editing emacs code
+;; see https://emacs.stackexchange.com/a/3681/767
+(dir-locals-set-class-variables
+ 'emacs
+ '((nil . ((buffer-read-only . t)
+           (show-trailing-whitespace . nil)
+           (tab-width . 8)
+           (eval . (whitespace-mode -1))))))
+(dir-locals-set-directory-class (concat user-emacs-directory "elpa") 'emacs)
+
 
 (global-auto-revert-mode 1)
 
