@@ -822,7 +822,8 @@ Inspired by crux-beginning-of-line."
     (org-table-align)
     (let* ((format
             (completing-read "Transform table function: "
-                             '("orgtbl-to-tsv" "orgtbl-to-csv" "orgtbl-to-latex"
+                             '("my-orgtbl-to-prop-line" "orgtbl-to-tsv"
+                               "orgtbl-to-csv" "orgtbl-to-latex"
                                "orgtbl-to-html" "orgtbl-to-generic"
                                "orgtbl-to-texinfo" "orgtbl-to-orgtbl"
                                "orgtbl-to-unicode")))
@@ -844,6 +845,17 @@ Inspired by crux-beginning-of-line."
             (beginning-of-line)
             (message "Tranformation done."))
         (user-error "Table export format invalid"))))
+
+  (defun my-orgtbl-to-prop-line (table params)
+    "Convert the orgtbl-mode table to a line of text.
+
+The line will have entries for each table row, separated by '; '.
+Each entry will have ': ' put in between columns."
+    (replace-regexp-in-string           ;; join lines
+     "\n" ""
+     (substring ;; drop first '; '
+      (orgtbl-to-generic table (org-combine-plists '(:sep ": " :lstart "; ") params))
+      2)))
 
   (use-package ile
     :load-path "lisp/ile"
