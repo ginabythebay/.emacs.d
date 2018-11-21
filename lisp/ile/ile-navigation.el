@@ -54,7 +54,7 @@ We look for files in PROJECT-DIR/Discovery/united that contains PREFIX and NO."
 (defun ile-org-table-column-next-duplicate ()
   "Move the cursor down to the cells in the current column until we leave the current table or we find the next duplicate entry."
   (interactive)
-  (unless (org-table-p)
+  (unless (org-at-table-p)
     (user-error "Must be in a table"))
   (save-excursion (org-table-align))
   (let ((last-field (org-trim (save-excursion (org-table-get-field)))))
@@ -62,14 +62,14 @@ We look for files in PROJECT-DIR/Discovery/united that contains PREFIX and NO."
     (cl-loop
      for current-field = (org-trim (save-excursion (org-table-get-field)))
      then (progn (next-line) (org-trim (save-excursion (org-table-get-field))))
-     until (or (not (org-table-p)) (string= current-field last-field))
+     until (or (not (org-at-table-p)) (string= current-field last-field))
      do (setq last-field current-field))))
 
 (defun ile-org-bates-at-point ()
   "Return the bates number (e.g. OCA 400) at point, or nil if none is found."
   (let ((case-fold-search nil))
     (when (thing-at-point-looking-at ile-org--bates-re 10)
-      (buffer-substring (match-beginning 0) (match-end 0)))))
+      (buffer-substring (match-beginning 0) (match-end 2)))))
 
 (defun ile-org-date-at-point ()
   "Return the date at point, or nil if none is found."
