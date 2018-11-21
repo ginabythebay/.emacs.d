@@ -39,7 +39,8 @@
            (tab-width . 8)
            (eval . (whitespace-mode -1))))))
 (dir-locals-set-directory-class (concat user-emacs-directory "elpa") 'emacs)
-
+(dir-locals-set-directory-class
+ (locate-dominating-file (locate-library "winner") "lisp") 'emacs)
 
 (global-auto-revert-mode 1)
 
