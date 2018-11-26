@@ -905,8 +905,18 @@ Each entry will have ': ' put in between columns."
 
 (use-package swiper
   :ensure t
+  :init
+  (defun my-search ()
+    "Search using swiper or isearch-forward.
+
+While I prefer swiper for most things, I find that isearch-foward
+is more keyboard-macro-friendly."
+    (interactive)
+    (if defining-kbd-macro
+        (call-interactively 'isearch-forward)
+      (call-interactively 'swiper)))
   :bind
-  (("C-s" . swiper)))
+  (("C-s" . my-search)))
 
 ;;(use-package helm-bbdb
 ;;  :ensure t
