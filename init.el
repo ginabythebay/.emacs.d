@@ -641,6 +641,11 @@ Inspired by crux-beginning-of-line."
 	    (when (file-exists-p mm)
 	      (setq markdown-command mm))))
 
+(use-package git-gutter
+  :ensure t
+  :config
+  (global-git-gutter-mode +1))
+
 (use-package magit
   :ensure t
   :bind ("C-x g" . magit-status))
