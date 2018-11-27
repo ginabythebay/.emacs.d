@@ -714,7 +714,7 @@ Inspired by crux-beginning-of-line."
     (require pkg))
   (pdf-tools-install)
   ;; open pdfs scaled to fit page
-  (setq pdf-view-display-size 'fit-page)
+  (setq-default pdf-view-display-size 'fit-page)
   ;; automatically annotate highlights
   (setq pdf-annot-activate-created-annotations t)
   ;; blink-cursor-mode can cause flickering of pdfs:
