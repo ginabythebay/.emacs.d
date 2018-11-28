@@ -760,7 +760,7 @@ Inspired by crux-beginning-of-line."
   ;; see http://cachestocaches.com/2016/9/my-workflow-org-agenda/
   (setq org-capture-templates
         '(("t" "todo" entry (file org-default-notes-file)
-           "* TODO %?\n%u\n%a\n" :clock-in t :clock-resume t)
+           "* TODO %?\n" :clock-in t :clock-resume t)
           ("m" "Meeting" entry (file org-default-notes-file)
            "* MEETING with %? :MEETING:\n%t" :clock-in t :clock-resume t)
           ("i" "Idea" entry (file org-default-notes-file)
