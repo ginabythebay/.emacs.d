@@ -40,22 +40,24 @@
   (interactive)
   (w32-browser "//Dan-PC/Users/Dan/Documents/Case List/Case List (2).doc"))
 
+(provide 'gina-launcher)
+
 (defhydra gina-launcher-hydra (:hint nil :exit t)
   "
 (quit with _q_)
 _b_: bury buffer
+_c_: jump to Current clock
 _d_: toggle debug on error
-_t_: open Time sheet
 _i_: clock In to recent task
 _l_: open case list
-_c_: jump to Current clock"
+_s_: iSearch forward
+_t_: open Time sheet"
   ("q" nil)
   ("b" bury-buffer)
+  ("c" org-clock-jump-to-current-clock)
   ("d" toggle-debug-on-error)
-  ("t" gina-open-current-timesheet)
   ("i" gina-clock-in-to-recent-task)
   ("l" gina-open-case-list)
-  ("c" org-clock-jump-to-current-clock))
-
-(provide 'gina-launcher)
+  ("s" isearch-forward)
+  ("t" gina-open-current-timesheet))
 ;;; gina-launcher.el ends here
