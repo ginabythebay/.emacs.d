@@ -715,7 +715,6 @@ Inspired by crux-beginning-of-line."
 
 (use-package pdf-tools
   :config
-  (message "beginning :config for pdf-tools")
   (pdf-tools-install)
   (dolist
       (pkg
@@ -732,8 +731,7 @@ Inspired by crux-beginning-of-line."
   (add-hook 'pdf-view-mode-hook (lambda () (blink-cursor-mode 0)))
   ;; swiper doesn't work with pdfs
   (define-key pdf-view-mode-map (kbd "C-s") #'isearch-forward)
-  (define-key pdf-view-mode-map (kbd "G") #'pdf-view-last-page)
-  (message "ending :config for pdf-tools"))
+  (define-key pdf-view-mode-map (kbd "G") #'pdf-view-last-page))
 
 (use-package htmlize)
 
