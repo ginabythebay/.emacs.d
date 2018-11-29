@@ -19,6 +19,7 @@
 (require 'dash)
 (require 'org-element)
 (require 'org-id)
+(require 'org-table)
 (require 'projectile)
 
 

@@ -879,6 +879,7 @@ Each entry will have ': ' put in between columns."
       2)))
 
   (use-package ile
+    :after (company)
     :load-path "lisp/ile"
     :commands ile-mode
     :ensure nil
@@ -906,7 +907,15 @@ Each entry will have ': ' put in between columns."
 
     (global-set-key (kbd "C-x 8 s") (lambda () (interactive) (insert "§")))
     :config
-    (add-hook 'org-mode-hook 'ile-mode))
+    (add-hook 'org-mode-hook 'ile-mode)
+
+    (add-hook 'ile-mode-hook
+              (lambda ()
+                (require 'ile-company)
+                (set (make-local-variable 'company-backends)
+                     (list (list #'company-dabbrev
+                                 #'ile-company-pdf-dictionary
+                                 :with #'company-yasnippet))))))
 
   (add-hook 'org-mode-hook #'flyspell-mode)
   (add-hook 'org-mode-hook #'auto-fill-mode)
