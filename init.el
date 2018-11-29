@@ -162,6 +162,7 @@ the syntax class ')'."
 
 (use-package beacon
   :ensure t
+  :diminish beacon-mode
   :config
   (beacon-mode 1))
 
@@ -342,16 +343,22 @@ Inspired by crux-beginning-of-line."
   (customize-set-variable 'explicit-shell-file-name "/bin/bash")
   (customize-set-variable 'explicit-bash-args '("--noediting" "--login" "-i")))
 
-;; Notes for getting hunspell working on the mac.
-;; Install the binary using brew
-;; Get the dictionaries from a libreoffice extension.  This worked:
-;; http://extensions.libreoffice.org/extension-center/english-dictionaries
-;; Unzip the ofx file.  Copy *.aff and *.dic into ~/Library/Spelling/
-(add-hook 'text-mode-hook 'flyspell-mode)
-(add-hook 'prog-mode-hook 'flyspell-prog-mode)
+(use-package flyspell
+  :ensure t
+  :diminish flyspell-mode
+  :config
+  (define-key flyspell-mode-map (kbd "C-;") nil)
+  ;; Notes for getting hunspell working on the mac.
+  ;; Install the binary using brew
+  ;; Get the dictionaries from a libreoffice extension.  This worked:
+  ;; http://extensions.libreoffice.org/extension-center/english-dictionaries
+  ;; Unzip the ofx file.  Copy *.aff and *.dic into ~/Library/Spelling/
+  (add-hook 'text-mode-hook 'flyspell-mode)
+  (add-hook 'prog-mode-hook 'flyspell-prog-mode))
 
 (use-package highlight-symbol
   :ensure t
+  :diminish highlight-symbol-mode
   :config
   (add-hook 'prog-mode-hook 'highlight-symbol-mode))
 
@@ -365,6 +372,7 @@ Inspired by crux-beginning-of-line."
 ;; TODO(gina) look into getting a bunch of snippets, including go.  See https://github.com/capitaomorte/yasnippet
 (use-package yasnippet
   :ensure t
+  :diminish yas-minor-mode
   :config
   (yas-reload-all)
   (add-hook 'prog-mode-hook #'yas-minor-mode)
@@ -372,6 +380,7 @@ Inspired by crux-beginning-of-line."
 
 (use-package which-key
   :ensure t
+  :diminish which-key-mode
   :config (which-key-mode))
 
 (use-package expand-region
@@ -492,8 +501,13 @@ Inspired by crux-beginning-of-line."
     (forward-line -1)
     (indent-according-to-mode)))
 
+(use-package eldoc
+  :ensure t
+  :diminish eldoc-mode)
+
 (use-package lispy
   :ensure t
+  :diminish lispy-mode
   :commands (lispy-mode)
   :init
   (add-hook 'emacs-lisp-mode-hook (lambda () (lispy-mode 1)))
@@ -643,6 +657,7 @@ Inspired by crux-beginning-of-line."
 
 (use-package git-gutter
   :ensure t
+  :diminish git-gutter-mode
   :config
   (global-git-gutter-mode +1))
 
