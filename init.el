@@ -714,27 +714,26 @@ Inspired by crux-beginning-of-line."
       c-basic-offset 2)
 
 (use-package pdf-tools
-  :magic ("%PDF" . pdf-view-mode)
-  :bind
-  (:map pdf-view-mode-map
-        ("G" . pdf-view-last-page)
-        ("C-s" . isearch-forward)) ;; swiper doesn't work with pdfs
   :config
-  ;; initialise
+  (message "beginning :config for pdf-tools")
+  (pdf-tools-install)
   (dolist
       (pkg
        '(pdf-annot pdf-cache pdf-dev pdf-history pdf-info pdf-isearch
                    pdf-links pdf-misc pdf-occur pdf-outline pdf-sync
                    pdf-util pdf-view pdf-virtual))
     (require pkg))
-  (pdf-tools-install)
   ;; open pdfs scaled to fit page
   (setq-default pdf-view-display-size 'fit-page)
   ;; automatically annotate highlights
   (setq pdf-annot-activate-created-annotations t)
   ;; blink-cursor-mode can cause flickering of pdfs:
   ;; https://emacs.stackexchange.com/a/28599/767
-  (add-hook 'pdf-view-mode-hook (lambda () (blink-cursor-mode 0))))
+  (add-hook 'pdf-view-mode-hook (lambda () (blink-cursor-mode 0)))
+  ;; swiper doesn't work with pdfs
+  (define-key pdf-view-mode-map (kbd "C-s") #'isearch-forward)
+  (define-key pdf-view-mode-map (kbd "G") #'pdf-view-last-page)
+  (message "ending :config for pdf-tools"))
 
 (use-package htmlize)
 
