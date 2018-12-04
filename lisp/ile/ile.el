@@ -17,7 +17,8 @@
 (require 'ile-navigation)
 
 (defconst ile--exclude-bates-names
-  '("CA" ;; our fair state
+  '("CA"  ;; our fair state
+    "SBN" ;; state bar number
     ;; todo keywords
     "TODO" "NEXT" "DONE" "WAITING" "HOLD" "CANCELLED" "PHONE" "MEETING"))
 
