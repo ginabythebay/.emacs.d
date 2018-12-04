@@ -307,5 +307,34 @@ to be CLOCKED OUT."))))
 	    (not (memq ch '(?K ?G ?S ?C))))
        fail-quietly)))))
 
+(defun gw/maybe-insert-item ()
+  "Insert a list item if we are in a list.
+
+If inserting and the current item has a checkbox, create a
+  checkbox for the one we insert."
+  (interactive)
+  (when (org-in-item-p)
+    (let ((cbox))
+      (save-excursion
+        (goto-char (point-at-bol))
+        (setq cbox (org-at-item-checkbox-p)))
+      (org-insert-item cbox))))
+
+
+;; This override calls gw/maybe-insert-item, which handles checkboxes
+;; instead of org-insert-item.
+(defun org-meta-return (&optional arg)
+  "Insert a new heading or wrap a region in a table.
+Calls `org-insert-heading', `org-insert-item' or
+`org-table-wrap-region', depending on context.  When called with
+an argument, unconditionally call `org-insert-heading'."
+  (interactive "P")
+  (org-check-before-invisible-edit 'insert)
+  (or (run-hook-with-args-until-success 'org-metareturn-hook)
+      (call-interactively (cond (arg #'org-insert-heading)
+				((org-at-table-p) #'org-table-wrap-region)
+				((org-in-item-p) #'gw/maybe-insert-item)
+				(t #'org-insert-heading)))))
+
 (provide 'org-override)
 ;;; org-override.el ends here
