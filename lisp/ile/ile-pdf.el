@@ -56,6 +56,38 @@ page."
             '( (1 . 13) (15 . 20))
             "bar"))))
 
+;; adapted from https://emacs.stackexchange.com/questions/2259/how-to-export-top-level-headings-of-org-mode-buffer-to-separate-files
+(defun ile-pdf-export-all-html (pub-dir)
+  "Export all subtrees that are tagged with :export: to separate files.
+
+PUB-DIR is the directory to publish to.
+
+Subtrees that do not have the :EXPORT_FILE_NAME: property set
+are exported to a filename derived from the headline text."
+  (let ((fn 'org-html-export-to-html)
+        (modifiedp (buffer-modified-p)))
+    (save-excursion
+      (org-map-entries
+       (lambda ()
+         (let* ((orig-export-file (org-entry-get (point) "EXPORT_FILE_NAME"))
+                (new-export-file
+                 (if orig-export-file
+                     (concat pub-dir (file-name-nondirectory orig-export-file))
+                   (concat
+                    pub-dir
+                    (file-name-nondirectory
+                     (replace-regexp-in-string
+                      " "
+                      "_"
+                      (nth 4 (org-heading-components))))))))
+           (org-set-property "EXPORT_FILE_NAME" new-export-file)
+           (funcall fn nil t)
+           (if orig-export-file
+               (org-set-property "EXPORT_FILE_NAME" orig-export-file)
+             (org-delete-property "EXPORT_FILE_NAME"))
+           (set-buffer-modified-p modifiedp)))
+       "+export" 'file))))
+
 (defun ile-pdf-from-html (in-files out-file &optional footer-left footer-right)
   "Convert one or more html files to a pdf file.
 
@@ -90,6 +122,42 @@ executable."
       (unless (equal status 0)
         (error "Failed convert to pdf.  See buffer %s for more detail "
                ile-pdf--output-buffer)))))
+
+;;;###autoload
+(defun ile-pdf-export-all (pub-dir &optional no-split)
+  "Export each subtree to one or more pdf files.
+
+PUB-DIR is the directory to publish to.
+
+Subtrees that do not have the :EXPORT_FILE_NAME: property set
+are exported to a filename derived from the headline text.
+
+If NO-SPLIT is set, then we will produce a single pdf with the
+file name based on the buffer name.  If it is nil, then we will
+produce one pdf files for each exported subtree."
+  (interactive "DPublish directory: ")
+  (let ((tdir (concat (make-temp-file "pdfworkarea" t) "/")))
+    (my-org-export-all-html tdir)
+    (let ((html-files (directory-files tdir t "\\.html$")))
+      (if no-split
+          (let ((out (concat
+                      pub-dir
+                      (concat
+                       (file-name-sans-extension
+                        (file-name-nondirectory (buffer-name)))
+                       ".pdf"))))
+            (ile-pdf-from-html html-files out)
+            (message "Produced %s" out))
+        (cl-loop for f in html-files
+                 do (let ((out (concat
+                                pub-dir
+                                (concat
+                                 (file-name-sans-extension
+                                  (file-name-nondirectory f))
+                                 ".pdf"))))
+                      (ile-pdf-from-html f out)))
+        (message "Produced %d pdf files" (length html-files))))
+    (delete-directory tdir t)))
 
 (defun ile-pdf--extract-pages (in-file page-ranges out-file)
   "Extract one or more pages from IN-FILE and put them into OUT-FILE.
