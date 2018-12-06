@@ -890,6 +890,7 @@ Each entry will have ': ' put in between columns."
     (defvar ile-map nil
       "ILE keymap.")
     (define-prefix-command 'ile-map)
+    (define-key ile-map (kbd "a") #'ile-tbl-to-clipboard)
     (define-key ile-map (kbd "c") #'my-cleanup-region-date)
     (define-key ile-map (kbd "d") #'ile-duplicate)
     (define-key ile-map (kbd "i") #'ile-nav-indirect-buffer-for-id)

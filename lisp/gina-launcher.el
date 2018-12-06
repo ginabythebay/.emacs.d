@@ -14,7 +14,6 @@
 
 ;; code goes here
 
-(require 'ile)
 (require 'org-clock)
 (require 'w32-browser)
 
@@ -46,7 +45,6 @@
 (defhydra gina-launcher-hydra (:hint nil :exit t)
   "
 (quit with _q_)
-_a_: copy tAble data to clipboard
 _b_: bury buffer
 _c_: jump to Current clock
 _d_: toggle debug on error
@@ -55,7 +53,6 @@ _l_: open case list
 _s_: iSearch forward
 _t_: open Time sheet"
   ("q" nil)
-  ("a" ile-tbl-to-clipboard)
   ("b" bury-buffer)
   ("c" org-clock-jump-to-current-clock)
   ("d" toggle-debug-on-error)
