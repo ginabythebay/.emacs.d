@@ -798,6 +798,7 @@ Inspired by crux-beginning-of-line."
   ;; adapted from http://sachachua.com/blog/2008/01/projects-in-emacs-org/
   (setq org-stuck-projects
         '("+PROJECT/-MAYBE-DONE" ("TODO" "NEXT") nil "\\<IGNORE\\>"))
+  (setq org-tags-exclude-from-inheritance '("PROJECT"))
 
   (setq org-file-apps
         '(("\\.docx\\'" . default)
