@@ -795,7 +795,7 @@ Inspired by crux-beginning-of-line."
   (setq org-use-speed-commands
         (lambda () (and (looking-at org-outline-regexp) (looking-back "^\**"))))
 
-  ;; adapated from http://sachachua.com/blog/2008/01/projects-in-emacs-org/
+  ;; adapted from http://sachachua.com/blog/2008/01/projects-in-emacs-org/
   (setq org-stuck-projects
         '("+PROJECT/-MAYBE-DONE" ("TODO" "NEXT") nil "\\<IGNORE\\>"))
 
