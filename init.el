@@ -795,6 +795,10 @@ Inspired by crux-beginning-of-line."
   (setq org-use-speed-commands
         (lambda () (and (looking-at org-outline-regexp) (looking-back "^\**"))))
 
+  ;; adapated from http://sachachua.com/blog/2008/01/projects-in-emacs-org/
+  (setq org-stuck-projects
+        '("+PROJECT/-MAYBE-DONE" ("TODO" "NEXT") nil "\\<IGNORE\\>"))
+
   (setq org-file-apps
         '(("\\.docx\\'" . default)
           ("\\.mm\\'" . default)
@@ -807,7 +811,7 @@ Inspired by crux-beginning-of-line."
 
   (setq org-todo-keywords
         (quote ((sequence "TODO(t)" "NEXT(n)" "|" "DONE(d)")
-                (sequence "WAITING(w@/!)" "HOLD(h@/!)" "|" "CANCELLED(c@/!)" "PHONE" "MEETING"))))
+                (sequence "WAITING(w@/!)" "HOLD(h@/!)" "|" "CANCELLED(c@/!)"))))
 
   (setq org-todo-state-tags-triggers
         (quote (("CANCELLED" ("CANCELLED" . t))
@@ -869,7 +873,7 @@ Inspired by crux-beginning-of-line."
 
 The line will have entries for each table row, separated by '; '.
 Each entry will have ': ' put in between columns."
-    (replace-regexp-in-string           ;; join lines
+    (replace-regexp-in-string ;; join lines
      "\n" ""
      (substring ;; drop first '; '
       (orgtbl-to-generic table (org-combine-plists '(:sep ": " :lstart "; ") params))
