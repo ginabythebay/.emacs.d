@@ -56,6 +56,39 @@ LIMIT is the limit of the search."
     (when font-lock-mode
       (with-no-warnings (font-lock-fontify-buffer)))))
 
+
+;;;###autoload
+(defun ile-tbl-to-clipboard ()
+  "Copy data in the clipboard to OS clipboard and kill ring.
+
+Similar `ORG-TABLE-EXPORT', but instead of exporting to a file,
+copy the data in the table to the OS clipboard (and to the kill
+ring) formatted according to user's choice, where the format
+choices are the same as org-table-export."
+  (interactive)
+  (unless (org-at-table-p) (user-error "No table at point"))
+  (let* ((format
+          (completing-read "Transform table function: "
+                           '("orgtbl-to-tsv"
+                             "orgtbl-to-csv" "orgtbl-to-latex"
+                             "orgtbl-to-html" "orgtbl-to-generic"
+                             "orgtbl-to-texinfo" "orgtbl-to-orgtbl"
+                             "orgtbl-to-unicode"))))
+    (if (string-match "\\([^ \t\r\n]+\\)\\( +.*\\)?" format)
+        (progn
+          (message "Copying data...")
+          (let ((transform (intern (match-string 1 format)))
+                (params (and (match-end 2)
+                             (read (concat "(" (match-string 2 format) ")"))))
+                (table (org-table-to-lisp
+                        (buffer-substring-no-properties
+                         (org-table-begin) (org-table-end)))))
+            (unless (fboundp transform)
+              (user-error "No such transformation function %s" transform))
+            (kill-new (funcall transform table params))
+            (message "Copying data...done")))
+      (user-error "Table export format invalid"))))
+
 (provide 'ile)
 ;;; ile.el ends here
 
