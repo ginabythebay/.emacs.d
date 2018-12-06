@@ -17,7 +17,9 @@
 ;; code goes here
 
 (require 'org)
-
+(require 'org-agenda)
+(require 'org-clock)
+(require 'subr-x)
 
 (defun org-agenda-get-category-icon (tags)
   "Return an image for and TAGS according to `org-agenda-category-icon-alist'."
