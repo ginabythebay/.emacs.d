@@ -313,9 +313,10 @@ to be CLOCKED OUT."))))
 If inserting and the current item has a checkbox, create a
   checkbox for the one we insert."
   (interactive)
-  (when (org-in-item-p)
+  (when-let* ((item-start (org-in-item-p)))
     (let ((cbox))
       (save-excursion
+        (goto-char item-start)
         (goto-char (point-at-bol))
         (setq cbox (org-at-item-checkbox-p)))
       (org-insert-item cbox))))
@@ -325,6 +326,7 @@ If inserting and the current item has a checkbox, create a
 ;; instead of org-insert-item.
 (defun org-meta-return (&optional arg)
   "Insert a new heading or wrap a region in a table.
+If ARG is set, we call `org-insert-heading'.
 Calls `org-insert-heading', `org-insert-item' or
 `org-table-wrap-region', depending on context.  When called with
 an argument, unconditionally call `org-insert-heading'."
