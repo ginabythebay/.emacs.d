@@ -781,8 +781,7 @@ Inspired by crux-beginning-of-line."
            "** NEXT %?" :prepend t :clock-in t :clock-resume t)
           ("c" "Schedule court deadline in current buffer" entry (file+olp+datetree buffer-file-name "Court deadlines")
            "** %? " :time-prompt t)))
-
-  (setq org-agenda-span 700)
+  
   (setq org-agenda-show-all-dates nil)
   (setq org-agenda-show-future-repeats (quote next))
   (setq org-show-context-detail
@@ -799,6 +798,16 @@ Inspired by crux-beginning-of-line."
   (setq org-stuck-projects
         '("+PROJECT/-MAYBE-DONE" ("TODO" "NEXT") nil "\\<IGNORE\\>"))
   (setq org-tags-exclude-from-inheritance '("PROJECT"))
+
+  (setq org-agenda-custom-commands
+        '(("p" "Active projects" tags "PROJECT-MAYBE-DONE" nil) ;; (1)
+          ("m" "Maybe projects" tags "PROJECT&MAYBE" nil)       ;; (2)
+          ("a" "My Agenda"
+           ((org-agenda-list)
+            (org-agenda-list-stuck-projects)
+            (tags "PROJECT-MAYBE-DONE")))
+          ;; ... put your other custom commands here
+          ))
 
   (setq org-file-apps
         '(("\\.docx\\'" . default)
@@ -1038,7 +1047,8 @@ Each entry will have ': ' put in between columns."
   (require 'org)                        ;; we use org-agenda-files
                                         ;; variable below
   (save-excursion
-    (let ((cnt 0))
+    (let ((cnt 0)
+          (org-agenda-span 700))
       ;; TODO(gina) see if there is some code I can lift to deal, with, e.g. directory names
       (dolist (f org-agenda-files)
         (setq cnt (+ 1 cnt))
