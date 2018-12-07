@@ -89,6 +89,24 @@ choices are the same as org-table-export."
             (message "Copying data...done")))
       (user-error "Table export format invalid"))))
 
+(defun ile-entry-when-sort-key ()
+  "Return a key we can use for sorting the current entry.
+
+We look at the timestamp for the special SCHEDULED property or
+the special DEADLINE property.  If only one is found, we use
+that.  If neither is found, we return a blank string.  It is not
+possible for both to be found because org mode only recognizes
+the first entry after the heading."
+  (or (org-entry-get (point) "DEADLINE")
+      (org-entry-get (point) "SCHEDULED")
+      ""))
+
+(defun ile-sort-entries-by-date ()
+  "Sort entries by SCHEDULED or DEADLINE special property.
+See `org-sort-entries'."
+  (interactive)
+  (org-sort-entries nil ?f #'ile-entry-when-sort-key #'string<))
+
 (provide 'ile)
 ;;; ile.el ends here
 

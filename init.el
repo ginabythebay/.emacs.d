@@ -910,6 +910,7 @@ Each entry will have ': ' put in between columns."
     (define-key ile-map (kbd "i") #'ile-nav-indirect-buffer-for-id)
     (define-key ile-map (kbd "j") #'ile-jump)
     (define-key ile-map (kbd "q") #'ile-org-fill-subtree)
+    (define-key ile-map (kbd "s") #'ile-sort-entries-by-date)
     (define-key ile-map (kbd "t") #'ile-org-noter-dates)
 
     ;; This part would remain out here somewhere
