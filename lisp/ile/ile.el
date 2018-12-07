@@ -101,6 +101,7 @@ the first entry after the heading."
       (org-entry-get (point) "SCHEDULED")
       ""))
 
+;;;###autoload
 (defun ile-sort-entries-by-date ()
   "Sort entries by SCHEDULED or DEADLINE special property.
 See `org-sort-entries'."
