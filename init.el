@@ -1048,7 +1048,9 @@ Each entry will have ': ' put in between columns."
   (require 'org)
   (save-excursion
     (let ((org-agenda-span days))
-      (org-agenda nil "a" 'buffer)
+      (message "Loading agenda...")
+      (org-agenda-list nil nil days)
+      (message "Loading agenda...done")
       (switch-to-buffer "*Org Agenda*")
       (print-buffer))))
 
