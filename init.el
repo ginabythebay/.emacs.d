@@ -1042,11 +1042,21 @@ Each entry will have ': ' put in between columns."
       (kill-new filename)
       (message "Copied buffer file name '%s' to the clipboard." filename))))
 
+(defun my-print-combined-agenda (days)
+  "Create an agenda for the number of DAYS specified and sent it to the printer."
+  (interactive "nNumber of days to use: ")
+  (require 'org)
+  (save-excursion
+    (let ((org-agenda-span days))
+      (org-agenda nil "a" 'buffer)
+      (switch-to-buffer "*Org Agenda*")
+      (print-buffer))))
+
 (defun my-print-each-agenda (dir)
   "Create an html file for every agenda file in DIR."
   (interactive "Postscript file to Save to: ")
-  (require 'org)                        ;; we use org-agenda-files
-                                        ;; variable below
+  (require 'org) ;; we use org-agenda-files
+  ;; variable below
   (save-excursion
     (let ((cnt 0)
           (org-agenda-span 700))
