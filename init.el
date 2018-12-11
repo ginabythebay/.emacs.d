@@ -46,6 +46,8 @@
 
 (winner-mode 1)
 
+(diminish 'auto-fill-function)          ;; diminishing auto-fill-mode
+
 ;; enable gpg encryption
 ;; see https://stackoverflow.com/questions/41741477/emacs-epa-and-gnupg2-no-usable-configuration?rq=1
 (require 'epa-file)
