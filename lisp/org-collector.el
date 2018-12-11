@@ -99,11 +99,10 @@ value is calculated either through lack of required variables for
 a column, or through the generation of an error.")
 
 (defun and-rest (list)
+  "Return nil unless all elements of LIST are non-nil."
   (if (listp list)
-      (if (> (length list) 1)
-	  (and (car list) (and-rest (cdr list)))
-	(car list))
-    list))
+      (seq-reduce (lambda (a b) (and a b)) list t)
+      list))
 
 (put 'org-collector-error
      'error-conditions
