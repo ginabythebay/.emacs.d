@@ -368,13 +368,6 @@ Inspired by crux-beginning-of-line."
   :config
   (add-hook 'prog-mode-hook 'highlight-symbol-mode))
 
-;; TODO(gina) delete after 8/22/2016.  Using bookmarks package (above) instead
-;(use-package home-buffer
-;  :load-path "lisp"
-;  :bind (([f11] . switch-to-home-buffer)
-;	 ([(control f11)] . set-current-buffer-to-home-buffer)
-;	 ([f2] . switch-to-other-buffer)))
-
 ;; TODO(gina) look into getting a bunch of snippets, including go.  See https://github.com/capitaomorte/yasnippet
 (use-package yasnippet
   :ensure t
