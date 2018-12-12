@@ -46,7 +46,6 @@
 
 (winner-mode 1)
 
-(diminish 'auto-fill-function)          ;; diminishing auto-fill-mode
 
 ;; enable gpg encryption
 ;; see https://stackoverflow.com/questions/41741477/emacs-epa-and-gnupg2-no-usable-configuration?rq=1
@@ -134,6 +133,11 @@ the syntax class ')'."
   :config
   ;; To disable collection of benchmark data after init is done.
   (add-hook 'after-init-hook 'benchmark-init/deactivate))
+
+(use-package diminish
+  :ensure t
+  :config
+  (diminish 'auto-fill-function))
 
 (use-package key-chord
   :config
