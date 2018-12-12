@@ -1,0 +1,6 @@
+# -*- mode: snippet -*-
+# name: Checkbox list
+# key: <cb
+# --
+- [/] $1
+  - $2 
