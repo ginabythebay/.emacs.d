@@ -1107,6 +1107,7 @@ Each entry will have ': ' put in between columns."
       (org-timestamp-change 0 'day))))
 
 (use-package marec
+  :commands marec-status
   :load-path "lisp"
   :ensure nil)
 
