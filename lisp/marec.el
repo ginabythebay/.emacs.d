@@ -18,11 +18,12 @@
 (defun marec-status ()
   "Look at open buffers potentially needing recovery."
   (interactive)
-  (let* ((candidates (seq-filter #'marec-buf-candidate-p (buffer-list)))
+  (let* ((inhibit-read-only t)
+         (candidates (seq-filter #'marec-buf-candidate-p (buffer-list)))
          (candidates-p (not (zerop (length candidates))))
          (status-buffer (get-buffer-create "*marec status*")))
     (with-current-buffer status-buffer
-      (setq buffer-read-only nil)
+      (setq buffer-read-only t)
       (erase-buffer)
       (if (not candidates-p)
           (insert "No files recoverable buffers open")
@@ -32,8 +33,6 @@
                  (newline)
                  (insert "  " (buffer-name c))))
 
-      (setq buffer-read-only t)
-      
       (when candidates-p
         (pop-to-buffer status-buffer))
 
@@ -55,4 +54,5 @@ Based on code in `after-find-file'"
 			      buffer-file-name))))
 
 
+(provide 'marec)
 ;;; marec.el ends here
