@@ -15,14 +15,6 @@
 ;; code goes here
 
 ;;;###autoload
-(defun marec-status ()
-  "Look at open buffers potentially needing recovery."
-  (interactive)
-  (let ((buf (marec-update)))
-    (with-current-buffer (marec-update)
-      (marec-mode))
-    (pop-to-buffer buf)))
-
 (defun marec-update ()
   "Update the marec buffer.
 Returns the status buffer."
@@ -39,13 +31,26 @@ Returns the status buffer."
         (cl-loop for c in candidates
                  do
                  (newline)
-                 (insert "  " (buffer-name c))))
+                 (let ((beg (point)))
+                   (insert "  " (buffer-name c))
+                   (put-text-property beg (point) 'marec-properties (list c)))))
       (if candidates-p
           (message "%d buffers appear to be recoverable" (length candidates))
         (message "No buffers appear to be recoverable")))
     status-buffer))
 
-(defalias #'marec-status 'marec)
+;;;###autoload
+(defun marec-status ()
+  "Look at open buffers potentially needing recovery."
+  (interactive)
+  (let ((buf (marec-update)))
+    (with-current-buffer (marec-update)
+      (marec-mode))
+    (pop-to-buffer buf)))
+
+
+;;;###autoload
+(defalias #'marec 'marec-status)
 
 (defun marec-buf-candidate-p (buf)
   "Return non-nil if BUF is a candidate for recovery.
@@ -62,8 +67,24 @@ Based on code in `after-find-file'"
 (defvar marec-mode-map
   (let ((map (make-keymap)))
     (define-key map (kbd "g") #'marec-update)
+    (define-key map (kbd "RET") #'marec-visit-buffer)
     map))
 
+(defun marec-visit-buffer ()
+  "Visit the buffer on the current line."
+  (interactive)
+  (switch-to-buffer (marec-current-buffer)))
+
+(defun marec-current-buffer ()
+  "Return the buffer at line, if there is one and it is live."
+  (let ((props (get-text-property (line-beginning-position)
+				  'marec-properties)))
+    (unless props
+      (user-error "No buffer on this line"))
+    (let ((buf (car props)))
+      (unless (buffer-live-p buf)
+	(user-error "Buffer %s has been killed; %s" buf (substitute-command-keys "use `\\[marec-update]' to update.")))
+      buf)))
 
 (define-derived-mode marec-mode special-mode "Marec"
   "A major mode for magic recovery."
@@ -72,5 +93,5 @@ Based on code in `after-find-file'"
   (set (make-local-variable 'revert-buffer-function)
        #'marec-update))
 
-  (provide 'marec)
+(provide 'marec)
 ;;; marec.el ends here
