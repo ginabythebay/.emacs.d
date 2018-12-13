@@ -261,6 +261,7 @@ the syntax class ')'."
 (use-package dired
   :ensure nil
   :config
+  (setq dired-dwim-target t)
   (add-hook 'dired-mode-hook (lambda () (require 'dired-x))))
 
 ; see http://pragmaticemacs.com/emacs/copy-and-paste-files-with-dired-ranger/
