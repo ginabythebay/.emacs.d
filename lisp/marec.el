@@ -50,7 +50,7 @@ Returns the status buffer."
 
 
 ;;;###autoload
-(defalias #'marec 'marec-status)
+(defalias 'marec 'marec-status)
 
 (defun marec-buf-candidate-p (buf)
   "Return non-nil if BUF is a candidate for recovery.
