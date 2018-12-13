@@ -504,7 +504,7 @@ Inspired by crux-beginning-of-line."
   :ensure t
   :diminish eldoc-mode)
 
-(use-package lispy
+(use-package lispy
   :ensure t
   :diminish lispy-mode
   :commands (lispy-mode)
@@ -1107,7 +1107,7 @@ Each entry will have ': ' put in between columns."
       (org-timestamp-change 0 'day))))
 
 (use-package marec
-  :commands marec-status
+  :commands (marec marec-status)
   :load-path "lisp"
   :ensure nil)
 
