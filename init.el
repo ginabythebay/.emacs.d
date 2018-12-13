@@ -1106,6 +1106,10 @@ Each entry will have ': ' put in between columns."
     (when (org-at-timestamp-p 'lax)
       (org-timestamp-change 0 'day))))
 
+(use-package marec
+  :load-path "lisp"
+  :ensure nil)
+
 (use-package gina-launcher
   :load-path "lisp"
   :after (hydra)
