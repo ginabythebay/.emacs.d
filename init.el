@@ -780,7 +780,8 @@ Inspired by crux-beginning-of-line."
            "** NEXT %?" :prepend t :clock-in t :clock-resume t)
           ("c" "Schedule court deadline in current buffer" entry (file+olp+datetree buffer-file-name "Court deadlines")
            "** %? " :time-prompt t)))
-  
+
+  (setq org-agenda-span 'day)
   (setq org-agenda-show-all-dates nil)
   (setq org-agenda-show-future-repeats (quote next))
   (setq org-show-context-detail
