@@ -70,6 +70,7 @@ Based on code in `after-find-file'"
   (let ((map (make-keymap)))
     (define-key map (kbd "d") #'marec-diff-buffer)
     (define-key map (kbd "g") #'marec-update)
+    (define-key map (kbd "r") #'marec-recover)
     (define-key map (kbd "RET") #'marec-visit-buffer)
     map))
 
@@ -77,6 +78,28 @@ Based on code in `after-find-file'"
   "Visit the buffer on the current line."
   (interactive)
   (switch-to-buffer (marec-current-buffer)))
+
+(defun marec-recover ()
+  "Recover the buffer on the current line."
+  (interactive)
+  (let ((buf (marec-current-buffer)))
+    (unless (marec-buf-candidate-p buf)
+      (user-error "Buffer %s no longer has auto-save data; %s" buf (substitute-command-keys "use `\\[marec-update]' to update.")))
+    (with-current-buffer buf
+
+      (let ((file-name (let ((buffer-file-name (buffer-file-name buf)))
+		         (make-auto-save-file-name)))
+            (inhibit-read-only t)
+	    ;; Keep the current buffer-file-coding-system.
+	    (coding-system buffer-file-coding-system)
+	    ;; Auto-saved file should be read with special coding.
+	    (coding-system-for-read 'auto-save-coding))
+	(erase-buffer)
+	(insert-file-contents file-name nil)
+	(set-buffer-file-coding-system coding-system))
+      (after-find-file nil nil t)
+      (save-buffer)
+      (marec-update))))
 
 (defun marec-diff-buffer ()
   "Diff the buffer on the current line."
