@@ -14,6 +14,8 @@
 
 ;; code goes here
 
+(require 'diff)
+
 ;;;###autoload
 (defun marec-update ()
   "Update the marec buffer.
@@ -66,6 +68,7 @@ Based on code in `after-find-file'"
 
 (defvar marec-mode-map
   (let ((map (make-keymap)))
+    (define-key map (kbd "d") #'marec-diff-buffer)
     (define-key map (kbd "g") #'marec-update)
     (define-key map (kbd "RET") #'marec-visit-buffer)
     map))
@@ -74,6 +77,17 @@ Based on code in `after-find-file'"
   "Visit the buffer on the current line."
   (interactive)
   (switch-to-buffer (marec-current-buffer)))
+
+(defun marec-diff-buffer ()
+  "Diff the buffer on the current line."
+  (interactive)
+  (let ((buf (marec-current-buffer)))
+    (unless (marec-buf-candidate-p buf)
+      (user-error "Buffer %s no longer has auto-save data; %s" buf (substitute-command-keys "use `\\[marec-update]' to update.")))
+    (with-current-buffer buf
+      (let ((save-file-name (or buffer-auto-save-file-name
+			        (make-auto-save-file-name))))
+        (diff (current-buffer) save-file-name "--strip-trailing-cr" 'noasync)))))
 
 (defun marec-current-buffer ()
   "Return the buffer at line, if there is one and it is live."
