@@ -715,6 +715,7 @@ Inspired by crux-beginning-of-line."
       c-basic-offset 2)
 
 (use-package pdf-tools
+  :magic ("%PDF" . pdf-view-mode)
   :config
   (pdf-tools-install)
   (dolist
@@ -897,10 +898,6 @@ Each entry will have ': ' put in between columns."
     :commands ile-mode
     :ensure nil
     :demand t
-    :bind
-    (:map pdf-view-mode-map
-          ("e" . ile-pdf-extract-pages)
-          ("b" . ile-jump-bates-number))
     :init
     ;; TODO(gina) move this into ILE after I figure out the right way to packageize it.
     (defvar ile-map nil
@@ -922,6 +919,13 @@ Each entry will have ': ' put in between columns."
 
     (global-set-key (kbd "C-x 8 s") (lambda () (interactive) (insert "§")))
     :config
+    (eval-after-load 'pdf-tools
+      ;; We avoid using :bind because that would force pdf-tools to
+      ;; load before we might need it and it is slow
+      (bind-keys :package ile :map pdf-view-mode-map
+                 ("e" . ile-pdf-extract-pages)
+                 ("b" . ile-jump-bates-number)))
+
     (add-hook 'org-mode-hook 'ile-mode)
 
     (add-hook 'ile-mode-hook
