@@ -679,7 +679,7 @@ Inspired by crux-beginning-of-line."
   :bind
   (("C-t" . shell-pop)))
 
-(add-hook 'shell-mode-hook (setq show-trailing-whitespace nil))
+(add-hook 'shell-mode-hook (lambda () (setq show-trailing-whitespace nil)))
 
 
 ;; C
