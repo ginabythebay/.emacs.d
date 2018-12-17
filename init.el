@@ -820,6 +820,7 @@ Inspired by crux-beginning-of-line."
 
   (setq org-file-apps
         '(("\\.docx\\'" . default)
+          ("\\.doc\\'" . default)
           ("\\.mm\\'" . default)
           ("\\.x?html?\\'" . default)
           (auto-mode . emacs)))
