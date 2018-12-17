@@ -801,17 +801,20 @@ Inspired by crux-beginning-of-line."
         (lambda () (and (looking-at org-outline-regexp) (looking-back "^\**"))))
 
   ;; adapted from http://sachachua.com/blog/2008/01/projects-in-emacs-org/
+  ;; Also see https://orgmode.org/manual/Matching-tags-and-properties.html
   (setq org-stuck-projects
-        '("+PROJECT/-MAYBE-DONE" ("TODO" "NEXT") nil "\\<IGNORE\\>"))
+        '("PROJECT-TODO=\"MAYBE\"-TODO=\"DONE\"" ("TODO" "NEXT") nil "\\<IGNORE\\>"))
   (setq org-tags-exclude-from-inheritance '("PROJECT"))
 
+  (add-hook 'org-agenda-mode-hook (lambda () (setq show-trailing-whitespace nil)))
+ 
   (setq org-agenda-custom-commands
         '(("p" "Active projects" tags "PROJECT-MAYBE-DONE" nil) ;; (1)
           ("m" "Maybe projects" tags "PROJECT&MAYBE" nil)       ;; (2)
           ("a" "My Agenda"
            ((org-agenda-list)
             (org-agenda-list-stuck-projects)
-            (tags "PROJECT-MAYBE-DONE")))
+            (tags "PROJECT-TODO=\"MAYBE\"-TODO=\"DONE\"")))
           ;; ... put your other custom commands here
           ))
 
