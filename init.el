@@ -33,15 +33,20 @@
 ;; Avoid accidentally editing emacs code
 ;; see https://emacs.stackexchange.com/a/3681/767
 ;; This causes errors when installing packages.  boo.
-;; (dir-locals-set-class-variables
-;;  'emacs
-;;  '((nil . ((buffer-read-only . t)
-;;            (show-trailing-whitespace . nil)
-;;            (tab-width . 8)
-;;            (eval . (whitespace-mode -1))))))
-;; (dir-locals-set-directory-class (concat user-emacs-directory "elpa") 'emacs)
-;; (dir-locals-set-directory-class
-;;  (locate-dominating-file (locate-library "winner") "lisp") 'emacs)
+(dir-locals-set-class-variables
+ 'emacs
+ '((nil . ((buffer-read-only . t)
+           (show-trailing-whitespace . nil)
+           (tab-width . 8)
+           (eval . (whitespace-mode -1))))))
+(dir-locals-set-directory-class (concat user-emacs-directory "elpa") 'emacs)
+(dir-locals-set-directory-class
+ (locate-dominating-file (locate-library "winner") "lisp") 'emacs)
+(advice-add
+ 'package-install-from-archive
+ :around (lambda (orig-fun &rest args)
+           (let ((enable-dir-local-variables nil))
+              (apply orig-fun args))))
 
 (global-auto-revert-mode 1)
 
@@ -807,7 +812,7 @@ Inspired by crux-beginning-of-line."
   (setq org-tags-exclude-from-inheritance '("PROJECT"))
 
   (add-hook 'org-agenda-mode-hook (lambda () (setq show-trailing-whitespace nil)))
- 
+
   (setq org-agenda-custom-commands
         '(("p" "Active projects" tags "PROJECT-MAYBE-DONE" nil) ;; (1)
           ("m" "Maybe projects" tags "PROJECT&MAYBE" nil)       ;; (2)
