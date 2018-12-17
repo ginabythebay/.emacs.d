@@ -679,6 +679,9 @@ Inspired by crux-beginning-of-line."
   :bind
   (("C-t" . shell-pop)))
 
+(add-hook 'shell-mode-hook (setq show-trailing-whitespace nil))
+
+
 ;; C
 (setq c-default-style "stroustrup"
       c-basic-offset 2)
