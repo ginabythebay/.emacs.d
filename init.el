@@ -32,7 +32,6 @@
 
 ;; Avoid accidentally editing emacs code
 ;; see https://emacs.stackexchange.com/a/3681/767
-;; This causes errors when installing packages.  boo.
 (dir-locals-set-class-variables
  'emacs
  '((nil . ((buffer-read-only . t)
@@ -45,7 +44,7 @@
 (advice-add
  'package-install-from-archive
  :around (lambda (orig-fun &rest args)
-           (let ((enable-dir-local-variables nil))
+           (let ((inhibit-read-only t))
               (apply orig-fun args))))
 
 (global-auto-revert-mode 1)
