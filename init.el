@@ -31,21 +31,23 @@
 (setq vc-follow-symlinks t)
 
 ;; Avoid accidentally editing emacs code
-;; see https://emacs.stackexchange.com/a/3681/767
+;; See https://emacs.stackexchange.com/q/46650/767
+(define-derived-mode emacs-lisp-autoloads-mode emacs-lisp-mode "Autoloads"
+  "Marker mode for package autoloads files.")
+(add-to-list 'auto-mode-alist '("autoloads\\.el\\'" . emacs-lisp-autoloads-mode))
+(add-to-list 'auto-mode-alist '("loaddefs\\.el\\'" . emacs-lisp-autoloads-mode))
+
 (dir-locals-set-class-variables
- 'emacs
+ 'read-only-emacs
  '((nil . ((buffer-read-only . t)
            (show-trailing-whitespace . nil)
            (tab-width . 8)
-           (eval . (whitespace-mode -1))))))
-(dir-locals-set-directory-class (concat user-emacs-directory "elpa") 'emacs)
+           (eval . (whitespace-mode -1))))
+   ;; Keep autoloads writeable so we can update packages
+   (emacs-lisp-autoloads-mode . ((buffer-read-only . nil)))))
+(dir-locals-set-directory-class (concat user-emacs-directory "elpa") 'read-only-emacs)
 (dir-locals-set-directory-class
- (locate-dominating-file (locate-library "winner") "lisp") 'emacs)
-(advice-add
- 'package-install-from-archive
- :around (lambda (orig-fun &rest args)
-           (let ((inhibit-read-only t))
-              (apply orig-fun args))))
+ (locate-dominating-file (locate-library "winner") "lisp") 'read-only-emacs)
 
 (global-auto-revert-mode 1)
 
