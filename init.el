@@ -681,7 +681,8 @@ Inspired by crux-beginning-of-line."
 (setq-default show-trailing-whitespace t)
 
 (use-package shell-pop
-  :ensure t
+  :ensure nil
+  :load-path "lisp"
   :bind
   (("C-t" . shell-pop)))
 
