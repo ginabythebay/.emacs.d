@@ -179,12 +179,6 @@ the syntax class ')'."
   :config
   (beacon-mode 1))
 
-(use-package paradox
-  :ensure t
-  :defer t
-  :config
-  (paradox-enable))
-
 (use-package delight
   :ensure t)
 
@@ -952,7 +946,10 @@ Each entry will have ': ' put in between columns."
 
   (add-hook 'org-mode-hook #'flyspell-mode)
   (add-hook 'org-mode-hook #'auto-fill-mode)
-  (add-hook 'org-mode-hook (lambda () (require 'org-override))))
+  (add-hook 'org-mode-hook (lambda () (require 'org-override)))
+
+  (use-package ox-clip
+    :ensure t))
 
 (use-package org-collector
   :load-path "lisp"
