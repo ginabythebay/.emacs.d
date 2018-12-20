@@ -1,0 +1,3 @@
+[submodule "lisp/shell-pop-el"]
+	path = lisp/shell-pop-el
+	url = git@github.com:ginabythebay/shell-pop-el.git
