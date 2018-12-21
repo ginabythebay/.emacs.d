@@ -22,6 +22,10 @@
 	(setq result t)))
     result))
 
+;; from https://www.masteringemacs.org/article/script-files-executable-automatically
+(add-hook 'after-save-hook
+          'executable-make-buffer-file-executable-if-script-p)
+
 ;; Get all this machine-written custom crud out of my cleanish init.el file.
 ;; See http://emacsblog.org/2008/12/06/quick-tip-detaching-the-custom-file/
 (setq custom-file "~/.emacs.d/custom.el")
@@ -731,7 +735,7 @@ Inspired by crux-beginning-of-line."
                    pdf-util pdf-view pdf-virtual))
     (require pkg))
   ;; open pdfs scaled to fit page
-  (setq-default pdf-view-display-size 'fit-page)
+  (setq pdf-view-display-size 'fit-page)
   ;; automatically annotate highlights
   (setq pdf-annot-activate-created-annotations t)
   ;; blink-cursor-mode can cause flickering of pdfs:
