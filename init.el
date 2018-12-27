@@ -365,6 +365,8 @@ Inspired by crux-beginning-of-line."
   :ensure t
   :diminish highlight-symbol-mode
   :config
+  (defun highlight-symbol-count (&optional _symbol)
+    "Override does nothing.  Too noisy.")
   (add-hook 'prog-mode-hook 'highlight-symbol-mode))
 
 ;; TODO(gina) look into getting a bunch of snippets, including go.  See https://github.com/capitaomorte/yasnippet
