@@ -86,6 +86,7 @@
 ;;; Code:
 (require 'org)
 (require 'org-table)
+(require 'seq)
 (require 'subr-x)
 
 (defvar ile-notesview-default-value 0
@@ -93,13 +94,6 @@
 Used when the no value is calculated either through lack of
 required variables for a column, or through the generation of an
 error.")
-
-(defun and-rest (list)
-  (if (listp list)
-      (if (> (length list) 1)
-	  (and (car list) (and-rest (cdr list)))
-	(car list))
-    list))
 
 (put 'org-collector-error
      'error-conditions
@@ -246,10 +240,13 @@ minus any headings below it."
 	  (delq nil
 		(mapcar
 		 (lambda (props)
-		   (if (and-rest (mapcar
-				  (lambda (col)
-				    (ile-notesview-eval-w-props props col))
-				  conds))
+		   (if (seq-reduce
+                        (lambda (a b) (and a b))
+                        (mapcar
+			 (lambda (col)
+			   (ile-notesview-eval-w-props props col))
+			 conds)
+                        t)
 		       props))
 		 header-props))
 	header-props)))))
