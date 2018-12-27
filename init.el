@@ -176,12 +176,6 @@ the syntax class ')'."
 (use-package hydra
   :ensure t)
 
-(use-package beacon
-  :ensure t
-  :diminish beacon-mode
-  :config
-  (beacon-mode 1))
-
 (use-package delight
   :ensure t)
 
@@ -226,12 +220,12 @@ the syntax class ')'."
 ;; Themes
 ;(use-package zenburn-theme
 ;  :ensure t)
-;(use-package solarized-theme
-;  :ensure t)
-(use-package tangotango-theme
-  :ensure t)
-;; Our default, for now
-(load-theme 'tangotango)
+(use-package solarized-theme
+  :ensure t
+  :config
+  (deftheme solarized-dark "The dark variant of the Solarized colour theme")
+  (create-solarized-theme 'dark 'solarized-dark)
+  (provide-theme 'solarized-dark))
 
 ;; Project management.
 (use-package projectile
