@@ -258,6 +258,8 @@ the syntax class ')'."
 
 (use-package dired
   :ensure nil
+  :bind (:map dired-mode-map
+              ("C-t" . shell-pop))
   :config
   (setq dired-dwim-target t)
   (add-hook 'dired-mode-hook (lambda () (require 'dired-x))))
