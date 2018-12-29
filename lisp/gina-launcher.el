@@ -15,7 +15,8 @@
 ;; code goes here
 
 (require 'org-clock)
-(require 'w32-browser)
+(when (string= system-type "windows-nt")
+  (require 'w32-browser))
 
 (defvar timesheet-dir "c:/Users/gina/Documents/Gina/Noncases/timesheets/")
 
@@ -45,19 +46,22 @@
 (defhydra gina-launcher-hydra (:hint nil :exit t)
   "
 (quit with _q_)
-_b_: bury buffer
+_b_: back (pop global mark)
 _c_: jump to Current clock
 _d_: toggle debug on error
 _i_: clock In to recent task
 _l_: open case list
 _s_: iSearch forward
-_t_: open Time sheet"
+_t_: open Time sheet
+_u_: bury buffer
+"
   ("q" nil)
-  ("b" bury-buffer)
+  ("b" pop-global-mark)
   ("c" org-clock-jump-to-current-clock)
   ("d" toggle-debug-on-error)
   ("i" gina-clock-in-to-recent-task)
   ("l" gina-open-case-list)
   ("s" isearch-forward)
-  ("t" gina-open-current-timesheet))
+  ("t" gina-open-current-timesheet)
+  ("u" bury-buffer))
 ;;; gina-launcher.el ends here
