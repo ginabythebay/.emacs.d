@@ -350,6 +350,20 @@ Inspired by crux-beginning-of-line."
   (customize-set-variable 'explicit-shell-file-name "/bin/bash")
   (customize-set-variable 'explicit-bash-args '("--noediting" "--login" "-i")))
 
+(use-package ispell
+  :config
+  (add-to-list 'ispell-local-dictionary-alist '("en_US"
+                                                "[[:alpha:]]"
+                                                "[^[:alpha:]]"
+                                                "[']"
+                                                t
+                                                ("-d" "en_US")
+                                                nil
+                                                iso-8859-1))
+  (setq ispell-really-hunspell t)
+  (setq ispell-program-name "hunspell")
+  (setq ispell-dictionary "en_US"))
+
 (use-package flyspell
   :ensure t
   :diminish flyspell-mode
@@ -1015,11 +1029,6 @@ Each entry will have ': ' put in between columns."
 ; TODO(gina) continue fixing these up
 ;;(use-package calfw)
 ;;(use-package calfw-org)
-
-(setenv "LANG" "en_US")
-(setq ispell-really-hunspell t)
-(setq ispell-program-name "hunspell")
-(setq ispell-dictionary "en_US")
 
 (delete-selection-mode t)
 (setq column-number-mode t)  ;; put line number in mode line.
