@@ -608,12 +608,14 @@ Inspired by crux-beginning-of-line."
   :ensure nil
   :load-path "lisp")
 
-(eval-and-compile
-  (defun go-lint-load-path ()
-    (concat (getenv "GOPATH")  "/src/github.com/golang/lint/misc/emacs")  ; octavia
-    (concat (getenv "GOPATH")  "/src/golang.org/x/lint/misc/emacs")))     ; Gina-PC
-(use-package golint
-  :load-path (lambda() (list (go-lint-load-path))))
+(if (string= "octavia" my-host)
+    (use-package golint
+      :ensure t)
+  (eval-and-compile
+    (defun go-lint-load-path ()
+      (concat (getenv "GOPATH")  "/src/golang.org/x/lint/misc/emacs")))
+  (use-package golint
+    :load-path (lambda() (list (go-lint-load-path)))))
 
 ;; END GO CONFIGURATION
 
