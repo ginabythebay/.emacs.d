@@ -168,6 +168,7 @@ agenda-day   The day in the agenda where this is listed"
     ;; TODO (gina) make buffer read only;  inhibit it when we need to right
     ;; TODO (gina) allow 'g' to refresh the buffer
     (org-mode)
+    (insert "#+OPTIONS: toc:nil\n")
     (insert "* Case Planner\n")
     (insert "Generated " (format-time-string "%B %d, %Y at %I:%M:%S %p") "\n")
     (dolist (name case-names)
@@ -176,24 +177,42 @@ agenda-day   The day in the agenda where this is listed"
                    #'identity
                    (mapcar #'ile--case-event
                            (assoc-default name cases 'string= '())))))
-        (if rows
-            (insert (orgtbl-to-orgtbl rows '(:raw t)) "\n")
-            ;; (insert (orgtbl-to-generic rows :tstart "|*When*|*Type*|*Event*|*Todo*|*Tags*|") "\n")
-          (insert "No upcoming events found\n"))))))
+        (if (not rows)
+            (insert "No upcoming events found\n")
+          (insert )
+          (setq rows (cons 'hline rows))
+          (setq rows (cons (list "*When*" "*Type*" "*Event*" "*Todo*" "*Tags*")
+                           rows))
+          (insert (orgtbl-to-orgtbl rows '(:raw t)))
+          (org-return)
+          )))))
+
+(defconst ile--case-planner-types
+  (list "past-scheduled"
+        "scheduled"
+        "deadline"
+        "timestamp"                     ; TODO-gina- remove
+        "block"))
 
 (defun ile--case-event (event)
   "Extract information from EVENT.
 Returns nil if EVENT doesn't apply or a list where the elements are:
 timespec,type,head,todo,tags"
-  (when-let* ((timespec (plist-get event 'date)))
+  (when-let* ((timespec (plist-get event 'date))
+              (type (plist-get event 'type))
+              (head (plist-get event 'txt)))
     (let ((time (plist-get event 'time)))
       (when (not (string-empty-p time))
         (setq timespec (concat timespec " " time))))
-    (list timespec
-          (plist-get event 'type)
-          (plist-get event 'txt)
-          (plist-get event 'todo)
-          (plist-get event 'tags))))
+    (let ((tokens (split-string head " :" nil "[ \f\t\n\r\v]+")))
+      (when (> (length tokens) 1)
+        (setq head (car tokens))))
+    (when (member type ile--case-planner-types)
+      (list timespec
+            type
+            head
+            (concat "" (plist-get event 'todo))
+            (plist-get event 'tags)))))
 
 
 (provide 'ile)
