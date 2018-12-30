@@ -181,8 +181,7 @@ agenda-day   The day in the agenda where this is listed"
             (insert "No upcoming events found\n")
           (insert )
           (setq rows (cons 'hline rows))
-          (setq rows (cons (list "*When*" "*Type*" "*Event*" "*Todo*" "*Tags*")
-                           rows))
+          (setq rows (cons (ile--case-event nil) rows))
           (insert (orgtbl-to-orgtbl rows '(:raw t)))
           (org-return)
           )))))
@@ -195,24 +194,27 @@ agenda-day   The day in the agenda where this is listed"
         "block"))
 
 (defun ile--case-event (event)
-  "Extract information from EVENT.
-Returns nil if EVENT doesn't apply or a list where the elements are:
+  "Convert EVENT to a list suitable for use in a table.
+If EVENT is nil, return a header.  If non-nil:
+return nil if EVENT doesn't apply or a list where the elements are:
 timespec,type,head,todo,tags"
-  (when-let* ((timespec (plist-get event 'date))
-              (type (plist-get event 'type))
-              (head (plist-get event 'txt)))
-    (let ((time (plist-get event 'time)))
-      (when (not (string-empty-p time))
-        (setq timespec (concat timespec " " time))))
-    (let ((tokens (split-string head " :" nil "[ \f\t\n\r\v]+")))
-      (when (> (length tokens) 1)
-        (setq head (car tokens))))
-    (when (member type ile--case-planner-types)
-      (list timespec
-            type
-            head
-            (concat "" (plist-get event 'todo))
-            (plist-get event 'tags)))))
+  (if (not event)
+      (list "*When*" "*Type*" "*Event*" "*Todo*" "*Tags*")
+    (when-let* ((timespec (plist-get event 'date))
+                (type (plist-get event 'type))
+                (head (plist-get event 'txt)))
+      (let ((time (plist-get event 'time)))
+        (when (not (string-empty-p time))
+          (setq timespec (concat timespec " " time))))
+      (let ((tokens (split-string head " :" nil "[ \f\t\n\r\v]+")))
+        (when (> (length tokens) 1)
+          (setq head (car tokens))))
+      (when (member type ile--case-planner-types)
+        (list timespec
+              type
+              head
+              (concat "" (plist-get event 'todo))
+              (plist-get event 'tags))))))
 
 
 (provide 'ile)
