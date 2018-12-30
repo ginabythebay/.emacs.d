@@ -170,12 +170,30 @@ agenda-day   The day in the agenda where this is listed"
     (org-mode)
     (insert "* Case Planner\n")
     (insert "Generated " (format-time-string "%B %d, %Y at %I:%M:%S %p") "\n")
-    (let (cat-set (mapcar )
-                  (last-cat))
-      (dolist (name case-names)
-        (insert "** " name "\n")
-        )
-      )))
+    (dolist (name case-names)
+      (insert "** " name "\n")
+      (let ((rows (seq-filter
+                   #'identity
+                   (mapcar #'ile--case-event
+                           (assoc-default name cases 'string= '())))))
+        (if rows
+            (insert (orgtbl-to-orgtbl rows '(:raw t)) "\n")
+            ;; (insert (orgtbl-to-generic rows :tstart "|*When*|*Type*|*Event*|*Todo*|*Tags*|") "\n")
+          (insert "No upcoming events found\n"))))))
+
+(defun ile--case-event (event)
+  "Extract information from EVENT.
+Returns nil if EVENT doesn't apply or a list where the elements are:
+timespec,type,head,todo,tags"
+  (when-let* ((timespec (plist-get event 'date)))
+    (let ((time (plist-get event 'time)))
+      (when (not (string-empty-p time))
+        (setq timespec (concat timespec " " time))))
+    (list timespec
+          (plist-get event 'type)
+          (plist-get event 'txt)
+          (plist-get event 'todo)
+          (plist-get event 'tags))))
 
 
 (provide 'ile)
