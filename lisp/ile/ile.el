@@ -199,22 +199,35 @@ If EVENT is nil, return a header.  If non-nil:
 return nil if EVENT doesn't apply or a list where the elements are:
 timespec,type,head,todo,tags"
   (if (not event)
-      (list "*When*" "*Type*" "*Event*" "*Todo*" "*Tags*")
-    (when-let* ((timespec (plist-get event 'date))
+      (list "*Date*" "*Time*" "*Type*" "*Event*" "*Todo*" "*Tags*")
+    (when-let* ((date (plist-get event 'date))
                 (type (plist-get event 'type))
                 (head (plist-get event 'txt)))
-      (let ((time (plist-get event 'time)))
-        (when (not (string-empty-p time))
-          (setq timespec (concat timespec " " time))))
       (let ((tokens (split-string head " :" nil "[ \f\t\n\r\v]+")))
         (when (> (length tokens) 1)
           (setq head (car tokens))))
       (when (member type ile--case-planner-types)
-        (list timespec
+        (list (ile--pad-date date)
+              (or (plist-get event 'time) "")
               type
               head
-              (concat "" (plist-get event 'todo))
+              (or (plist-get event 'todo) "")
               (plist-get event 'tags))))))
+
+(defconst ile--case-date-re
+  "\\([[:digit:]]\\{4,4\\}\\)-\\([[:digit:]]\\{1,2\\}\\)-\\([[:digit:]]\\{1,2\\}\\)")
+
+(defun ile--pad-date (date)
+  "Return DATE padded so it is always of the form YYYY-MM-DD.
+If DATE is in an unexpected format, it is returned unchanged."
+  (if (not (string-match ile--case-date-re date))
+      date
+    (let ((year (match-string 1 date))
+          (month (match-string 2 date))
+          (day (match-string 3 date)))
+      (when (= 1 (length month)) (setq month (concat "0" month)))
+      (when (= 1 (length day)) (setq day (concat "0" day)))
+      (concat year "-" month "-" day))))
 
 
 (provide 'ile)
