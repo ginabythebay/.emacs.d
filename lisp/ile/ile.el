@@ -151,12 +151,11 @@ agenda-day   The day in the agenda where this is listed"
   ;;   (let ((org-agenda-span 700))
   ;;     (org-agenda nil cmd-key)))
   (set-buffer org-agenda-buffer-name)
-  (let* ((lines (seq-filter
-                 (lambda (l) (get-text-property 0 'org-category l))
-                 (org-split-string (buffer-string) "\n")))
-         (all-events (mapcar
+  (let* ((all-events (mapcar
                       (lambda (l) (org-fix-agenda-info (text-properties-at 0 l)))
-                      lines))
+                      (seq-filter
+                       (lambda (l) (get-text-property 0 'org-category l))
+                       (org-split-string (buffer-string) "\n"))))
 	 line cases case-names)
     (dolist (e all-events)
       (let* ((category (plist-get e 'org-category))
