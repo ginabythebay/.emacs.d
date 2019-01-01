@@ -259,7 +259,8 @@ the syntax class ')'."
 (use-package dired
   :ensure nil
   :bind (:map dired-mode-map
-              ("C-t" . shell-pop))
+              ("C-t" . shell-pop)
+              ("C-o" . 'my-dired-display-file))
   :config
   (setq dired-dwim-target t)
   (add-hook 'dired-mode-hook (lambda () (require 'dired-x))))
@@ -294,10 +295,13 @@ the syntax class ')'."
 (defun my-dired-display-file ()
   "Open file cursor is on in other window and return to current window."
   (interactive)
-  (let ((orig-window (selected-window)))
-    (dired-find-file-other-window)
+  (let ((orig-window (selected-window))
+        (dest-window (next-window)))
+    (when (eq dest-window orig-window)
+      (setq dest-window (split-window-right)))
+    (set-window-buffer dest-window
+                       (find-file-noselect (dired-get-file-for-visit)))
     (select-window orig-window)))
-
 
 (defun my-dired-move-beginning-line ()
   "Move point to beginning of file name or beginning of line.
