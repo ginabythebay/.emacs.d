@@ -1094,9 +1094,10 @@ Each entry will have ': ' put in between columns."
   "Write the case planner to OUT-NAME, as html."
   (interactive "FHTML output file: ")
   (require 'ile)
-  (ile-case-planner)
-  (org-html-export-as-html)
-  (write-file out-name))
+  (let ((org-agenda-span 700))
+    (ile-case-planner)
+    (org-html-export-as-html)
+    (write-file out-name)))
 
 (defun my-print-each-agenda (dir)
   "Create an html file for every agenda file in DIR."
