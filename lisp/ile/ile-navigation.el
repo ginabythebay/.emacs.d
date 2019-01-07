@@ -69,10 +69,10 @@ We look for files in PROJECT-DIR/Discovery/united that contains PREFIX and NO."
 (defun ile-org-bates-at-point ()
   "Return the bates number (e.g. OCA 400) at point, or nil if none is found."
   (let ((case-fold-search nil))
-    (when (thing-at-point-looking-at ile-org--bates-re 10)
-      (when-let* ((start (match-beginning 0))
-                  (end (match-end 2)))
-        (buffer-substring start end)))))
+    (when-let* ((_ (thing-at-point-looking-at ile-org--bates-re 10))
+                (start (match-beginning 0))
+                (end (match-end 2)))
+      (buffer-substring start end))))
 
 (defun ile-org-date-at-point ()
   "Return the date at point, or nil if none is found."

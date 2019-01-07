@@ -259,7 +259,8 @@ the syntax class ')'."
 (use-package dired
   :ensure nil
   :bind (:map dired-mode-map
-              ("C-t" . shell-pop))
+              ("C-t" . shell-pop)
+              ("C-o" . 'my-dired-display-file))
   :config
   (setq dired-dwim-target t)
   (add-hook 'dired-mode-hook (lambda () (require 'dired-x))))
@@ -294,10 +295,13 @@ the syntax class ')'."
 (defun my-dired-display-file ()
   "Open file cursor is on in other window and return to current window."
   (interactive)
-  (let ((orig-window (selected-window)))
-    (dired-find-file-other-window)
+  (let ((orig-window (selected-window))
+        (dest-window (next-window)))
+    (when (eq dest-window orig-window)
+      (setq dest-window (split-window-right)))
+    (set-window-buffer dest-window
+                       (find-file-noselect (dired-get-file-for-visit)))
     (select-window orig-window)))
-
 
 (defun my-dired-move-beginning-line ()
   "Move point to beginning of file name or beginning of line.
@@ -349,6 +353,20 @@ Inspired by crux-beginning-of-line."
 (when (file-exists-p "/bin/bash")
   (customize-set-variable 'explicit-shell-file-name "/bin/bash")
   (customize-set-variable 'explicit-bash-args '("--noediting" "--login" "-i")))
+
+(use-package ispell
+  :config
+  (add-to-list 'ispell-local-dictionary-alist '("en_US"
+                                                "[[:alpha:]]"
+                                                "[^[:alpha:]]"
+                                                "[']"
+                                                t
+                                                ("-d" "en_US")
+                                                nil
+                                                iso-8859-1))
+  (setq ispell-really-hunspell t)
+  (setq ispell-program-name "hunspell")
+  (setq ispell-dictionary "en_US"))
 
 (use-package flyspell
   :ensure t
@@ -594,12 +612,14 @@ Inspired by crux-beginning-of-line."
   :ensure nil
   :load-path "lisp")
 
-(eval-and-compile
-  (defun go-lint-load-path ()
-    (concat (getenv "GOPATH")  "/src/github.com/golang/lint/misc/emacs")  ; octavia
-    (concat (getenv "GOPATH")  "/src/golang.org/x/lint/misc/emacs")))     ; Gina-PC
-(use-package golint
-  :load-path (lambda() (list (go-lint-load-path))))
+(if (string= "octavia" my-host)
+    (use-package golint
+      :ensure t)
+  (eval-and-compile
+    (defun go-lint-load-path ()
+      (concat (getenv "GOPATH")  "/src/golang.org/x/lint/misc/emacs")))
+  (use-package golint
+    :load-path (lambda() (list (go-lint-load-path)))))
 
 ;; END GO CONFIGURATION
 
@@ -1016,11 +1036,6 @@ Each entry will have ': ' put in between columns."
 ;;(use-package calfw)
 ;;(use-package calfw-org)
 
-(setenv "LANG" "en_US")
-(setq ispell-really-hunspell t)
-(setq ispell-program-name "hunspell")
-(setq ispell-dictionary "en_US")
-
 (delete-selection-mode t)
 (setq column-number-mode t)  ;; put line number in mode line.
 
@@ -1074,6 +1089,15 @@ Each entry will have ': ' put in between columns."
       (message "Loading agenda...done")
       (switch-to-buffer "*Org Agenda*")
       (print-buffer))))
+
+(defun my-html-case-planner (out-name)
+  "Write the case planner to OUT-NAME, as html."
+  (interactive "FHTML output file: ")
+  (require 'ile)
+  (let ((org-agenda-span 700))
+    (ile-case-planner)
+    (org-html-export-as-html)
+    (write-file out-name)))
 
 (defun my-print-each-agenda (dir)
   "Create an html file for every agenda file in DIR."
