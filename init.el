@@ -257,6 +257,7 @@ the syntax class ')'."
 	      ("a" . mc/mark-all-like-this))))
 
 (use-package dired
+  :after (shell-pop)
   :ensure nil
   :bind (:map dired-mode-map
               ("C-t" . shell-pop)
