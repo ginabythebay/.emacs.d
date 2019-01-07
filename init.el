@@ -259,8 +259,11 @@ the syntax class ')'."
 (use-package dired
   :after (shell-pop)
   :ensure nil
+  :init
+  (defun my-shell-pop ()
+    (shell-pop))
   :bind (:map dired-mode-map
-              ("C-t" . shell-pop)
+              ("C-t" . 'my-shell-pop)
               ("C-o" . 'my-dired-display-file))
   :config
   (setq dired-dwim-target t)
