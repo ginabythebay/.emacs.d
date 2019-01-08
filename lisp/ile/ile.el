@@ -136,6 +136,8 @@ See `org-sort-entries'."
     ;; TODO (gina) allow 'g' to refresh the buffer
     (org-mode)
     (insert "#+OPTIONS: toc:nil\n")
+    (insert "#+HTML_HEAD: <link href='http://fonts.googleapis.com/css?family=PT+Serif' rel='stylesheet' type='text/css'>\n")
+    (insert "#+HTML_HEAD: <style type=\"text/css\">p { font-family: 'PT Serif; }</style>\n")
     (insert "* Case Planner\n")
     (insert "Generated " (format-time-string "%B %d, %Y at %I:%M:%S %p") "\n")
     (dolist (name case-names)
