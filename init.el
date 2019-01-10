@@ -267,7 +267,11 @@ the syntax class ')'."
               ("C-o" . 'my-dired-display-file))
   :config
   (setq dired-dwim-target t)
-  (add-hook 'dired-mode-hook (lambda () (require 'dired-x))))
+  (add-hook
+   'dired-mode-hook
+   (lambda ()
+     (dired-hide-details-mode)
+     (require 'dired-x))))
 
 ; see http://pragmaticemacs.com/emacs/copy-and-paste-files-with-dired-ranger/
 (use-package dired-ranger
