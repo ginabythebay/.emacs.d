@@ -843,7 +843,11 @@ Inspired by crux-beginning-of-line."
           ("a" "My Agenda"
            ((org-agenda-list)
             (org-agenda-list-stuck-projects)
-            (tags "PROJECT-TODO=\"MAYBE\"-TODO=\"DONE\"")))
+            (tags "PROJECT-TODO=\"MAYBE\"-TODO=\"DONE\"")
+            (tags "TODO=\"WAITING\"")
+            (tags "TODO=\"NEXT\"")
+            (tags "TODO=\"TODO\"")
+            ))
           ;; ... put your other custom commands here
           ))
 
