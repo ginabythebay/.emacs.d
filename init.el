@@ -760,13 +760,10 @@ Inspired by crux-beginning-of-line."
                    pdf-links pdf-misc pdf-occur pdf-outline pdf-sync
                    pdf-util pdf-view pdf-virtual))
     (require pkg))
-  ;; open pdfs scaled to fit page
-  (setq pdf-view-display-size 'fit-page)
   ;; automatically annotate highlights
   (setq pdf-annot-activate-created-annotations t)
-  ;; blink-cursor-mode can cause flickering of pdfs:
-  ;; https://emacs.stackexchange.com/a/28599/767
-  (add-hook 'pdf-view-mode-hook (lambda () (blink-cursor-mode 0)))
+  ;; open pdfs scaled to fit page
+  (add-hook 'pdf-view-mode-hook (lambda () (pdf-view-fit-page-to-window)))
   ;; swiper doesn't work with pdfs
   (define-key pdf-view-mode-map (kbd "C-s") #'isearch-forward)
   (define-key pdf-view-mode-map (kbd "G") #'pdf-view-last-page))
