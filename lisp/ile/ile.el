@@ -113,11 +113,17 @@ See `org-sort-entries'."
 (defconst ile-case-planner-buffer-name "*ile case planner*")
 
 ;;;###autoload
-(defun ile-case-planner ()
-  "Build a case plan."
-  (interactive)
+(defun ile-case-planner (&optional case-file)
+  "Build a case plan for CASE-FILE.
+CASE-FILE can be a single file or a list of files.  If not
+specified, `org-agenda-files' will be used."
   (message "building case plan...")
-  (let ((org-agenda-span 700))
+  (let ((org-agenda-span 700)
+        (org-agenda-files (if case-file
+                              (if (listp case-file)
+                                  case-file
+                                (list case-file)))
+                          org-agenda-files))
     (org-agenda nil "a"))
   (set-buffer org-agenda-buffer-name)
   (let* ((all-events (mapcar
