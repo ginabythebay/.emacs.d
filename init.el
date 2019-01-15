@@ -1099,6 +1099,15 @@ Each entry will have ': ' put in between columns."
       (switch-to-buffer "*Org Agenda*")
       (print-buffer))))
 
+(defun my-html-case-planner-current-file (out-name)
+  "Write the case planner for the current file to OUT-NAME, as html."
+  (interactive "FHTML output file: ")
+  (require 'ile)
+  (let ((org-agenda-span 700))
+    (ile-case-planner (buffer-file-name))
+    (org-html-export-as-html)
+    (write-file out-name)))
+
 (defun my-html-case-planner (out-name)
   "Write the case planner to OUT-NAME, as html."
   (interactive "FHTML output file: ")
