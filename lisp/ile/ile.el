@@ -15,6 +15,8 @@
 ;; code goes here
 
 (require 'ile-navigation)
+(require 'org)
+(require 'org-agenda)
 
 (defconst ile--exclude-bates-names
   '("CA"  ;; our fair state
@@ -123,7 +125,7 @@ See `org-sort-entries'."
                       (seq-filter
                        (lambda (l) (get-text-property 0 'org-category l))
                        (org-split-string (buffer-string) "\n"))))
-	 line cases case-names)
+	 cases case-names)
     (dolist (e all-events)
       (let* ((category (plist-get e 'org-category))
              (events (assoc-default category cases 'string= '())))
