@@ -1113,18 +1113,25 @@ Each entry will have ': ' put in between columns."
   (interactive "Postscript file to Save to: ")
   (require 'org) ;; we use org-agenda-files
   ;; variable below
+  (let ((cnt 0)
+        (org-agenda-span 700))
+    ;; TODO(gina) see if there is some code I can lift to deal, with, e.g. directory names
+    (dolist (f org-agenda-files)
+      (setq cnt (+ 1 cnt))
+      (let ((htmlfile (concat dir (format "%02d-%s.html" cnt (buffer-name)))))
+        (my-print-one-agenda f htmlfile)))
+    (message "Wrote %d agenda entries to %s" cnt dir)))
+
+(defun my-print-one-agenda (org-file htmlfile)
+  "Write agenda specific to ORG-FILE to HTMLFILE."
+  (interactive "fOrg file: \nFHTML output file: ")
   (save-excursion
-    (let ((cnt 0)
-          (org-agenda-span 700))
+    (let ((org-agenda-span 700))
       ;; TODO(gina) see if there is some code I can lift to deal, with, e.g. directory names
-      (dolist (f org-agenda-files)
-        (setq cnt (+ 1 cnt))
-        (switch-to-buffer (find-file-noselect f nil nil nil))
-        (let ((htmlfile (concat dir (format "%02d-%s.html" cnt (buffer-name)))))
-          (org-agenda nil "a" 'buffer)
-          (switch-to-buffer "*Org Agenda*")
-          (org-agenda-write htmlfile)))
-      (message "Wrote %d agenda entries to %s" cnt dir))))
+      (switch-to-buffer (find-file-noselect org-file nil nil nil))
+      (org-agenda nil "a" 'buffer)
+      (switch-to-buffer "*Org Agenda*")
+      (org-agenda-write htmlfile))))
 
 (defun my-print-each-agenda-faces (filename)
   "Print a single pdf file with a section for each agenda file, to FILENAME."
