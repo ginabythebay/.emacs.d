@@ -934,7 +934,6 @@ Each entry will have ': ' put in between columns."
       2)))
 
   (use-package ile
-    :after (company)
     :load-path "lisp/ile"
     :commands ile-mode
     :ensure nil
@@ -960,6 +959,7 @@ Each entry will have ': ' put in between columns."
 
     (global-set-key (kbd "C-x 8 s") (lambda () (interactive) (insert "§")))
     :config
+    (require 'company)
     (eval-after-load 'pdf-tools
       ;; We avoid using :bind because that would force pdf-tools to
       ;; load before we might need it and it is slow
