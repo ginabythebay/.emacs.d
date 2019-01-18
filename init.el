@@ -960,6 +960,12 @@ Each entry will have ': ' put in between columns."
     (global-set-key (kbd "C-x 8 s") (lambda () (interactive) (insert "§")))
     :config
     (require 'company)
+    ;; TODO(gina) can I push this into the ile package itself?
+    (dolist
+        (pkg
+         '(bates ile-company ile-discovery ile ile-link ile-navigation
+                 ile-note-view ile-org-noter ile-pdf))
+      (require pkg))
     (eval-after-load 'pdf-tools
       ;; We avoid using :bind because that would force pdf-tools to
       ;; load before we might need it and it is slow
