@@ -122,8 +122,8 @@ specified, `org-agenda-files' will be used."
         (org-agenda-files (if case-file
                               (if (listp case-file)
                                   case-file
-                                (list case-file)))
-                          org-agenda-files))
+                                (list case-file))
+                            org-agenda-files)))
     (org-agenda nil "a"))
   (set-buffer org-agenda-buffer-name)
   (let* ((all-events (mapcar
