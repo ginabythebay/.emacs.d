@@ -844,7 +844,7 @@ Inspired by crux-beginning-of-line."
           ("a" "My Agenda"
            ((org-agenda-list)
             (org-agenda-list-stuck-projects)
-            (tags "PROJECT-TODO=\"MAYBE\"-TODO=\"DONE\"")
+            (tags "PROJECT-TODO=\"MAYBE\"-TODO=\"DONE\"-TODO=\"HOLD\"")
             (tags "TODO=\"WAITING\"")
             (tags "TODO=\"NEXT\"")
             (tags "TODO=\"TODO\"")
@@ -966,12 +966,11 @@ Each entry will have ': ' put in between columns."
          '(bates ile-company ile-discovery ile ile-link ile-navigation
                  ile-note-view ile-org-noter ile-pdf))
       (require pkg))
-    (eval-after-load 'pdf-tools
       ;; We avoid using :bind because that would force pdf-tools to
       ;; load before we might need it and it is slow
-      (bind-keys :package ile :map pdf-view-mode-map
+      (bind-keys :package pdf-tools :map pdf-view-mode-map
                  ("e" . ile-pdf-extract-pages)
-                 ("b" . ile-jump-bates-number)))
+                 ("b" . ile-jump-bates-number))
 
     (add-hook 'org-mode-hook 'ile-mode)
 
