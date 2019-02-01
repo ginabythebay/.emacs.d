@@ -765,7 +765,7 @@ Inspired by crux-beginning-of-line."
   ;; open pdfs scaled to fit page
   (add-hook 'pdf-view-mode-hook (lambda () (pdf-view-fit-page-to-window)))
   ;; swiper doesn't work with pdfs
-  (define-key pdf-view-mode-map (kbd "C-s") #'isearch-forward)
+  ;; (define-key pdf-view-mode-map (kbd "C-s") #'isearch-forward)
   (define-key pdf-view-mode-map (kbd "G") #'pdf-view-last-page))
 
 (use-package htmlize)
@@ -1000,11 +1000,12 @@ Each entry will have ': ' put in between columns."
   :config
   (setq bbdb-file "~/bbdb"))
 
-(use-package swiper
-  :ensure t
-  :init
-  :bind
-  (("C-s" . swiper)))
+;; TODO(gina) delete after 2019-07-01 if still not using
+;; (use-package swiper
+;;   :ensure t
+;;   :init
+;;   :bind
+;;   (("C-s" . swiper)))
 
 ;;(use-package helm-bbdb
 ;;  :ensure t
