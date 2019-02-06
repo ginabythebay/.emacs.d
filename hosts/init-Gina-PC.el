@@ -58,6 +58,7 @@ make it easier to fix."
         "c:/Users/gina/Documents/Gina/Gamino/Gamino notes.org"
         "c:/Users/gina/Documents/Gina/Gantt/Gantt Notes.org"
         "c:/Users/gina/Documents/Gina/Eid/Eid Notes.org"
+        "c:/Users/gina/Documents/Gina/Horn/Horn notes.org"
         "c:/Users/gina/Documents/Gina/Mangano/Mangano notes.org"
         "c:/Users/gina/Documents/Gina/Marin/Marin notes.org"
         "c:/Users/gina/Documents/Gina/Stec/Stec notes.org"
@@ -66,7 +67,6 @@ make it easier to fix."
         "c:/Users/gina/Documents/Gina/rojas/Rojas notes.org"
         "c:/Users/gina/Documents/Gina/saw.org"
         "c:/Users/gina/Documents/Gina/Smith/Smith notes.org"
-        "c:/Users/gina/Documents/Gina/Valencia/Valencia notes.org"
         "c:/Users/gina/Documents/Gina/Williams/Williams notes.org")))
 
 (provide 'init-Gina-PC)
