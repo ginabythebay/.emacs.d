@@ -879,6 +879,19 @@ Inspired by crux-beginning-of-line."
 
   (unbind-key "C-'" org-mode-map)
 
+  ;; adapted from https://emacs.stackexchange.com/a/10714/767
+  (defun my-org-replace-link-by-link-description ()
+    "Replace an org link by its description or if empty its address."
+    (interactive)
+    (if (org-in-regexp org-bracket-link-regexp 1)
+        (save-excursion
+          (let ((remove (list (match-beginning 0) (match-end 0)))
+                (description (if (match-end 3)
+                                 (org-match-string-no-properties 3)
+                               (org-match-string-no-properties 1))))
+            (apply 'delete-region remove)
+            (insert description)))))
+
   ;; From https://www.reddit.com/r/orgmode/comments/9tljmi/faster_large_table_editing_disable_flyspell/
   (defun my-dont-flyspell-org-tables (orig-fun &rest args)
     (let ((flyspell-enabled (position 'flyspell-mode minor-mode-list)))
