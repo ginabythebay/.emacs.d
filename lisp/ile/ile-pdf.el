@@ -137,7 +137,7 @@ file name based on the buffer name.  If it is nil, then we will
 produce one pdf files for each exported subtree."
   (interactive "DPublish directory: ")
   (let ((tdir (concat (make-temp-file "pdfworkarea" t) "/")))
-    (my-org-export-all-html tdir)
+    (ile-pdf-export-all-html tdir)
     (let ((html-files (directory-files tdir t "\\.html$")))
       (if no-split
           (let ((out (concat
