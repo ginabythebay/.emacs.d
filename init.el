@@ -977,11 +977,11 @@ Each entry will have ': ' put in between columns."
          '(bates ile-company ile-discovery ile ile-link ile-navigation
                  ile-note-view ile-org-noter ile-pdf))
       (require pkg))
-      ;; We avoid using :bind because that would force pdf-tools to
-      ;; load before we might need it and it is slow
-      (bind-keys :package pdf-tools :map pdf-view-mode-map
-                 ("e" . ile-pdf-extract-pages)
-                 ("b" . ile-jump-bates-number))
+    ;; We avoid using :bind because that would force pdf-tools to
+    ;; load before we might need it and it is slow
+    (bind-keys :package pdf-tools :map pdf-view-mode-map
+               ("e" . ile-pdf-extract-pages)
+               ("b" . ile-jump-bates-number))
 
     (add-hook 'org-mode-hook 'ile-mode)
 
