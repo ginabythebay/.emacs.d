@@ -751,13 +751,13 @@ Inspired by crux-beginning-of-line."
 (use-package pdf-tools
   :magic ("%PDF" . pdf-view-mode)
   :config
-  (pdf-tools-install)
   (dolist
       (pkg
        '(pdf-annot pdf-cache pdf-dev pdf-history pdf-info pdf-isearch
                    pdf-links pdf-misc pdf-occur pdf-outline pdf-sync
                    pdf-util pdf-view pdf-virtual))
     (require pkg))
+  (pdf-tools-install)
   ;; automatically annotate highlights
   (setq pdf-annot-activate-created-annotations t)
   ;; open pdfs scaled to fit page
