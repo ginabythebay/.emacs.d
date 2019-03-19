@@ -806,6 +806,9 @@ Inspired by crux-beginning-of-line."
   (setq org-capture-templates
         '(("t" "todo" entry (file org-default-notes-file)
            "* TODO %?" :clock-in t :clock-resume t)
+          ;; doesn't work yet. just jumps to last line of current fil
+          ;; ("p" "phone call" entry (function (lambda ()))
+          ;;  "* TC %?" :clock-in t :clock-resume t)
           ("m" "Meeting" entry (file org-default-notes-file)
            "* MEETING with %? :MEETING:" :clock-in t :clock-resume t)
           ("i" "Idea" entry (file org-default-notes-file)
