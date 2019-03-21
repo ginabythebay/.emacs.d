@@ -143,16 +143,44 @@ specified, we will include all entries."
         ((not (string= a-tags b-tags)) nil)
         (t (string< (plist-get a :task) (plist-get b :task))))))))
 
-(defun ile-clock-test-current-file ()
-  "Test of clock parser."
-  (interactive)
-  (cl-loop for e in
-           (ile-clock-entries)
-           do (message "%s %s %s %s"
-                       (plist-get e :filetags)
-                       (plist-get e :date)
-                       (plist-get e :task)
-                       (ile-clock--minutes-to-duration (plist-get e :minutes)))))
+(defconst ile-clock--csv-keys (list :filetags :date :task :minutes))
+(defconst ile-clock--csv-headers (list "filetags" "date" "task" "minutes"))
+
+(defun ile-clock--listify (&optional entry)
+  "Convert an ENTRY to a list for easy csv export.
+
+If ENTRY is nil, we return a list of headers instead."
+  (if entry
+      (mapcar (lambda (k)
+                (org-quote-csv-field
+                 (format "%s" (plist-get entry k))))
+              ile-clock--csv-keys)
+    ile-clock--csv-headers)
+  )
+
+(defun ile-clock-export-entries (outfile &optional files range)
+  "Exports clock entries in csv format.
+
+OUTFILE is the name of the file to output to.
+
+FILES can be a list of file names or a single file name.  If it
+is not specified, the current file will be used.
+
+RANGE specifies the start time and end time to include in float
+time.  We expect a list where the car is start time and the cadr
+is the end time, as returned by `org-clock-special-range'.  If not
+specified, we will include all entries."
+  (let ((entries (ile-clock-entries files range))
+        buf)
+    (with-current-buffer (find-file-noselect outfile)
+      (setq buf (current-buffer))
+      (erase-buffer)
+      (fundamental-mode)
+      (insert (string-join (ile-clock--listify) ",") "\n")
+      (cl-loop for e in entries
+               do (insert (string-join (ile-clock--listify e) ",") "\n"))
+      (save-buffer))
+    (kill-buffer buf)))
 
 (provide 'ile-clock)
 ;;; ile-clock.el ends here
