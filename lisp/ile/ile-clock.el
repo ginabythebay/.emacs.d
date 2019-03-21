@@ -62,6 +62,7 @@ that overlap with that range."
                                   rend
                                   (org-element-property :raw-value timestamp))
         (list
+         :filetags (format ":%s:" (string-join org-file-tags ":"))
          :task task
          :date (apply #'format "%d-%02d-%02d" start)
          :minutes (ile-clock--duration-to-minutes duration))))))
@@ -86,50 +87,69 @@ Assumes that all ENTRIES have the same task and start."
   (when (> (length entries) 0)
     (let ((first (car entries)))
       (list
+       :filetags (plist-get first :filetags)
        :task (plist-get first :task)
        :date (plist-get first :date)
        :minutes (seq-reduce (lambda (v e) (+ v (plist-get e :minutes))) entries 0)))))
 
-;; TODO(gina)
-;;   - expand this to optionally take a list of files to draw from.
-;;   - Also allow it to accept a value like 'lastweek to narrow the results.  See
-;;      org-clock-special-range
-(defun ile-clock-entries (&optional range)
+(defun ile-clock-entries (&optional files range)
   "Get clock entries for the current buffer.
+
+FILES can be a list of file names or a single file name.  If it
+is not specified, the current file will be used.
 
 RANGE specifies the start time and end time to include in float
 time.  We expect a list where the car is start time and the cadr
 is the end time, as returned by `org-clock-special-range'.  If not
 specified, we will include all entries."
-  (let* ((rstart (if range
-                     (float-time (car range))
-                   0))
-         (rend (if range
-                   (float-time (cadr range))
-                 (float-time (current-time))))
-         (parser (lambda (e) (ile-clock--parse-clock rstart rend e))))
-    (sort
-     ;; list with one entry per task/date, with times summed up
-     (cl-loop for e in
-              ;; alist where entries are grouped by task and date
-              (seq-group-by
-               (lambda (e) (list (plist-get e :task) (plist-get e :date)))
-               (org-element-map (org-element-parse-buffer) 'clock
-                 parser nil nil))
-              collect (ile-clock--combine-entries (cdr e)))
-     (lambda (a b)
-       (let ((a-date (plist-get a :date))
-             (b-date (plist-get b :date)))
-         (or (string< a-date b-date)
-             (and (string= a-date b-date)
-                  (string< (plist-get a :task) (plist-get b :task)))))))))
+  (setq files (cond
+               ((stringp files) (list files))
+               ((not files) nil)
+               ((listp files) files)
+               (t (user-error "Unexpected files arg %s" files))))
+
+  (sort
+   (cl-loop for bf in (cond
+                       ((stringp files) (list (find-file-noselect files)))
+                       ((not files) (list (current-buffer)))
+                       ((listp files) (mapcar #'find-file-noselect files))
+                       (t (user-error "Unexpected files arg %s" files)))
+            append
+            (with-current-buffer bf
+              (let* ((rstart (if range
+                                 (float-time (car range))
+                               0))
+                     (rend (if range
+                               (float-time (cadr range))
+                             (float-time (current-time))))
+                     (parser (lambda (e) (ile-clock--parse-clock rstart rend e))))
+                ;; list with one entry per task/date, with times summed up
+                (cl-loop for e in
+                         ;; alist where entries are grouped by task and date
+                         (seq-group-by
+                          (lambda (e) (list (plist-get e :task) (plist-get e :date)))
+                          (org-element-map (org-element-parse-buffer) 'clock
+                            parser nil nil))
+                         collect (ile-clock--combine-entries (cdr e))))))
+   (lambda (a b)
+     (let ((a-date (plist-get a :date))
+           (b-date (plist-get b :date))
+           (a-tags (plist-get a :filetags))
+           (b-tags (plist-get b :filetags)))
+       (cond
+        ((string< a-date b-date) 1)
+        ((not (string= a-date b-date)) nil)
+        ((string< a-tags b-tags) 1)
+        ((not (string= a-tags b-tags)) nil)
+        (t (string< (plist-get a :task) (plist-get b :task))))))))
 
 (defun ile-clock-test-current-file ()
   "Test of clock parser."
   (interactive)
   (cl-loop for e in
            (ile-clock-entries)
-           do (message "%s %s %s"
+           do (message "%s %s %s %s"
+                       (plist-get e :filetags)
                        (plist-get e :date)
                        (plist-get e :task)
                        (ile-clock--minutes-to-duration (plist-get e :minutes)))))
