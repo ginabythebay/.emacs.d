@@ -15,7 +15,7 @@
 ;; code goes here
 
 (require 'org-noter)
-
+(require 'pdf-view)
 
 (defun org-cycle-hide-drawers (state &optional exceptions)
   "Does nothing.  STATE is ignored.  EXCEPTIONS is ignored.")
@@ -25,11 +25,11 @@
   "Insert note associated with the current location.
 
 This command will prompt for a title of the note and then insert
-it in the notes buffer. When the input is empty, a title based on
+it in the notes buffer.  When the input is empty, a title based on
 `org-noter-default-heading-title' will be generated.
 
 If there are other notes related to the current location, the
-prompt will also suggest them. Depending on the value of the
+prompt will also suggest them.  Depending on the value of the
 variable `org-noter-closest-tipping-point', it may also
 suggest the closest previous note.
 
