@@ -205,7 +205,7 @@ TITLE will be used for the DESCRIPTION property.
 PAGE will be used to calculate the bates number."
   (org-noter--with-valid-session
    (with-current-buffer (org-noter--session-notes-buffer session)
-     (when page
+     (when (and page file-range)
        (let ((start (nth 0 file-range))
              (end (nth 1 file-range))
              (expected-pdf-pages (bates--expected-pdf-pages file-range)))
@@ -234,17 +234,21 @@ PAGE will be used to calculate the bates number."
                  (buffer-file-name
                   (org-noter--session-doc-buffer session))))
           (file-range (bates-parse-filename-to-range name)))
-     (unless file-range
-       (user-error "Unable to decode `%s': Expected something like COB0002421-COB0003964" name))
      (org-noter-insert-note)
 
      (with-current-buffer (org-noter--session-notes-buffer session)
        (let ((page (string-to-number (org-entry-get nil org-noter-property-note-location))))
          (bates-initialize-props file-range " " page))
 
-       (search-backward ":DATE:")
-       (end-of-line)
-       (insert " ")))))
+       (if file-range
+           (progn
+             (search-backward ":DATE:")
+             (end-of-line)
+             (insert " "))
+         (outline-previous-visible-heading 1)
+         (search-forward "* ")
+         (org-kill-line))
+       ))))
 
 (eval-after-load "org-noter"
   '(progn
