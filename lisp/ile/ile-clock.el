@@ -19,6 +19,109 @@
 (require 'seq)
 (require 'subr-x)
 
+(defun org-dblock-write:clockview (params)
+  "collect the column specification from the #+cols line
+preceeding the dblock, then update the contents of the dblock."
+  (interactive)
+  (save-restriction
+    (let* ((scope (plist-get params :scope))
+           (files (pcase scope
+		    (`agenda
+		     (org-agenda-files t))
+		    (`agenda-with-archives
+		     (org-add-archive-files (org-agenda-files t)))
+		    (`file-with-archives
+		     (and buffer-file-name
+			  (org-add-archive-files (list buffer-file-name))))
+		    ((or `nil `file `subtree `tree
+			 (and (pred symbolp)
+			      (guard (string-match "\\`tree\\([0-9]+\\)\\'"
+						   (symbol-name scope)))))
+		     (or (buffer-file-name (buffer-base-buffer))
+			 (current-buffer)))
+		    (_ (user-error "Unknown scope: %S" scope))))
+           (block (plist-get params :block))
+           (range (org-clock-special-range block))
+	   table line pos)
+	(save-excursion
+	  (org-narrow-to-subtree)
+          (setq table "|foo|bar|")
+          (setq table (ile-clock--clockview-to-table files range))
+	  (widen))
+	(setq pos (point))
+	(insert table) (org-cycle) (move-end-of-line 1)
+	(goto-char pos)
+	(org-table-recalculate 'all))))
+
+(defun ile-clock--clockview-to-table (files range)
+  "Return a table as a string based on FILES and RANGE.
+
+FILES can be a list of file names or a single file name.  If it
+is not specified, the current file will be used.
+
+RANGE specifies the start time and end time to include in float
+time.  We expect a list where the car is start time and the cadr
+is the end time, as returned by `org-clock-special-range'.  If not
+specified, we will include all entries."
+  (string-join
+   (apply #'list
+          (format "|%s|" (string-join (ile-clock--listify) "|"))
+          "|---"
+          (cl-loop for e in (ile-clock-entries files range)
+                   collect (format "|%s|" (string-join (ile-clock--listify e) "|"))))
+   "\n"))
+
+(defun ile-clock-entries (&optional files range)
+  "Get clock entries for the current buffer.
+
+FILES can be a list of file names or a single file name.  If it
+is not specified, the current file will be used.
+
+RANGE specifies the start time and end time to include in float
+time.  We expect a list where the car is start time and the cadr
+is the end time, as returned by `org-clock-special-range'.  If not
+specified, we will include all entries."
+  (setq files (cond
+               ((stringp files) (list files))
+               ((not files) nil)
+               ((listp files) files)
+               (t (user-error "Unexpected files arg %s" files))))
+
+  (sort
+   (cl-loop for bf in (cond
+                       ((stringp files) (list (find-file-noselect files)))
+                       ((not files) (list (current-buffer)))
+                       ((listp files) (mapcar #'find-file-noselect files))
+                       (t (user-error "Unexpected files arg %s" files)))
+            append
+            (with-current-buffer bf
+              (let* ((rstart (if range
+                                 (float-time (car range))
+                               0))
+                     (rend (if range
+                               (float-time (cadr range))
+                             (float-time (current-time))))
+                     (parser (lambda (e) (ile-clock--parse-clock rstart rend e))))
+                ;; list with one entry per task/date, with times summed up
+                (cl-loop for e in
+                         ;; alist where entries are grouped by task and date
+                         (seq-group-by
+                          (lambda (e) (list (plist-get e :task) (plist-get e :date)))
+                          (org-element-map (org-element-parse-buffer) 'clock
+                            parser nil nil))
+                         collect (ile-clock--combine-entries (cdr e))))))
+   (lambda (a b)
+     (let ((a-date (plist-get a :date))
+           (b-date (plist-get b :date))
+           (a-tags (plist-get a :filetags))
+           (b-tags (plist-get b :filetags)))
+       (cond
+        ((string< a-date b-date) 1)
+        ((not (string= a-date b-date)) nil)
+        ((string< a-tags b-tags) 1)
+        ((not (string= a-tags b-tags)) nil)
+        (t (string< (plist-get a :task) (plist-get b :task))))))))
+
 (defun ile-clock--in-rangep (rstart rend timestamp)
   "Decides if TIMESTAMP overlaps with a range.
 
@@ -91,57 +194,6 @@ Assumes that all ENTRIES have the same task and start."
        :task (plist-get first :task)
        :date (plist-get first :date)
        :minutes (seq-reduce (lambda (v e) (+ v (plist-get e :minutes))) entries 0)))))
-
-(defun ile-clock-entries (&optional files range)
-  "Get clock entries for the current buffer.
-
-FILES can be a list of file names or a single file name.  If it
-is not specified, the current file will be used.
-
-RANGE specifies the start time and end time to include in float
-time.  We expect a list where the car is start time and the cadr
-is the end time, as returned by `org-clock-special-range'.  If not
-specified, we will include all entries."
-  (setq files (cond
-               ((stringp files) (list files))
-               ((not files) nil)
-               ((listp files) files)
-               (t (user-error "Unexpected files arg %s" files))))
-
-  (sort
-   (cl-loop for bf in (cond
-                       ((stringp files) (list (find-file-noselect files)))
-                       ((not files) (list (current-buffer)))
-                       ((listp files) (mapcar #'find-file-noselect files))
-                       (t (user-error "Unexpected files arg %s" files)))
-            append
-            (with-current-buffer bf
-              (let* ((rstart (if range
-                                 (float-time (car range))
-                               0))
-                     (rend (if range
-                               (float-time (cadr range))
-                             (float-time (current-time))))
-                     (parser (lambda (e) (ile-clock--parse-clock rstart rend e))))
-                ;; list with one entry per task/date, with times summed up
-                (cl-loop for e in
-                         ;; alist where entries are grouped by task and date
-                         (seq-group-by
-                          (lambda (e) (list (plist-get e :task) (plist-get e :date)))
-                          (org-element-map (org-element-parse-buffer) 'clock
-                            parser nil nil))
-                         collect (ile-clock--combine-entries (cdr e))))))
-   (lambda (a b)
-     (let ((a-date (plist-get a :date))
-           (b-date (plist-get b :date))
-           (a-tags (plist-get a :filetags))
-           (b-tags (plist-get b :filetags)))
-       (cond
-        ((string< a-date b-date) 1)
-        ((not (string= a-date b-date)) nil)
-        ((string< a-tags b-tags) 1)
-        ((not (string= a-tags b-tags)) nil)
-        (t (string< (plist-get a :task) (plist-get b :task))))))))
 
 (defconst ile-clock--csv-keys (list :filetags :date :task :minutes))
 (defconst ile-clock--csv-headers (list "filetags" "date" "task" "minutes"))
