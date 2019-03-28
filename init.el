@@ -1107,6 +1107,25 @@ Each entry will have ': ' put in between columns."
       (kill-new filename)
       (message "Copied buffer file name '%s' to the clipboard." filename))))
 
+(defun my-billing-csv-current-buffer ()
+  "Write clock csv file for the current buffer."
+  (let* ((dir (file-name-directory buffer-file-name))
+         (output (concat (file-name-sans-extension buffer-file-name) "_billing.csv"))
+         (old (concat output ".old"))
+         (base (file-name-nondirectory output)))
+    (message "writing %s..." base)
+    (when (file-exists-p output)
+      (rename-file output old t))
+    (ile-clock-export-entries output)
+    (message "writing %s...done" base)))
+
+(defun my-billing-csv-agenda ()
+  "Write clock files for all agenda files."
+  (interactive)
+  (cl-loop for e in org-agenda-files
+           do (with-current-buffer (find-file-noselect e)
+                (my-billing-csv-current-buffer))))
+
 (defun my-print-combined-agenda (days)
   "Create an agenda for the number of DAYS specified and sent it to the printer."
   (interactive "nNumber of days to use: ")
