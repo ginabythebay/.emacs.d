@@ -978,7 +978,7 @@ Each entry will have ': ' put in between columns."
     (dolist
         (pkg
          '(bates ile-company ile-discovery ile ile-link ile-navigation
-                 ile-note-view ile-org-noter ile-pdf))
+                 ile-note-view ile-org-noter ile-pdf ile-clock))
       (require pkg))
     ;; We avoid using :bind because that would force pdf-tools to
     ;; load before we might need it and it is slow
