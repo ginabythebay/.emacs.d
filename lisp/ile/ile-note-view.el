@@ -133,15 +133,13 @@ preceeding the dblock, then update the contents of the dblock."
 		       (ile-notesview-collect cols stringformat conds match scope inherit
 					      (if colnames colnames cols)) stringformat)))
 	(widen))
-      (setq pos (point))
       (while (and content-lines (string-match "^#" (car content-lines)))
         (insert (pop content-lines) "\n"))
       (insert table) (insert "\n|--") (org-cycle) (move-end-of-line 1)
-      (message (format "point-%d" pos))
       (while (setq line (pop content-lines))
 	(when (string-match "^#" line)
 	  (insert "\n" line)))
-      (goto-char pos)
+      (beginning-of-line)
       (org-table-recalculate 'all)
       (when sort
         (unless (= 3 (length sort))
