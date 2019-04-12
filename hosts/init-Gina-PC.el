@@ -55,6 +55,7 @@ make it easier to fix."
       (quote
        ("c:/Users/gina/Documents/Gina/Alsayyad/Alsayyad notes.org"
         "c:/Users/gina/Documents/Gina/Armstrong Temple/Armstrongtemple notes.org"
+        "c:/Users/gina/Documents/Gina/Brooks/Brooks notes.org"
         "c:/Users/gina/Documents/Gina/Gamino/federal/Gamino federal notes.org"
         "c:/Users/gina/Documents/Gina/Gamino/state/Gamino state notes.org"
         "c:/Users/gina/Documents/Gina/Gantt/Gantt Notes.org"
