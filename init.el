@@ -1044,6 +1044,9 @@ Each entry will have ': ' put in between columns."
 (use-package free-keys
   :ensure t)
 
+(use-package ace-window
+  :bind (("C-x o" . ace-window)))
+
 (use-package helm
   :ensure t
   :diminish helm-mode
