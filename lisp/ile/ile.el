@@ -207,6 +207,21 @@ If DATE is in an unexpected format, it is returned unchanged."
       (when (= 1 (length day)) (setq day (concat "0" day)))
       (concat year "-" month "-" day))))
 
+;; TODO(gina) make this generic.  Currently I keep rewriting the same thing
+(defun ile-next-wit-file ()
+  "Yes."
+  (interactive)
+
+  (org-next-visible-heading 1)
+  (right-char 3)
+  (let ((f (buffer-substring-no-properties (point) (line-end-position))))
+    (next-line 2)
+    (end-of-line)
+    (insert " ")
+    (other-window 1)
+    (find-file f)
+    (other-window 1)))
+
 
 (provide 'ile)
 ;;; ile.el ends here
