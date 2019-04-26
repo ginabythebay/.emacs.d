@@ -743,6 +743,8 @@ Inspired by crux-beginning-of-line."
   (global-unset-key "\C-c\C-c")
   (local-set-key "\C-c\C-c" 'compile))
 (add-hook 'python-mode-hook 'my-python-mode-hook)
+(setq python-shell-interpreter "ipython"
+      python-shell-interpreter-args "--simple-prompt -i")
 
 ;; Java
 (setq c-default-style "java"
