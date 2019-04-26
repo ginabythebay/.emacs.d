@@ -1047,7 +1047,9 @@ Each entry will have ': ' put in between columns."
   :ensure t)
 
 (use-package ace-window
-  :bind (("C-x o" . ace-window)))
+  :bind (("C-x o" . ace-window))
+  :config
+  (setq aw-scope 'frame))
 
 (use-package helm
   :ensure t
