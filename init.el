@@ -64,10 +64,15 @@
 (custom-set-variables '(epg-gpg-program (executable-find "gpg")))
 (epa-file-enable)
 
+(defun my-set-font-if-installed (font)
+  "If FONT is found, then set it."
+  (when (find-font (font-spec :name font))
+    (set-frame-font font nil t)))
+
 ;; from https://aur.archlinux.org/packages/go-fonts-git/
 ;; Note that on linux I had 12 points, but on windows 11 felt better.
 ;; Might need to make this dependant on the screen or something.
-(set-frame-font "Go Mono-11" nil t)
+(my-set-font-if-installed "Go Mono-11")
 
 ;; These come from https://fonts.google.com/?category=Monospace
 ;(set-frame-font "Roboto Mono-12" nil t)
