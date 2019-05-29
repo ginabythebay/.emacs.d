@@ -1072,10 +1072,28 @@ Each entry will have ': ' put in between columns."
 (global-set-key [f5] 'kmacro-end-and-call-macro)
 
 
-; These don't really seem to do anything yet
-; TODO(gina) continue fixing these up
-;;(use-package calfw)
-;;(use-package calfw-org)
+(use-package calfw
+  :bind (("C-c A" . my-calendar)
+         :map cfw:calendar-mode-map
+         ("M-n" . cfw:navi-next-month-command)
+         ("M-p" . cfw:navi-previous-month-command)
+         ("j"   . cfw:navi-goto-date-command)
+         ("g"   . cfw:refresh-calendar-buffer))
+  :commands cfw:open-calendar-buffer
+
+  :preface
+  (defun my-calendar ()
+    (interactive)
+    (let ((buf (get-buffer "*cfw-calendar*")))
+      (if buf
+          (pop-to-buffer buf nil)
+        (cfw:open-calendar-buffer
+         :contents-sources
+         (list (cfw:org-create-source))
+         :view 'two-weeks))))
+
+  :config
+  (use-package calfw-org))
 
 (delete-selection-mode t)
 (setq column-number-mode t)  ;; put line number in mode line.
