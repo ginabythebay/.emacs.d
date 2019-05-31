@@ -261,6 +261,41 @@ the syntax class ')'."
 	      ("m" . mc/edit-lines)
 	      ("a" . mc/mark-all-like-this))))
 
+;; from http://ergoemacs.org/emacs/emacs_dired_open_file_in_ext_apps.html
+(defun xah-show-in-desktop ()
+  "Show current file in desktop.
+\\(Mac Finder, Windows Explorer, Linux file manager)
+This command can be called when in a file or in `dired'.
+
+URL `http://ergoemacs.org/emacs/emacs_dired_open_file_in_ext_apps.html'
+Version 2018-09-29"
+  (interactive)
+  (let (($path (if (buffer-file-name) (buffer-file-name) default-directory )))
+    (cond
+     ((string-equal system-type "windows-nt")
+      (w32-shell-execute "explore" (replace-regexp-in-string "/" "\\" $path t t)))
+     ((string-equal system-type "darwin")
+      (if (eq major-mode 'dired-mode)
+          (let (($files (dired-get-marked-files )))
+            (if (eq (length $files) 0)
+                (progn
+                  (shell-command
+                   (concat "open " default-directory)))
+              (progn
+                (shell-command
+                 (concat "open -R " (shell-quote-argument (car (dired-get-marked-files ))))))))
+        (shell-command
+         (concat "open -R " $path))))
+     ((string-equal system-type "gnu/linux")
+      (let (
+            (process-connection-type nil)
+            (openFileProgram (if (file-exists-p "/usr/bin/gvfs-open")
+                                 "/usr/bin/gvfs-open"
+                               "/usr/bin/xdg-open")))
+        (start-process "" nil openFileProgram $path))
+      ;; (shell-command "xdg-open .") ;; 2013-02-10 this sometimes froze emacs till the folder is closed. eg with nautilus
+      ))))
+
 (use-package dired
   :ensure nil
   :init
@@ -269,7 +304,8 @@ the syntax class ')'."
     (call-interactively 'shell-pop))
   :bind (:map dired-mode-map
               ("C-t" . my-shell-pop)
-              ("C-o" . 'my-dired-display-file))
+              ("C-o" . 'my-dired-display-file)
+              ("C-e" . 'xah-show-in-desktop))
   :config
   (setq dired-dwim-target t)
   (add-hook
@@ -287,7 +323,6 @@ the syntax class ')'."
               ("X" . dired-ranger-move)
               ("Y" . dired-ranger-paste)
 	      ("`" . dired-ranger-bookmark-visit)))
-
 
 (defun my-kill-all-pdf-view-buffers ()
   "Iterate through all buffers and kill the ones with major mode ‘pdf-view-mode’."
