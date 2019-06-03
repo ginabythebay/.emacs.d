@@ -1119,13 +1119,10 @@ Each entry will have ': ' put in between columns."
   :preface
   (defun my-calendar ()
     (interactive)
-    (let ((buf (get-buffer "*cfw-calendar*")))
-      (if buf
-          (pop-to-buffer buf nil)
-        (cfw:open-calendar-buffer
+    (cfw:open-calendar-buffer
          :contents-sources
          (list (cfw:org-create-source))
-         :view 'two-weeks))))
+         :view 'two-weeks))
 
   :config
   (use-package calfw-org))
