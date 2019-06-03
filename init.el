@@ -1117,12 +1117,48 @@ Each entry will have ': ' put in between columns."
   :commands cfw:open-calendar-buffer
 
   :preface
+  (defun my-require-a-tag (tags reverse)
+    (let* ((next-headline (save-excursion
+                            (or (outline-next-heading) (point-max))))
+           (current-headline (or (and (org-at-heading-p)
+                                      (point))
+                                 (save-excursion (org-back-to-heading))))
+           (headline-tags (org-get-tags current-headline))
+           (tag-match (cl-loop for tag in tags
+                               when (member tag headline-tags) return t)))
+      (if reverse
+          (if tag-match
+              next-headline
+            nil)
+        (if (not tag-match)
+            next-headline
+          nil))))
+
+  (defun my-get-fixed-org-entries (begin end)
+    "Returns org entries tagged with \"court\" or \"hard\"."
+    (let ((org-agenda-skip-function-global
+           '(my-require-a-tag (list "court" "hard") nil)))
+      (cfw:org-schedule-period-to-calendar begin end)))
+
+  (defun my-get-unfixed-org-entries (begin end)
+    "Returns org entries tagged with \"court\" or \"hard\"."
+    (let ((org-agenda-skip-function-global
+           '(my-require-a-tag (list "court" "hard") t)))
+      (cfw:org-schedule-period-to-calendar begin end)))
+
   (defun my-calendar ()
     (interactive)
     (cfw:open-calendar-buffer
-         :contents-sources
-         (list (cfw:org-create-source))
-         :view 'two-weeks))
+     :contents-sources
+     (list (make-cfw:source
+            :name "fixed-entries"
+            :color "blue"
+            :data 'my-get-fixed-org-entries)
+           (make-cfw:source
+            :name "unfixed-entries"
+            :color "yellow"
+            :data 'my-get-unfixed-org-entries))
+     :view 'two-weeks))
 
   :config
   (use-package calfw-org))
