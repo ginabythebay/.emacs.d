@@ -1146,19 +1146,69 @@ Each entry will have ': ' put in between columns."
            '(my-require-a-tag (list "court" "hard") t)))
       (cfw:org-schedule-period-to-calendar begin end)))
 
+  (defun my-org-summary-format (item)
+  "Format an item. (How should be displayed?)"
+  (let* ((time (cfw:org-tp item 'time))
+         (time-of-day (cfw:org-tp item 'time-of-day))
+         (time-str (and time-of-day
+                        (format "%02i:%02i " (/ time-of-day 100) (% time-of-day 100))))
+         (category (cfw:org-tp item 'org-category))
+         (tags (cfw:org-tp item 'tags))
+         (marker (cfw:org-tp item 'org-marker))
+         (buffer (and marker (marker-buffer marker)))
+         (text (concat category ":" (cfw:org-extract-summary item)))
+         (props (cfw:extract-text-props item 'face 'keymap))
+         (extra (cfw:org-tp item 'extra)))
+    (setq text (substring-no-properties text))
+    ;; (when (string-match (concat "^" org-deadline-string ".*") extra)
+    ;;   (add-text-properties 0 (length text) (list 'face (org-agenda-deadline-face 1.0)) text))
+    ;; (if org-todo-keywords-for-agenda
+    ;;   (when (string-match (concat "^[\t ]*\\<\\(" (mapconcat 'identity org-todo-keywords-for-agenda "\\|") "\\)\\>") text)
+    ;;     (add-text-properties (match-beginning 1) (match-end 1) (list 'face (org-get-todo-face (match-string 1 text))) text)))
+    ;;; ------------------------------------------------------------------------
+    ;;; act for org link
+    ;;; ------------------------------------------------------------------------
+    (setq text (replace-regexp-in-string "%[0-9A-F]\\{2\\}" " " text))
+    (if (string-match org-bracket-link-regexp text)
+      (let* ((desc (if (match-end 3) (org-match-string-no-properties 3 text)))
+             (link (org-link-unescape (org-match-string-no-properties 1 text)))
+             (help (concat "LINK: " link))
+             (link-props (list
+                          'face 'org-link
+                          'mouse-face 'highlight
+                          'help-echo help
+                          'org-link link)))
+        (if desc
+            (progn
+              (setq desc (apply 'propertize desc link-props))
+              (setq text (replace-match desc nil nil text)))
+          (setq link (apply 'propertize link link-props))
+          (setq text (replace-match link nil nil text)))))
+    (when time-str
+      (setq text (concat time-str text)))
+    (propertize
+     (apply 'propertize text props)
+     ;; include org filename
+     ;; (and buffer (concat " " (buffer-name buffer)))
+     'keymap cfw:org-text-keymap
+     ;; Delete the display property, since displaying images will break our
+     ;; table layout.
+     'display nil)))
+
   (defun my-calendar ()
     (interactive)
-    (cfw:open-calendar-buffer
-     :contents-sources
-     (list (make-cfw:source
-            :name "fixed-entries"
-            :color "blue"
-            :data 'my-get-fixed-org-entries)
-           (make-cfw:source
-            :name "unfixed-entries"
-            :color "yellow"
-            :data 'my-get-unfixed-org-entries))
-     :view 'two-weeks))
+    (let ((cfw:org-schedule-summary-transformer 'my-org-summary-format))
+      (cfw:open-calendar-buffer
+       :contents-sources
+       (list (make-cfw:source
+              :name "fixed-entries"
+              :color "white"
+              :opt-face '(:weight bold)
+              :data 'my-get-fixed-org-entries)
+             (make-cfw:source
+              :name "unfixed-entries"
+              :data 'my-get-unfixed-org-entries))
+       :view 'two-weeks)))
 
   :config
   (use-package calfw-org))
