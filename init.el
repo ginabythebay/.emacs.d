@@ -324,6 +324,15 @@ Version 2018-09-29"
               ("Y" . dired-ranger-paste)
 	      ("`" . dired-ranger-bookmark-visit)))
 
+(use-package ibuffer-projectile
+  :ensure t
+  :config
+  (add-hook 'ibuffer-hook
+            (lambda ()
+              (ibuffer-projectile-set-filter-groups)
+              (unless (eq ibuffer-sorting-mode 'alphabetic)
+                (ibuffer-do-sort-by-alphabetic)))))
+
 (defun my-kill-all-pdf-view-buffers ()
   "Iterate through all buffers and kill the ones with major mode ‘pdf-view-mode’."
   (interactive)
