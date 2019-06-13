@@ -341,7 +341,11 @@ Version 2018-09-29"
       (with-current-buffer (car buffers)
         (when (string= "pdf-view-mode" major-mode)
           (kill-buffer)))
-      (setq buffers (cdr buffers)))))
+      (setq buffers (cdr buffers))))
+  ;; takes care of the case where we are in pdf virtual mode which
+  ;; seems to leave files 'open'
+  (pdf-info-quit)
+  (pdf-info-process-assert-running t))
 
 (defun my-wdired-finish-edit ()
   "Kill any open pdf view buffers then call ‘wdired-finish-edit’."
