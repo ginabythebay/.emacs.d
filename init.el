@@ -809,13 +809,20 @@ Inspired by crux-beginning-of-line."
                    pdf-util pdf-view pdf-virtual))
     (require pkg))
   (pdf-tools-install)
+
+  (defun my-edit-virtual-pdf-file ()
+    "When in pdf-virtual mode, edits the current file."
+    (interactive)
+    (w32-browser (pdf-virtual-buffer-current-file)))
+  
   ;; automatically annotate highlights
   (setq pdf-annot-activate-created-annotations t)
   ;; open pdfs scaled to fit page
   (add-hook 'pdf-view-mode-hook (lambda () (pdf-view-fit-page-to-window)))
   ;; swiper doesn't work with pdfs
   ;; (define-key pdf-view-mode-map (kbd "C-s") #'isearch-forward)
-  (define-key pdf-view-mode-map (kbd "G") #'pdf-view-last-page))
+  (define-key pdf-view-mode-map (kbd "G") #'pdf-view-last-page)
+  (define-key pdf-virtual-view-mode-map (kbd "C-e") #'my-edit-virtual-pdf-file))
 
 (use-package htmlize)
 
