@@ -1306,10 +1306,27 @@ Each entry will have ': ' put in between columns."
       (switch-to-buffer "*Org Agenda*")
       (print-buffer))))
 
-;;;###autoload
-(defun my-org-batch-agenda-cld ()
-  "Print cld compatible schedule information."
+(defun my-org-batch-agenda-cld-detail ()
+  "Print detailed cld compatible schedule information."
   (interactive)
+  (my-org-batch-agenda-cld nil))
+
+(defun my-org-batch-agenda-cld-high ()
+  "Print high-level cld compatible schedule information."
+  (interactive)
+  (my-org-batch-agenda-cld '("court" "hard" "holiday")))
+
+(defun my-cld-tags-p (req_tags tags)
+  "Return true if there are no req_tags or if there is a tag match."
+  (let ((tags (concat ":" tags ":")))
+    (if (not req_tags)
+        t
+      (let ((matches (mapcar (lambda (x) (concat ":" x ":")) req_tags)))
+        (cl-loop for m in matches
+                 if (cl-search m tags) return t)))))
+
+(defun my-org-batch-agenda-cld (req_tags)
+  "Print cld compatible schedule information."
   (require 'org)
 
   (message "exporting agenda as cld...")
@@ -1327,7 +1344,9 @@ Each entry will have ': ' put in between columns."
              (type (plist-get e 'type))
              (extra (plist-get e 'extra))
              (tags (plist-get e 'tags)))
-        (unless (or (string= "upcoming-deadline" type) (not ts))
+        (unless (or (string= "upcoming-deadline" type)
+                    (not ts)
+                    (not (my-cld-tags-p req_tags tags)))
           (when (string-match "[0-9]\\{4\\}-\\([0-9]\\)-[0-9]\\{1,2\\}" day)
             (setq day (replace-match "0\\1" t nil day 1)))
           (when (string-match "[0-9]\\{4\\}-[0-9]\\{2\\}-\\([0-9]\\)$" day)
