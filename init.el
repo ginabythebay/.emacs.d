@@ -1382,7 +1382,7 @@ those events containing matching tags will be included."
                      (string-blank-p extra))
                     ""
                   (if (string-prefix-p "(" extra)
-                      (concat " extra")
+                      (concat " " extra)
                     (concat " (" extra ")"))))
           (princ (concat ts " " "{" cat ":" txt extra "}\n"))))))
   (message "exporting agenda as cld...done"))
