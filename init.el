@@ -1375,10 +1375,15 @@ those events containing matching tags will be included."
             (setq txt (replace-match "" t t txt)))
           (when (string-match "\\(:? +$\\)" extra)
             (setq extra (replace-match "" t t extra)))
-          (if (or (string= "Scheduled" extra) (string= "Deadline" extra) (string-blank-p extra))
-              (setq extra "")
-            (if (not (string-prefix-p "(" extra))
-                (setq extra (concat " (" extra ")"))))
+          (setq extra
+                (if (or
+                     (string= "Scheduled" extra)
+                     (string= "Deadline" extra)
+                     (string-blank-p extra))
+                    ""
+                  (if (string-prefix-p "(" extra)
+                      (concat " extra")
+                    (concat " (" extra ")"))))
           (princ (concat ts " " "{" cat ":" txt extra "}\n"))))))
   (message "exporting agenda as cld...done"))
 
