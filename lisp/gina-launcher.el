@@ -41,6 +41,12 @@
   (interactive)
   (w32-browser "//Dan-PC/Users/Dan/Documents/Case List/Case List (2).doc"))
 
+(defun gina-open-explorer ()
+  "Open windows explorer in the director for the buffer."
+  (interactive)
+  (let ((dir (file-name-directory (buffer-file-name))))
+    (w32-shell-execute "explore" (replace-regexp-in-string "/" "\\" dir t t))))
+
 (provide 'gina-launcher)
 
 (defhydra gina-launcher-hydra (:hint nil :exit t)
@@ -49,6 +55,7 @@
 _b_: back (pop global mark)
 _c_: jump to Current clock
 _d_: toggle debug on error
+_e_: open explorer
 _i_: clock In to recent task
 _l_: open case list
 _s_: iSearch forward
@@ -59,6 +66,7 @@ _u_: bury buffer
   ("b" pop-global-mark)
   ("c" org-clock-jump-to-current-clock)
   ("d" toggle-debug-on-error)
+  ("e" gina-open-explorer)
   ("i" gina-clock-in-to-recent-task)
   ("l" gina-open-case-list)
   ("s" isearch-forward)
