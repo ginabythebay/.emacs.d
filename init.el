@@ -1325,8 +1325,18 @@ Each entry will have ': ' put in between columns."
         (cl-loop for m in matches
                  if (cl-search m tags) return t)))))
 
+(defun my-decode-date (date)
+  "Accepts a year-day-month DATE string and return a datetime."
+  (when (string-match "[0-9]\\{4\\}-\\([0-9]\\)-[0-9]\\{1,2\\}" date)
+    (setq date (replace-match "0\\1" t nil date 1)))
+  (when (string-match "[0-9]\\{4\\}-[0-9]\\{2\\}-\\([0-9]\\)$" date)
+    (setq date (replace-match "0\\1" t nil date 1)))
+  (date-to-time (concat date " 00:00:00")))
+
 (defun my-org-batch-agenda-cld (req_tags)
-  "Print cld compatible schedule information."
+  "Print cld compatible schedule information.
+If REQ_TAGS is non-nil, it should be a list of tags and only
+those events containing matching tags will be included."
   (require 'org)
 
   (message "exporting agenda as cld...")
@@ -1338,23 +1348,28 @@ Each entry will have ': ' put in between columns."
     (when (get-text-property 0 'org-category line)
       (let* ((e (org-fix-agenda-info (text-properties-at 0 line)))
              (day (plist-get e 'agenda-day))
+             (date (plist-get e 'date))
              (ts (plist-get e 'ts-date))
              (cat (plist-get e 'org-category))
              (txt (plist-get e 'txt))
              (type (plist-get e 'type))
              (extra (plist-get e 'extra))
              (tags (plist-get e 'tags)))
-        (unless (or (string= "upcoming-deadline" type)
-                    (not ts)
-                    (not (my-cld-tags-p req_tags tags)))
-          (when (string-match "[0-9]\\{4\\}-\\([0-9]\\)-[0-9]\\{1,2\\}" day)
-            (setq day (replace-match "0\\1" t nil day 1)))
-          (when (string-match "[0-9]\\{4\\}-[0-9]\\{2\\}-\\([0-9]\\)$" day)
-            (setq day (replace-match "0\\1" t nil day 1)))
-          (setq day (date-to-time (concat day " 00:00:00")))
-          (setq ts (org-time-from-absolute ts))
-          (when (time-less-p ts day)
-            (setq ts day))
+        (unless (or
+                 ;; not useful in calendars
+                 (string= "upcoming-deadline" type)
+                 ;; this is essentially a duplicate because we also
+                 ;; get the scheduled item
+                 (string-prefix-p "(1/" extra)
+                 ;; block type entries don't have a ts
+                 (and (not ts) (not (string= "block" type)))
+                 (not (my-cld-tags-p req_tags tags)))
+          (setq day (my-decode-date day))
+          (if (string= "block" type)
+              (setq ts (my-decode-date date))
+            (setq ts (org-time-from-absolute ts))
+            (when (time-less-p ts day)
+              (setq ts day)))
           (setq ts (format-time-string "%b %d %Y" ts))
           (when (string-match "\\( +:[^ ]+:+$\\)" txt)
             (setq txt (replace-match "" t t txt)))
@@ -1362,7 +1377,8 @@ Each entry will have ': ' put in between columns."
             (setq extra (replace-match "" t t extra)))
           (if (or (string= "Scheduled" extra) (string= "Deadline" extra) (string-blank-p extra))
               (setq extra "")
-            (setq extra (concat " (" extra ")")))
+            (if (not (string-prefix-p "(" extra))
+                (setq extra (concat " (" extra ")"))))
           (princ (concat ts " " "{" cat ":" txt extra "}\n"))))))
   (message "exporting agenda as cld...done"))
 
