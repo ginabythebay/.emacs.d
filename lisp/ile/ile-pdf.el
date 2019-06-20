@@ -92,9 +92,7 @@ are exported to a filename derived from the headline text."
   "Convert one or more html files to a pdf file.
 
 IN-FILES is either a single html file or a list of html files.
-OUT-FILE is the pdf file to output to.  if FOOTER-LEFT or
-FOOTER-RIGHT is set, we will pass --footer-line to the
-executable."
+OUT-FILE is the pdf file to output to."
   (when (get-buffer ile-pdf--output-buffer)
     (kill-buffer ile-pdf--output-buffer))
 
@@ -106,8 +104,6 @@ executable."
       (setq args (append args `("--footer-left" ,footer-left))))
     (when footer-right
       (setq args (append args `("--footer-right" ,footer-right))))
-    (when (or footer-left footer-right)
-      (setq args (append args '("footer-line"))))
     (when (not (listp in-files))
       (setq in-files (list in-files)))
     (setq args (append args in-files (list out-file)))
@@ -146,7 +142,7 @@ produce one pdf files for each exported subtree."
                        (file-name-sans-extension
                         (file-name-nondirectory (buffer-name)))
                        ".pdf"))))
-            (ile-pdf-from-html html-files out)
+            (ile-pdf-from-html html-files out nil "Page [page]")
             (message "Produced %s" out))
         (cl-loop for f in html-files
                  do (let ((out (concat
@@ -155,7 +151,7 @@ produce one pdf files for each exported subtree."
                                  (file-name-sans-extension
                                   (file-name-nondirectory f))
                                  ".pdf"))))
-                      (ile-pdf-from-html f out)))
+                      (ile-pdf-from-html f out nil "Page [page]")))
         (message "Produced %d pdf files" (length html-files))))
     (delete-directory tdir t)))
 
