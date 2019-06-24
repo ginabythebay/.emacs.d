@@ -21,6 +21,8 @@
 (defconst ile--exclude-bates-names
   '("CA"  ;; our fair state
     "SBN" ;; state bar number
+    "RFP" ;; request for production of documents
+    "RPD" ;; see above
     ;; todo keywords
     "TODO" "NEXT" "DONE" "WAITING" "HOLD" "CANCELLED" "PHONE" "MEETING"))
 
