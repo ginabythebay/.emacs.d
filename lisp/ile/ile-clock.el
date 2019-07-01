@@ -20,8 +20,7 @@
 (require 'subr-x)
 
 (defun org-dblock-write:clockview (params)
-  "collect the column specification from the #+cols line
-preceeding the dblock, then update the contents of the dblock."
+  "Collect the column specification from the #+cols line according to PARAMS."
   (interactive)
   (save-restriction
     (let* ((scope (plist-get params :scope))
@@ -42,7 +41,7 @@ preceeding the dblock, then update the contents of the dblock."
 		    (_ (user-error "Unknown scope: %S" scope))))
            (block (plist-get params :block))
            (range (org-clock-special-range block))
-	   table line pos)
+	   table pos)
 	(save-excursion
 	  (org-narrow-to-subtree)
           (setq table "|foo|bar|")
