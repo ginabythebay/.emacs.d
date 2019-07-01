@@ -153,7 +153,10 @@ that overlap with that range."
            (end (list (org-element-property :year-end timestamp)
                       (org-element-property :month-end timestamp)
                       (org-element-property :day-end timestamp)))
-           (task (org-element-property :raw-value (org-element-lineage element '(headline)))))
+           (task (org-element-property :raw-value (org-element-lineage element '(headline))))
+           (link (org-link-escape (concat "file:" (buffer-file-name) "::*" task)))
+           (task (concat "\[\[" link "\]\[" task "\]\]")))
+
       (unless (equal start end)
         (user-error
          "Task \"%s\" starts on %s and ends on %s.  We don't support tasks that span dates"
