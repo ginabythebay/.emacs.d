@@ -316,12 +316,14 @@ If inserting and the current item has a checkbox, create a
   checkbox for the one we insert."
   (interactive)
   (when-let* ((item-start (org-in-item-p)))
-    (let ((cbox))
+    (let (cbox counterbox)
       (save-excursion
         (goto-char item-start)
         (goto-char (point-at-bol))
-        (setq cbox (org-at-item-checkbox-p)))
-      (org-insert-item cbox))))
+        (setq cbox (org-at-item-checkbox-p))
+        (setq counterbox (org-list-at-regexp-after-bullet-p "\\(\\[[0-9]*/[0-9]*\\]\\)[ \t]")))
+      (org-insert-item (or cbox counterbox))
+      (when counterbox (org-indent-item)))))
 
 
 ;; This override calls gw/maybe-insert-item, which handles checkboxes
