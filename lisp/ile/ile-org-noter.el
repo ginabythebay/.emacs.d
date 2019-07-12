@@ -125,7 +125,7 @@ then insert it in the notes buffer."
                                      (org-entry-get nil "BATES_START")
                                      contents
                                      (org-entry-get nil "DATE")) into temp)))
-           (setq chosen (completing-read "Duplicate of" choices))))
+           (setq chosen (completing-read "Duplicate of " choices))))
 
        (if (not (string-match "^\\(.*\\)|\\(.*\\)$" chosen))
            (error "Internal error parsing %s" chosen)
