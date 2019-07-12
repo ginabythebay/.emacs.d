@@ -1101,7 +1101,8 @@ Each entry will have ': ' put in between columns."
 (use-package org-noter
   :commands org-noter
   :config
-  (add-hook 'org-noter-notes-mode-hook (lambda () (require 'org-noter-override))))
+  (add-hook 'org-noter-notes-mode-hook (lambda () (require 'org-noter-override)))
+  (setq org-noter-hide-other nil))
 
 (use-package free-keys
   :ensure t)
