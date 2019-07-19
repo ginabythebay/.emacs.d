@@ -1119,7 +1119,8 @@ Each entry will have ': ' put in between columns."
          ("C-x r b" . helm-filtered-bookmarks)
          ("C-h a" . helm-apropos)
          ("C-x C-f" . helm-find-files)
-         ("C-x r l" . helm-bookmarks))
+         ("C-x r l" . helm-bookmarks)
+         ("C-x C-r" . helm-for-files))
   :config
   (helm-mode 1))
 
