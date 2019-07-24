@@ -506,7 +506,6 @@ Inspired by crux-beginning-of-line."
   :bind (:map company-active-map
               ("C-c h" . company-quickhelp-manual-begin)))
 
-
 (use-package company-tabnine
   :ensure t
   :after (company)
