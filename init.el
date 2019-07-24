@@ -507,6 +507,12 @@ Inspired by crux-beginning-of-line."
               ("C-c h" . company-quickhelp-manual-begin)))
 
 
+(use-package company-tabnine
+  :ensure t
+  :after (company)
+  :config
+  (add-to-list 'company-backends #'company-tabnine))
+
 (use-package rainbow-delimiters
   :ensure t
   :config
