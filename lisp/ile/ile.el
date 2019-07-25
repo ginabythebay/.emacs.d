@@ -209,6 +209,19 @@ If DATE is in an unexpected format, it is returned unchanged."
       (when (= 1 (length day)) (setq day (concat "0" day)))
       (concat year "-" month "-" day))))
 
+(defun ile-legal-date (date)
+  "Return DATE so that it is in typical legal format.
+Example: 2005-01-02 becomes January 2, 2005."
+  (let* ((parsed (org-parse-time-string date))
+         (encoded (apply 'encode-time parsed)))
+    (concat (format-time-string "%B " encoded)
+            ;; there does not seem to be a way to convince
+            ;; format-time-string to output the day of the month
+            ;; without padding it so we cobble it together ourselves
+            (number-to-string (nth 3 parsed))
+            ", "
+            (format-time-string "%Y" encoded))))
+
 ;; TODO(gina) make this generic.  Currently I keep rewriting the same thing
 (defun ile-next-wit-file ()
   "Yes."
