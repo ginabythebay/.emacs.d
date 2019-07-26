@@ -61,6 +61,7 @@ _l_: open case list
 _s_: iSearch forward
 _t_: open Time sheet
 _u_: bury buffer
+_v_: toggle visual line mode
 "
   ("q" nil)
   ("b" pop-global-mark)
@@ -71,5 +72,6 @@ _u_: bury buffer
   ("l" gina-open-case-list)
   ("s" isearch-forward)
   ("t" gina-open-current-timesheet)
-  ("u" bury-buffer))
+  ("u" bury-buffer)
+  ("v" visual-line-mode))
 ;;; gina-launcher.el ends here

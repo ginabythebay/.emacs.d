@@ -8,6 +8,8 @@
 
 (setq visible-bell t)
 
+(setq visual-line-fringe-indicators '(left-curly-arrow right-curly-arrow))
+
 ;;; Code:
 
 ;; Support functions
