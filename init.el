@@ -326,6 +326,13 @@ Version 2018-09-29"
               ("Y" . dired-ranger-paste)
 	      ("`" . dired-ranger-bookmark-visit)))
 
+(use-package dired-subtree
+  :after (dired)
+  :config
+  (bind-keys :map dired-mode-map
+             ("i" . dired-subtree-insert)
+             (";" . dired-subtree-remove)))
+
 (use-package ibuffer-projectile
   :ensure t
   :config
