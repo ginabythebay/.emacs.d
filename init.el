@@ -837,7 +837,13 @@ Inspired by crux-beginning-of-line."
     "When in pdf-virtual mode, edits the current file."
     (interactive)
     (w32-browser (pdf-virtual-buffer-current-file)))
-  
+
+  ;; don't do any checking of file sizes for pdfs.  They are mostly
+  ;; big anyway
+  (advice-add 'abort-if-file-too-large
+              :before-while (lambda (size op-type filename)
+                              (not (string-suffix-p ".pdf" filename t))))
+
   ;; automatically annotate highlights
   (setq pdf-annot-activate-created-annotations t)
   ;; open pdfs scaled to fit page
