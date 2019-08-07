@@ -13,5 +13,6 @@ anaconda-mode/*
 bookmarks
 server
 url/*
+transient/*
 /loaddefs.el
 recentf
