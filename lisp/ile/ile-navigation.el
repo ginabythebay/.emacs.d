@@ -180,11 +180,11 @@ determine it."
                                       "Date or bates number: ")))
                        (read-string prompt nil nil def))))
   (cond
-   ((string-match ile-org--fed-rule-re target)
+   ((eq 0 (string-match-p ile-org--fed-rule-re target))
     (ile-org-lookup-fed-rule target))
-   ((string-match ile-org--bates-re target)
+   ((eq 0 (string-match-p ile-org--bates-re target))
     (ile-jump-bates target))
-   ((string-match ile-org--date-re target)
+   ((eq 0 (string-match-p ile-org--date-re target))
     (ile-org-lookup-date target))))
 
 (defun ile-nav-case-org-files ()
