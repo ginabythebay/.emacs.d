@@ -1525,8 +1525,29 @@ If REGION is set, we use that instead of trying to guess the paragraph."
     (byte-compile-file generated-autoload-file)))
 ;;(load (concat user-emacs-directory "loaddefs.el") t)
 
+
+(defun my-fill-end-page ()
+  "Walks through org noter entries filling in end page."
+  (interactive)
+  (save-excursion
+    (org-back-to-heading 1)
+    (let ((prev-page-no (string-to-number
+                         (org-entry-get nil "NOTER_PAGE"))))
+      (org-previous-visible-heading 1)
+      (let ((cnt 0)
+            (page-no (org-entry-get nil "NOTER_PAGE")))
+        (while page-no
+          (setq cnt (+ 1 cnt))
+          (org-entry-put nil "END_PAGE" (number-to-string (- prev-page-no 1)))
+          (org-previous-visible-heading 1)
+          (setq prev-page-no (string-to-number page-no))
+          (setq page-no (org-entry-get nil "NOTER_PAGE")))
+        (message "Processed %d entries" cnt)))))
+
+
 (unless noninteractive
   (server-start))
+
 
 
 (provide 'init)
