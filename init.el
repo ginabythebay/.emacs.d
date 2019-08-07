@@ -237,6 +237,7 @@ the syntax class ')'."
 ;; Project management.
 (use-package projectile
   :ensure t
+  :diminish projectile-mode
   :config
   (projectile-mode t)
   (setq projectile-create-missing-test-files t
