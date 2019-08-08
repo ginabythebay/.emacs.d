@@ -1545,6 +1545,38 @@ If REGION is set, we use that instead of trying to guess the paragraph."
           (setq page-no (org-entry-get nil "NOTER_PAGE")))
         (message "Processed %d entries" cnt)))))
 
+(defun my-extract-noter-files ()
+  "Extract pages from the current noter document.
+Expects to have a NOTER_DOCUMENT property and to be run from a
+table with the following columns, in any order: Name Start,
+End."
+  (interactive)
+  (unless (org-at-table-p) (user-error "No table at point"))
+  (let ((noter-doc (org-entry-get nil "NOTER_DOCUMENT")))
+    (unless noter-doc
+      (user-error "No NOTER_DOCUMENT property found, aborting"))
+
+    (let ((csvfile
+           (make-temp-file
+            "gw"
+            nil
+            ".csv"
+            (orgtbl-to-csv
+             (org-table-to-lisp
+              (buffer-substring-no-properties
+               (org-table-begin) (org-table-end)))
+             nil))))
+      (message "Extracting files...")
+      ;; TODO(gina) use call-process instead. A tad more work but we
+      ;; can see the output as it is generated and we can check the
+      ;; return value and abort if there is a failure.
+      (shell-command
+       (concat "extractpdffiles.py --srcpdf '"
+               noter-doc
+               "' --dstdir . --pagescsv '"
+               csvfile
+               "'"))
+      (delete-file csvfile))))
 
 (unless noninteractive
   (server-start))
