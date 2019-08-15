@@ -514,19 +514,11 @@ Inspired by crux-beginning-of-line."
 
   (global-company-mode))
 
-
 (use-package company-quickhelp
   :after (company)
   :config
   (setq company-quickhelp-delay .1)
-  :bind (:map company-active-map
-              ("C-c h" . company-quickhelp-manual-begin)))
-
-(use-package company-tabnine
-  :ensure t
-  :after (company)
-  :config
-  (add-to-list 'company-backends #'company-tabnine))
+  (company-quickhelp-mode))
 
 (use-package rainbow-delimiters
   :ensure t
