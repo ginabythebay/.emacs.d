@@ -499,7 +499,8 @@ Inspired by crux-beginning-of-line."
         company-minimum-prefix-length 3
         company-show-numbers t
         company-selection-wrap-around t
-        company-dabbrev-downcase nil)
+        company-dabbrev-downcase nil
+        company-dabbrev-ignore-case t)
 
   ;; see https://emacs.stackexchange.com/a/10520/767
   (defvar company-mode/enable-yas t
