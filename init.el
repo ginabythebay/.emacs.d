@@ -510,6 +510,11 @@ Inspired by crux-beginning-of-line."
         backend
       (append (if (consp backend) backend (list backend))
               '(:with company-yasnippet))))
+
+  ;; push company-capf to the back so company-dabbrev has priority
+  (setq company-backends (delete 'company-capf company-backends))
+  (setq company-backends (append company-backends '(company-capf)))
+  
   (setq company-backends (mapcar #'company-mode/backend-with-yas company-backends))
 
   (global-company-mode))
