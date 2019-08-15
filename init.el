@@ -848,7 +848,7 @@ Inspired by crux-beginning-of-line."
   ;; open pdfs scaled to fit page
   (add-hook 'pdf-view-mode-hook (lambda () (pdf-view-fit-page-to-window)))
   ;; swiper doesn't work with pdfs
-  ;; (define-key pdf-view-mode-map (kbd "C-s") #'isearch-forward)
+  (define-key pdf-view-mode-map (kbd "C-s") #'isearch-forward)
   (define-key pdf-view-mode-map (kbd "G") #'pdf-view-last-page)
   (define-key pdf-virtual-view-mode-map (kbd "C-e") #'my-edit-virtual-pdf-file))
 
@@ -1100,12 +1100,32 @@ Each entry will have ': ' put in between columns."
   :config
   (setq bbdb-file "~/bbdb"))
 
-;; TODO(gina) delete after 2019-07-01 if still not using
-;; (use-package swiper
-;;   :ensure t
-;;   :init
-;;   :bind
-;;   (("C-s" . swiper)))
+;; Some docs about how to use this...
+;; See slide 13 of https://www.slideshare.net/kaz_yos/search-and-replacement-techniques-in-emacs-avy-swiper-multiplecursor-ag-and-wgrep
+
+;; C-S to start a swiper search
+;; C-c C-o to open occur buffer
+;; C-x C-q to make occur buffer editable
+;; ...edit it...
+;; C-c C-c to write the edits back
+
+;; or
+;; C-S to start a swiper search
+;; C-c C-o to open occur buffer
+;; enter to jump to the last entry
+;; start macro recording
+;; edit the entry entry
+;; M-x ivy-occur-previous-line to jump the the earlier line
+;; stop recording
+(use-package swiper
+  :ensure t
+  :init
+  :bind
+  (("C-s" . swiper)))
+
+;; for ivy-wgrep-change-to-wgrep-mode
+(use-package wgrep
+  :after (swiper))
 
 ;;(use-package helm-bbdb
 ;;  :ensure t
