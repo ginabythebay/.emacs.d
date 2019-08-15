@@ -1337,6 +1337,11 @@ Each entry will have ': ' put in between columns."
   (interactive)
   (my-org-batch-agenda-cld '("court" "hard" "holiday")))
 
+(defun my-org-batch-agenda-cld-jane ()
+  "Print cld compatible schedule information for Jane."
+  (interactive)
+  (my-org-batch-agenda-cld '("jane")))
+
 (defun my-cld-tags-p (req_tags tags)
   "Return true if there are no req_tags or if there is a tag match."
   (let ((tags (concat ":" tags ":")))
