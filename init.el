@@ -275,6 +275,9 @@ the syntax class ')'."
               ("C-o" . 'my-dired-display-file)
               ("C-e" . 'xah-show-in-desktop))
   :config
+  (require "dired-aux")
+  (add-to-list 'dired-compress-file-suffixes
+               '("\\.zip\\'" ".zip" "unzip"))
   (setq dired-dwim-target t)
   (add-hook
    'dired-mode-hook
