@@ -37,9 +37,9 @@
     (w32-browser (car candidates))))
 
 (defun gina-open-case-list ()
-  "Open the case list on Dan's PC."
+  "Open the case list."
   (interactive)
-  (w32-browser "//Dan-PC/Users/Dan/Documents/Case List/Case List (2).doc"))
+  (w32-browser "c:/Users/gina/Documents/Gina/CaseList.doc"))
 
 (defun gina-open-explorer ()
   "Open windows explorer in the director for the buffer."
