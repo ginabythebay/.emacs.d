@@ -361,9 +361,13 @@ Version 2018-09-29"
           (kill-buffer)))
       (setq buffers (cdr buffers))))
   ;; takes care of the case where we are in pdf virtual mode which
-  ;; seems to leave files 'open'
-  (pdf-info-quit)
-  (pdf-info-process-assert-running t))
+  ;; seems to leave files 'open'. We check if the functions are
+  ;; defined first because this function can occasionally be called
+  ;; before the pdf code has been loaded.
+  (when (fboundp 'pdf-info-quit)
+    (pdf-info-quit))
+  (when (fboundp 'pdf-info-process-assert-running)
+    (pdf-info-process-assert-running t)))
 
 (defun my-wdired-finish-edit ()
   "Kill any open pdf view buffers then call ‘wdired-finish-edit’."
