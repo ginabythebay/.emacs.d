@@ -1134,7 +1134,10 @@ Each entry will have ': ' put in between columns."
   :init
   :bind
   (("C-s" . swiper)
-   ("C-c C-r" . ivy-resume)))
+   ("C-c C-r" . ivy-resume))
+  :config
+  (use-package ivy-hydra
+    :ensure t))
 
 ;; for ivy-wgrep-change-to-wgrep-mode
 (use-package wgrep
