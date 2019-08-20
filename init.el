@@ -886,7 +886,7 @@ Inspired by crux-beginning-of-line."
             (lambda ()
               ;; using this for swiper
               (local-unset-key (kbd "C-c C-r"))))
-  
+
   ;; turn off validation goo.  https://stackoverflow.com/a/15145594
   (setq org-html-validation-link nil)
 
