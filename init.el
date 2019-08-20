@@ -882,6 +882,11 @@ Inspired by crux-beginning-of-line."
   (setq org-duration-format (quote h:mm))
   (setq org-clock-mode-line-total 'current)
 
+  (add-hook 'org-mode-hook
+            (lambda ()
+              ;; using this for swiper
+              (local-unset-key (kbd "C-c C-r"))))
+  
   ;; turn off validation goo.  https://stackoverflow.com/a/15145594
   (setq org-html-validation-link nil)
 
@@ -1128,7 +1133,8 @@ Each entry will have ': ' put in between columns."
   :ensure t
   :init
   :bind
-  (("C-s" . swiper)))
+  (("C-s" . swiper)
+   ("C-c C-r" . ivy-resume)))
 
 ;; for ivy-wgrep-change-to-wgrep-mode
 (use-package wgrep
