@@ -1112,6 +1112,16 @@ Each entry will have ': ' put in between columns."
   :config
   (setq bbdb-file "~/bbdb"))
 
+(use-package ivy
+  :ensure t
+  :config
+
+  (setq ivy-use-virtual-buffers t)
+  (setq ivy-count-format "(%d/%d) ")
+
+  (use-package ivy-hydra
+    :ensure t))
+
 ;; Some docs about how to use this...
 ;; See slide 13 of https://www.slideshare.net/kaz_yos/search-and-replacement-techniques-in-emacs-avy-swiper-multiplecursor-ag-and-wgrep
 
@@ -1134,10 +1144,7 @@ Each entry will have ': ' put in between columns."
   :init
   :bind
   (("C-s" . swiper)
-   ("C-c C-r" . ivy-resume))
-  :config
-  (use-package ivy-hydra
-    :ensure t))
+   ("C-c C-r" . ivy-resume)))
 
 ;; for ivy-wgrep-change-to-wgrep-mode
 (use-package wgrep
