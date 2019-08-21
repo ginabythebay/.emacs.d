@@ -41,6 +41,25 @@
   (interactive)
   (w32-browser "c:/Users/gina/Documents/Gina/CaseList.doc"))
 
+(defun gina-refile ()
+  "Open a new frame for filing things."
+  (interactive)
+  (let ((fr (make-frame)))
+    (set-frame-parameter fr 'fullscreen 'maximized)
+    (select-frame-set-input-focus fr))
+
+  (split-window-right)
+
+  (dired "c:/Users/gina/Documents/Downloads")
+  (dired-sort-other "-lt")              ; also refreshes
+  (dired "c:/Users/gina/Documents/Clare Lacy/ScannedDocuments")
+  (dired-sort-other "-lt")              ; also refreshes
+
+  (other-window 1)
+  (dired "c:/Users/gina/Documents/Gina")
+
+  (other-window 1))
+
 (defun gina-open-explorer ()
   "Open windows explorer in the director for the buffer."
   (interactive)
@@ -58,6 +77,7 @@ _d_: toggle debug on error
 _e_: open explorer
 _i_: clock In to recent task
 _l_: open case list
+_r_: refile scans/downloads
 _s_: iSearch forward
 _t_: open Time sheet
 _u_: bury buffer
@@ -70,6 +90,7 @@ _v_: toggle visual line mode
   ("e" gina-open-explorer)
   ("i" gina-clock-in-to-recent-task)
   ("l" gina-open-case-list)
+  ("r" gina-refile)
   ("s" isearch-forward)
   ("t" gina-open-current-timesheet)
   ("u" bury-buffer)
