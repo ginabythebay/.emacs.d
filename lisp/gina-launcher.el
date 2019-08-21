@@ -84,7 +84,7 @@ _u_: bury buffer
 _v_: toggle visual line mode
 "
   ("q" nil)
-  ("b" pop-global-mark)
+  ("b" pop-global-mark :exit nil)
   ("c" org-clock-jump-to-current-clock)
   ("d" toggle-debug-on-error)
   ("e" gina-open-explorer)
