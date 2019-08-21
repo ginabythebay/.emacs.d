@@ -44,9 +44,8 @@
 (defun gina-refile ()
   "Open a new frame for filing things."
   (interactive)
-  (let ((fr (make-frame)))
-    (set-frame-parameter fr 'fullscreen 'maximized)
-    (select-frame-set-input-focus fr))
+  (select-frame-set-input-focus
+   (make-frame `((fullscreen . maximized))))
 
   (split-window-right)
 
