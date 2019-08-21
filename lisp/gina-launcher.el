@@ -66,6 +66,11 @@
   (let ((dir (file-name-directory (buffer-file-name))))
     (w32-shell-execute "explore" (replace-regexp-in-string "/" "\\" dir t t))))
 
+(defun gina-org-jump-to-current-clock ()
+  "Interactive version of 'org-clock-jump-to-current-clock."
+  (interactive)
+  (org-clock-jump-to-current-clock))
+
 (provide 'gina-launcher)
 
 (defhydra gina-launcher-hydra (:hint nil :exit t)
@@ -85,7 +90,7 @@ _v_: toggle visual line mode
 "
   ("q" nil)
   ("b" pop-global-mark :exit nil)
-  ("c" org-clock-jump-to-current-clock)
+  ("c" gina-org-jump-to-current-clock)
   ("d" toggle-debug-on-error)
   ("e" gina-open-explorer)
   ("i" gina-clock-in-to-recent-task)
