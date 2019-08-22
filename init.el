@@ -4,6 +4,8 @@
 ;;; Stuff here
 ;; TODO(gina) enable gocode?  https://github.com/nsf/gocode
 
+(setq gnutls-algorithm-priority "NORMAL:-VERS-TLS1.3")
+
 (setq-default indent-tabs-mode nil)
 
 (setq visible-bell t)
