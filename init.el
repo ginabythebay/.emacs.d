@@ -6,6 +6,8 @@
 
 (setq gnutls-algorithm-priority "NORMAL:-VERS-TLS1.3")
 
+(tool-bar-mode -1)
+
 (setq-default indent-tabs-mode nil)
 
 (setq visible-bell t)
