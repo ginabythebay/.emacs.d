@@ -786,7 +786,7 @@ Inspired by crux-beginning-of-line."
 
 (use-package shell-pop
   :load-path "lisp/shell-pop-el"
-  :ensure nil
+  :ensure t
   :bind
   (("C-t" . shell-pop)))
 
