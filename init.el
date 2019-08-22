@@ -611,7 +611,7 @@ Inspired by crux-beginning-of-line."
   :ensure t
   :diminish eldoc-mode)
 
-(use-package lispy
+(use-package lispy
   :ensure t
   :diminish lispy-mode
   :commands (lispy-mode)
