@@ -4,6 +4,10 @@
 ;;; Stuff here
 ;; TODO(gina) enable gocode?  https://github.com/nsf/gocode
 
+(setq gnutls-algorithm-priority "NORMAL:-VERS-TLS1.3")
+
+(tool-bar-mode -1)
+
 (setq-default indent-tabs-mode nil)
 
 (setq visible-bell t)
@@ -611,7 +615,7 @@ Inspired by crux-beginning-of-line."
   :ensure t
   :diminish eldoc-mode)
 
-(use-package lispy
+(use-package lispy
   :ensure t
   :diminish lispy-mode
   :commands (lispy-mode)
@@ -784,7 +788,7 @@ Inspired by crux-beginning-of-line."
 
 (use-package shell-pop
   :load-path "lisp/shell-pop-el"
-  :ensure nil
+  :ensure t
   :bind
   (("C-t" . shell-pop)))
 
