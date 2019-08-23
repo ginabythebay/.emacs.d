@@ -916,6 +916,7 @@ Inspired by crux-beginning-of-line."
           ("c" "Schedule court deadline in current buffer" entry (file+olp+datetree buffer-file-name "Court deadlines")
            "** %? " :time-prompt t)))
 
+  (setq org-agenda-window-setup 'current-window)
   (setq org-agenda-span 'day)
   (setq org-agenda-show-all-dates nil)
   (setq org-agenda-show-future-repeats (quote next))
