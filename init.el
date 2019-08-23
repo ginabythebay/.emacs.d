@@ -1114,6 +1114,7 @@ Each entry will have ': ' put in between columns."
 (use-package notmuch
   :ensure t
   :config
+  (setq notmuch-search-oldest-first nil)
   (add-hook 'notmuch-show-mode-hook (lambda () (setq show-trailing-whitespace nil))))
 
 ;; See http://emacs-fu.blogspot.com/2009/08/managing-e-mail-addresses-with-bbdb.html for further notes
