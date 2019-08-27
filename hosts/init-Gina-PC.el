@@ -40,6 +40,13 @@ make it easier to fix."
 
 (require 'dired)
 
+(when (string= system-type "gnu/linux")
+  (use-package w3m
+    :ensure t
+    :config
+    (setq browse-url-generic-program (executable-find "w3m")
+          browse-url-browser-function 'w3m)))
+
 (use-package w32-browser
   :ensure t
   :bind (:map dired-mode-map
