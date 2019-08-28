@@ -62,8 +62,11 @@
 (defun gina-open-explorer ()
   "Open windows explorer in the director for the buffer."
   (interactive)
-  (let ((dir (file-name-directory (buffer-file-name))))
-    (w32-shell-execute "explore" (replace-regexp-in-string "/" "\\" dir t t))))
+  (if (eq major-mode 'dired-mode)
+      (xah-show-in-desktop)
+    (let ((dir (file-name-directory (buffer-file-name))))
+      (w32-shell-execute "explore"
+                         (replace-regexp-in-string "/" "\\" dir t t)))))
 
 (defun gina-org-jump-to-current-clock ()
   "Interactive version of 'org-clock-jump-to-current-clock."

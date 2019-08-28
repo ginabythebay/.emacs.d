@@ -276,8 +276,7 @@ the syntax class ')'."
     (call-interactively 'shell-pop))
   :bind (:map dired-mode-map
               ("C-t" . my-shell-pop)
-              ("C-o" . 'my-dired-display-file)
-              ("C-e" . 'xah-show-in-desktop))
+              ("C-o" . 'my-dired-display-file))
   :config
   (require 'dired-aux)
   (add-to-list 'dired-compress-file-suffixes
