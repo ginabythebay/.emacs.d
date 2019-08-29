@@ -612,7 +612,9 @@ Inspired by crux-beginning-of-line."
 
 (use-package eldoc
   :ensure t
-  :diminish eldoc-mode)
+  :diminish eldoc-mode
+  :config
+  (global-eldoc-mode))
 
 (use-package lispy
   :ensure t
