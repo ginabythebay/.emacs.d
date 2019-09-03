@@ -58,24 +58,31 @@ make it easier to fix."
   "Return the current Win idle time in seconds."
   (/ (string-to-number (shell-command-to-string "C:/msys64/home/gina/bin/winidle.exe")) 1000))
 
+(defvar my-doc-dir
+  (if (string= system-type "gnu/linux")
+      "/mnt/c/Users/gina/Documents/Gina/"
+    "c:/Users/gina/Documents/Gina/"))
+
+(require 'org)
 (setq org-agenda-files
-      (quote
-       ("c:/Users/gina/Documents/Gina/Alsayyad/Alsayyad notes.org"
-        "c:/Users/gina/Documents/Gina/Armstrong Temple/Armstrongtemple notes.org"
-        "c:/Users/gina/Documents/Gina/Gamino/Gamino notes.org"
-        "c:/Users/gina/Documents/Gina/Gantt/Gantt Notes.org"
-        "c:/Users/gina/Documents/Gina/Eid/Eid Notes.org"
-        "c:/Users/gina/Documents/Gina/Horn/Horn notes.org"
-        "c:/Users/gina/Documents/Gina/Mangano/Mangano notes.org"
-        "c:/Users/gina/Documents/Gina/Marin/Marin notes.org"
-        "c:/Users/gina/Documents/Gina/Nevitt/Nevitt notes.org"
-        "c:/Users/gina/Documents/Gina/Stec/Stec notes.org"
-        "c:/Users/gina/Documents/Gina/Sullivan/Sullivan notes.org"
-        "c:/Users/gina/Documents/Gina/Overall notes.org"
-        "c:/Users/gina/Documents/Gina/rojas/Rojas notes.org"
-        "c:/Users/gina/Documents/Gina/saw.org"
-        "c:/Users/gina/Documents/Gina/Smith/Smith notes.org"
-        "c:/Users/gina/Documents/Gina/Williams/Williams notes.org")))
+      (mapcar
+       (lambda (r) (concat my-doc-dir r))
+       (quote ("Alsayyad/Alsayyad notes.org"
+               "Armstrong Temple/Armstrongtemple notes.org"
+               "Gamino/Gamino notes.org"
+               "Gantt/Gantt Notes.org"
+               "Eid/Eid Notes.org"
+               "Horn/Horn notes.org"
+               "Mangano/Mangano notes.org"
+               "Marin/Marin notes.org"
+               "Nevitt/Nevitt notes.org"
+               "Stec/Stec notes.org"
+               "Sullivan/Sullivan notes.org"
+               "Overall notes.org"
+               "rojas/Rojas notes.org"
+               "saw.org"
+               "Smith/Smith notes.org"
+               "Williams/Williams notes.org"))))
 
 (provide 'init-Gina-PC)
 ;;; init-Gina-PC.el ends here
