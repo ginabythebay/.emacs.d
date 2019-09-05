@@ -860,7 +860,8 @@ Inspired by crux-beginning-of-line."
                               (not (string-suffix-p ".pdf" filename t))))
 
   ;; automatically annotate highlights
-  (setq pdf-annot-activate-created-annotations t)
+  (setq pdf-annot-activate-created-annotations t
+        pdf-view-resize-factor 1.1)
   ;; open pdfs scaled to fit page
   (add-hook 'pdf-view-mode-hook (lambda () (pdf-view-fit-page-to-window)))
   ;; swiper doesn't work with pdfs
