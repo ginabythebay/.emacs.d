@@ -1121,6 +1121,8 @@ Each entry will have ': ' put in between columns."
   :ensure t
   :config
   (setq notmuch-search-oldest-first nil)
+  (when (not (string= system-type "gnu/linux"))
+    (setq notmuch-command "~/bin/notmuch-remote.sh"))
   (add-hook 'notmuch-show-mode-hook (lambda () (setq show-trailing-whitespace nil))))
 
 ;; See http://emacs-fu.blogspot.com/2009/08/managing-e-mail-addresses-with-bbdb.html for further notes
