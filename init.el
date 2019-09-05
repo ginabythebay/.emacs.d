@@ -669,6 +669,18 @@ Inspired by crux-beginning-of-line."
     :ensure t
     :config (add-hook 'js-mode-hook 'flymake-json-maybe-load)))
 
+;; https://emacs.stackexchange.com/a/336/767
+(setq compilation-finish-function
+      (lambda (buf str)
+        (if (null (string-match ".*exited abnormally.*" str))
+            ;;no errors, make the compilation window go away in a few seconds
+            (progn
+              (run-at-time
+               "2 sec" nil 'delete-windows-on
+               (get-buffer-create "*compilation*"))
+              (message "No Compilation Errors!")))))
+
+
 ;; BEGIN GO CONFIGURATION
 
 (use-package company-go
