@@ -680,7 +680,6 @@ Inspired by crux-beginning-of-line."
                (get-buffer-create "*compilation*"))
               (message "No Compilation Errors!")))))
 
-
 ;; BEGIN GO CONFIGURATION
 
 (use-package company-go
