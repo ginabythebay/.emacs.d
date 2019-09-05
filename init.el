@@ -236,7 +236,11 @@ the syntax class ')'."
   :config
   (deftheme solarized-dark "The dark variant of the Solarized colour theme")
   (create-solarized-theme 'dark 'solarized-dark)
-  (provide-theme 'solarized-dark))
+  (provide-theme 'solarized-dark)
+
+  (when (string= system-type "gnu/linux")
+    (set-face-background 'mode-line "red")
+    (set-face-background 'mode-line-inactive "brown")))
 
 ;; Project management.
 (use-package projectile
