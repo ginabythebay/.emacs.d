@@ -24,6 +24,9 @@
   (interactive)
   (save-restriction
     (let* ((scope (plist-get params :scope))
+           (linkify (if (plist-member params :linkify)
+                        (plist-get params :linkify)
+                      t))
            (files (pcase scope
 		    (`agenda
 		     (org-agenda-files t))
@@ -63,14 +66,14 @@
                           level)
                   (throw 'exit nil))))
             (org-narrow-to-subtree))))
-        (setq table (ile-clock--clockview-to-table files range))
+        (setq table (ile-clock--clockview-to-table files range linkify))
 	(widen))
 	(setq pos (point))
 	(insert table) (org-cycle) (move-end-of-line 1)
 	(goto-char pos)
 	(org-table-recalculate 'all))))
 
-(defun ile-clock--clockview-to-table (files range)
+(defun ile-clock--clockview-to-table (files range linkify)
   "Return a table as a string based on FILES and RANGE.
 
 FILES can be a list of file names or a single file name.  If it
@@ -79,16 +82,18 @@ is not specified, the current file will be used.
 RANGE specifies the start time and end time to include in float
 time.  We expect a list where the car is start time and the cadr
 is the end time, as returned by `org-clock-special-range'.  If not
-specified, we will include all entries."
+specified, we will include all entries.
+
+LINKIFY means we create links for tasks if t."
   (string-join
    (apply #'list
           (format "|%s|" (string-join (ile-clock--listify) "|"))
           "|---"
-          (cl-loop for e in (ile-clock-entries files range)
+          (cl-loop for e in (ile-clock-entries files range linkify)
                    collect (format "|%s|" (string-join (ile-clock--listify e) "|"))))
    "\n"))
 
-(defun ile-clock-entries (&optional files range)
+(defun ile-clock-entries (&optional files range linkify)
   "Get clock entries for the current buffer.
 
 FILES can be a list of file names or a single file name.  If it
@@ -97,7 +102,9 @@ is not specified, the current file will be used.
 RANGE specifies the start time and end time to include in float
 time.  We expect a list where the car is start time and the cadr
 is the end time, as returned by `org-clock-special-range'.  If not
-specified, we will include all entries."
+specified, we will include all entries.
+
+LINKIFY means we create links for tasks if t."
   (setq files (cond
                ((stringp files) (list files))
                ((not files) nil)
@@ -118,7 +125,7 @@ specified, we will include all entries."
                      (rend (if range
                                (float-time (cadr range))
                              (float-time (current-time))))
-                     (parser (lambda (e) (ile-clock--parse-clock rstart rend e))))
+                     (parser (lambda (e) (ile-clock--parse-clock rstart rend e linkify))))
                 ;; list with one entry per task/date, with times summed up
                 (cl-loop for e in
                          ;; alist where entries are grouped by task and date
@@ -152,11 +159,13 @@ and RSTART and REND are float times."
                 (apply #'encode-time (org-parse-time-string (cadr tokens))))))
     (and (<= rstart tstart) (<= tend rend))))
 
-(defun ile-clock--parse-clock (rstart rend element)
+(defun ile-clock--parse-clock (rstart rend element linkify)
   "Ingest clock ELEMENT and produces a plist of its relevant properties.
 
 RSTART and REND represent a range of times and we only return clock entries
-that overlap with that range."
+that overlap with that range.
+
+LINKIFY means we create links for tasks if t."
   (when (and (equal (org-element-type element) 'clock)
              ;; Only ingest closed, inactive clock elements.
              (equal (org-element-property :status element) 'closed)
@@ -172,8 +181,10 @@ that overlap with that range."
                       (org-element-property :month-end timestamp)
                       (org-element-property :day-end timestamp)))
            (task (org-element-property :raw-value (org-element-lineage element '(headline))))
-           (link (org-link-escape (concat "file:" (buffer-file-name) "::*" task)))
-           (task (concat "\[\[" link "\]\[" task "\]\]")))
+           (task (if linkify
+                     (let ((link (org-link-escape (concat "file:" (buffer-file-name) "::*" task))))
+                       (concat "\[\[" link "\]\[" task "\]\]"))
+                   task)))
 
       (unless (equal start end)
         (user-error
