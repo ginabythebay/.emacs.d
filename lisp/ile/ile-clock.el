@@ -42,11 +42,29 @@
            (block (plist-get params :block))
            (range (org-clock-special-range block))
 	   table pos)
-	(save-excursion
-	  (org-narrow-to-subtree)
-          (setq table "|foo|bar|")
-          (setq table (ile-clock--clockview-to-table files range))
-	  (widen))
+      (save-excursion
+        ;; match restriction to scope
+        (cond
+         ((not scope))	     ;use the restriction as it is now
+         ((eq scope 'file) (widen))
+         ((eq scope 'subtree) (org-narrow-to-subtree))
+         ((eq scope 'tree)
+          (while (org-up-heading-safe))
+          (org-narrow-to-subtree))
+         ((and (symbolp scope)
+               (string-match "\\`tree\\([0-9]+\\)\\'"
+                             (symbol-name scope)))
+          (let ((level (string-to-number
+                        (match-string 1 (symbol-name scope)))))
+            (catch 'exit
+              (while (org-up-heading-safe)
+                (looking-at org-outline-regexp)
+                (when (<= (org-reduced-level (funcall outline-level))
+                          level)
+                  (throw 'exit nil))))
+            (org-narrow-to-subtree))))
+        (setq table (ile-clock--clockview-to-table files range))
+	(widen))
 	(setq pos (point))
 	(insert table) (org-cycle) (move-end-of-line 1)
 	(goto-char pos)
