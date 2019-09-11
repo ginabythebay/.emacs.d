@@ -1,4 +1,5 @@
 lisp/NUL
+.#recentf
 forge-database.sqlite
 .cask/
 elpa/
