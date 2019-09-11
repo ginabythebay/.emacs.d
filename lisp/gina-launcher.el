@@ -64,7 +64,7 @@
   (interactive)
   (if (eq major-mode 'dired-mode)
       (xah-show-in-desktop)
-    (let ((dir (file-name-directory (buffer-file-name))))
+    (let ((dir (file-name-directory (buffer-file-name (buffer-base-buffer)))))
       (w32-shell-execute "explore"
                          (replace-regexp-in-string "/" "\\" dir t t)))))
 
