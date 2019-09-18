@@ -1100,11 +1100,20 @@ Each entry will have ': ' put in between columns."
          '(bates ile-company ile-discovery ile ile-link ile-navigation
                  ile-note-view ile-org-noter ile-pdf ile-clock))
       (require pkg))
+
+    (defun my-pdf-annotate (list-of-edges)
+      "Underline and hightlight."
+      (interactive (list (pdf-view-active-region t)))
+      (let ((pdf-annot-activate-created-annotations nil))
+        (pdf-annot-add-markup-annotation list-of-edges 'underline "#000000" nil)
+        (pdf-annot-add-markup-annotation list-of-edges 'highlight))
+
     ;; We avoid using :bind because that would force pdf-tools to
     ;; load before we might need it and it is slow
     (bind-keys :package pdf-tools :map pdf-view-mode-map
                ("e" . ile-pdf-extract-pages)
-               ("b" . ile-jump-bates-number))
+               ("b" . ile-jump-bates-number)
+               ("d" . my-pdf-annotate))
 
     (add-hook 'org-mode-hook 'ile-mode)
 
