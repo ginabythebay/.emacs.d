@@ -873,8 +873,8 @@ Inspired by crux-beginning-of-line."
   ;; automatically annotate highlights
   (setq pdf-annot-activate-created-annotations t
         pdf-view-resize-factor 1.1)
-  ;; open pdfs scaled to fit page
-  (add-hook 'pdf-view-mode-hook (lambda () (pdf-view-fit-page-to-window)))
+  (setq-default pdf-view-display-size 'fit-page)
+
   ;; swiper doesn't work with pdfs
   (define-key pdf-view-mode-map (kbd "C-s") #'isearch-forward)
   (define-key pdf-view-mode-map (kbd "G") #'pdf-view-last-page)
