@@ -3,7 +3,6 @@
 ;;; Commentary:
 ;;; Stuff here
 ;; TODO(gina) enable gocode?  https://github.com/nsf/gocode
-
 (setq gnutls-algorithm-priority "NORMAL:-VERS-TLS1.3")
 
 (tool-bar-mode -1)
@@ -1108,34 +1107,33 @@ Each entry will have ': ' put in between columns."
         (pdf-annot-add-markup-annotation list-of-edges 'underline "#000000" nil)
         (pdf-annot-add-markup-annotation list-of-edges 'highlight))
 
-    ;; We avoid using :bind because that would force pdf-tools to
-    ;; load before we might need it and it is slow
-    (bind-keys :package pdf-tools :map pdf-view-mode-map
-               ("e" . ile-pdf-extract-pages)
-               ("b" . ile-jump-bates-number)
-               ("d" . my-pdf-annotate))
+      ;; We avoid using :bind because that would force pdf-tools to
+      ;; load before we might need it and it is slow
+      (bind-keys :package pdf-tools :map pdf-view-mode-map
+                 ("e" . ile-pdf-extract-pages)
+                 ("b" . ile-jump-bates-number)
+                 ("d" . my-pdf-annotate))
 
-    (add-hook 'org-mode-hook 'ile-mode)
+      (add-hook 'org-mode-hook 'ile-mode)
 
-    (add-hook 'ile-mode-hook
-              (lambda ()
-                (require 'ile-company)
-                (set (make-local-variable 'company-backends)
-                     (list (list #'company-dabbrev
-                                 #'ile-company-pdf-dictionary
-                                 :with #'company-yasnippet))))))
+      (add-hook 'ile-mode-hook
+                (lambda ()
+                  (require 'ile-company)
+                  (set (make-local-variable 'company-backends)
+                       (list (list #'company-dabbrev
+                                   #'ile-company-pdf-dictionary
+                                   :with #'company-yasnippet))))))
 
-  (add-hook 'org-mode-hook #'flyspell-mode)
-  (add-hook 'org-mode-hook #'auto-fill-mode)
-  (add-hook 'org-mode-hook (lambda () (require 'org-override)))
-
+    (add-hook 'org-mode-hook #'flyspell-mode)
+    (add-hook 'org-mode-hook #'auto-fill-mode)
+    (add-hook 'org-mode-hook (lambda () (require 'org-override))))
   (use-package ox-clip
-    :ensure t))
+    :ensure t)
 
-(use-package org-collector
-  :load-path "lisp"
-  :after (org)
-  :ensure nil)
+  (use-package org-collector
+    :load-path "lisp"
+    :after (org)
+    :ensure nil))
 
 (use-package notmuch
   :ensure t
@@ -1343,7 +1341,6 @@ Each entry will have ': ' put in between columns."
 
 (delete-selection-mode t)
 (setq column-number-mode t)  ;; put line number in mode line.
-
 
 ; from
 ; https://emacs.stackexchange.com/questions/16640/can-i-export-a-specific-table-in-an-org-file-to-csv-from-the-command-line
