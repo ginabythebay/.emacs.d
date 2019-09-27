@@ -1367,7 +1367,10 @@ Each entry will have ': ' put in between columns."
 (defun my-subtree-export ()
   "Export the current subtree."
   (interactive)
-  (org-html-export-to-html nil t))
+  (w32-browser
+   (subst-char-in-string
+    ?/ ?\\
+    (org-html-export-to-html nil t))))
 
 ;; see http://emacsredux.com/blog/2013/03/27/copy-filename-to-the-clipboard/
 (defun my-copy-file-name-to-clipboard ()
