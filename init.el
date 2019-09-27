@@ -1665,6 +1665,10 @@ End."
 
 
 
+(put 'downcase-region 'disabled nil)
+(put 'upcase-region 'disabled nil)
+(put 'narrow-to-region 'disabled nil)
+
 (provide 'init)
 ;;; init.el ends here
 
@@ -1687,7 +1691,3 @@ End."
 ;; ;;key to launch deft
 ;; (global-set-key (kbd "C-c d") 'deft)
 
-
-(put 'downcase-region 'disabled nil)
-(put 'upcase-region 'disabled nil)
-(put 'narrow-to-region 'disabled nil)
