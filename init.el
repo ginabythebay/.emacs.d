@@ -234,12 +234,12 @@ the syntax class ')'."
   :ensure t
   :config
   (deftheme solarized-dark "The dark variant of the Solarized colour theme")
-  (create-solarized-theme 'dark 'solarized-dark)
-  (provide-theme 'solarized-dark)
+  (load-theme 'solarized-dark t)
 
-  (when (string= system-type "gnu/linux")
-    (set-face-background 'mode-line "red")
-    (set-face-background 'mode-line-inactive "brown")))
+  ;; (when (string= system-type "gnu/linux")
+  ;;   (set-face-background 'mode-line "red")
+  ;;   (set-face-background 'mode-line-inactive "brown"))
+  )
 
 ;; Project management.
 (use-package projectile
@@ -347,6 +347,8 @@ Version 2018-09-29"
       ;; (shell-command "xdg-open .") ;; 2013-02-10 this sometimes froze emacs till the folder is closed. eg with nautilus
       ))))
 
+(use-package bufler
+  :ensure t)
 
 (use-package ibuffer-projectile
   :ensure t
@@ -911,6 +913,13 @@ Inspired by crux-beginning-of-line."
   (setq org-html-validation-link nil)
 
   (setq org-reverse-note-order t)
+
+  (setq org-agenda-files '("/home/gina/syb/Gantt/Gantt Notes.org"
+                           "/home/gina/syb/Alsayyad/Alsayyad notes.org"
+                           "/home/gina/syb/Eid/Eid notes.org"
+                           "/home/gina/syb/Armstrong Temple/armstrongtemple notes.org"
+                           "/home/gina/syb/Marin/marin notes.org"))
+
 
   (setq org-default-notes-file "c:/Users/gina/Documents/Gina/overall notes.org")
 
