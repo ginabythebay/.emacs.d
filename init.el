@@ -132,7 +132,6 @@ the syntax class ')'."
 (setq package-enable-at-startup nil)
 (setq package-archives
         '(("melpa" . "http://melpa.org/packages/")
-          ("melpa-stable" . "http://stable.melpa.org/packages/")
           ("org" . "https://orgmode.org/elpa/")))
 (setq package-archive-priorities
       '(("melpa-stable" . 20)
@@ -1160,6 +1159,20 @@ Each entry will have ': ' put in between columns."
     :load-path "lisp"
     :after (org)
     :ensure nil))
+
+(use-package org-roam
+      :ensure t
+      :hook
+      (after-init . org-roam-mode)
+      :custom
+      (org-roam-directory "/home/gina/Source/278")
+      :bind (:map org-roam-mode-map
+              (("C-c n l" . org-roam)
+               ("C-c n f" . org-roam-find-file)
+               ("C-c n g" . org-roam-graph))
+              :map org-mode-map
+              (("C-c n i" . org-roam-insert))
+              (("C-c n I" . org-roam-insert-immediate))))
 
 (use-package notmuch
   :ensure t
