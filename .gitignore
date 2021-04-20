@@ -4,6 +4,7 @@ forge-database.sqlite
 .cask/
 elpa/
 .org-id-locations
+org-roam.db
 projectile.cache
 ac-comphist.dat
 custom.el
