@@ -1177,11 +1177,11 @@ Each entry will have ': ' put in between columns."
   (setq org-roam-dailies-directory "daily/")
 
   (setq org-roam-dailies-capture-templates
-        '(("d" "default" entry
+        '(("d" "default" plain
            #'org-roam-capture--get-point
-           " -  %?"
+           " - %?"
            :file-name "daily/%<%Y-%m-%d>"
-           :head "#+title: %<%Y-%m-%d>\n\n* Accomplished\n"))))
+           :head "#+title: %<%Y-%m-%d>\n\n* Accomplished\n\n"))))
 
 (use-package notmuch
   :ensure t
