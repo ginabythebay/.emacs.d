@@ -1179,9 +1179,9 @@ Each entry will have ': ' put in between columns."
   (setq org-roam-dailies-capture-templates
         '(("d" "default" entry
            #'org-roam-capture--get-point
-           "* %?"
+           " -  %?"
            :file-name "daily/%<%Y-%m-%d>"
-           :head "#+title: %<%Y-%m-%d>\n\n"))))
+           :head "#+title: %<%Y-%m-%d>\n\n* Accomplished\n"))))
 
 (use-package notmuch
   :ensure t
