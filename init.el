@@ -882,23 +882,6 @@ Inspired by crux-beginning-of-line."
 
 (use-package htmlize)
 
-(use-package twittering-mode
-  :load-path "lisp/twittering-mode"
-  :config
-  (setq twittering-icon-mode t)
-  (setq twittering-use-icon-storage t)
-  (add-hook 'twittering-mode-hook (lambda () (setq show-trailing-whitespace nil)))
-
-  (defun gw-twittering-visit-single-timeline ()
-    (interactive)
-    (let ((id (get-text-property (point) 'id)))
-      (cond
-       ((not (stringp id))
-        nil)
-       (t
-        (twittering-visit-timeline (concat ":single/" id))
-        id)))))
-
 (use-package org
   :ensure t
   :preface
