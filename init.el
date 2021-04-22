@@ -913,7 +913,6 @@ Inspired by crux-beginning-of-line."
    ("C-x l" . org-refile-goto-last-stored)
    ("C-c l" . org-store-link)
    ("C-c a" . org-agenda)
-   ("C-c c" . org-capture)
    ("C-c b" . org-switchb))
   :config
   ;; see https://stackoverflow.com/questions/22720526/set-clock-table-duration-format-for-emacs-org-mode
