@@ -1148,23 +1148,26 @@ Each entry will have ': ' put in between columns."
   (after-init . org-roam-mode)
   :custom
   (org-roam-directory "/home/gina/Source/278")
-  :bind (("C-c c" . org-roam-dailies-capture-today)
-         :map org-roam-mode-map
-         ("C-c n l" . org-roam)
-         ("C-c n f" . org-roam-find-file)
-         ("C-c n g" . org-roam-graph)
-         :map org-mode-map
-         ("C-c n i" . org-roam-insert)
-         ("C-c n I" . org-roam-insert-immediate)))
+  (org-roam-dailies-directory "daily/")
 
-  (setq org-roam-dailies-directory "daily/")
+  (org-roam-dailies-capture-templates
+   '(("d" "default" plain
+      #'org-roam-capture--get-point
+      " - %?"
+      :file-name "daily/%<%Y-%m-%d>"
+      :head "#+title: %<%Y-%m-%d>\n\n* Accomplished\n\n")))
 
-  (setq org-roam-dailies-capture-templates
-        '(("d" "default" plain
-           #'org-roam-capture--get-point
-           " - %?"
-           :file-name "daily/%<%Y-%m-%d>"
-           :head "#+title: %<%Y-%m-%d>\n\n* Accomplished\n\n"))))
+  ;; :commands org-roam-dailies-capture-today
+  ;; :init
+  ;; (bind-key "C-c c" . 'org-roam-dailies-capture-today)
+  :bind (("C-c c" . 'org-roam-dailies-capture-today)
+          :map org-roam-mode-map
+          ("C-c n l" . org-roam)
+          ("C-c n f" . org-roam-find-file)
+          ("C-c n g" . org-roam-graph)
+          :map org-mode-map
+          ("C-c n i" . org-roam-insert)
+          ("C-c n I" . org-roam-insert-immediate)))
 
 (use-package notmuch
   :ensure t
