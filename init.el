@@ -1144,6 +1144,8 @@ Each entry will have ': ' put in between columns."
 
 (use-package org-roam
   :ensure t
+  :config
+  (require 'org-roam-protocol)
   :hook
   (after-init . org-roam-mode)
   :custom
@@ -1161,13 +1163,13 @@ Each entry will have ': ' put in between columns."
   ;; :init
   ;; (bind-key "C-c c" . 'org-roam-dailies-capture-today)
   :bind (("C-c c" . 'org-roam-dailies-capture-today)
-          :map org-roam-mode-map
-          ("C-c n l" . org-roam)
-          ("C-c n f" . org-roam-find-file)
-          ("C-c n g" . org-roam-graph)
-          :map org-mode-map
-          ("C-c n i" . org-roam-insert)
-          ("C-c n I" . org-roam-insert-immediate)))
+         :map org-roam-mode-map
+         ("C-c n l" . org-roam)
+         ("C-c n f" . org-roam-find-file)
+         ("C-c n g" . org-roam-graph)
+         :map org-mode-map
+         ("C-c n i" . org-roam-insert)
+         ("C-c n I" . org-roam-insert-immediate)))
 
 (use-package notmuch
   :ensure t
