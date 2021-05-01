@@ -30,8 +30,11 @@
   (interactive)
   (dired "~/scan")
   (bury-buffer)
+
   (gina-open-shell-quietly "/sys")
-  (gina-open-shell-quietly "/scratch"))
+  (gina-open-shell-quietly "/scratch")
+
+  (message "default buffers opened"))
 
   (defun gina-refile ()
     "Open a new frame for filing things."
