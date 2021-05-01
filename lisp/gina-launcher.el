@@ -18,11 +18,6 @@
 (when (string= system-type "windows-nt")
   (require 'w32-browser))
 
-(defun gina-clock-in-to-recent-task ()
-  "Prompt the user for a recent task and clock in to it."
-  (interactive)
-  (org-clock-in '(4)))
-
 (defun gina-refile ()
   "Open a new frame for filing things."
   (interactive)
@@ -41,31 +36,21 @@
 
   (other-window 1))
 
-(defun gina-org-jump-to-current-clock ()
-  "Interactive version of 'org-clock-jump-to-current-clock."
-  (interactive)
-  (org-clock-jump-to-current-clock))
-
 (provide 'gina-launcher)
 
 (defhydra gina-launcher-hydra (:hint nil :exit t)
   "
 (quit with _q_)
 _b_: back (pop global mark)
-_c_: jump to Current clock
 _d_: toggle debug on error
-_i_: clock In to recent task
-_r_: refile scans/downloads
 _s_: iSearch forward
 _u_: bury buffer
 _v_: toggle visual line mode
 "
   ("q" nil)
   ("b" pop-global-mark :exit nil)
-  ("c" gina-org-jump-to-current-clock)
   ("d" toggle-debug-on-error)
   ("i" gina-clock-in-to-recent-task)
-  ("r" gina-refile)
   ("s" isearch-forward)
   ("u" bury-buffer)
   ("v" visual-line-mode))
