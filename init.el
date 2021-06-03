@@ -63,11 +63,13 @@
 (winner-mode 1)
 
 
-;; enable gpg encryption
-;; see https://stackoverflow.com/questions/41741477/emacs-epa-and-gnupg2-no-usable-configuration?rq=1
-(require 'epa-file)
-(custom-set-variables '(epg-gpg-program (executable-find "gpg")))
-(epa-file-enable)
+(if (eq system-type 'gnu/linux)
+    (progn
+      ;; enable gpg encryption
+      ;; see https://stackoverflow.com/questions/41741477/emacs-epa-and-gnupg2-no-usable-configuration?rq=1
+      (require 'epa-file)
+      (custom-set-variables '(epg-gpg-program (executable-find "gpg")))
+      (epa-file-enable)))
 
 (defun my-set-font-if-installed (font)
   "If FONT is found, then set it."
@@ -129,14 +131,12 @@ the syntax class ')'."
 (require 're-builder)
 
 (require 'package)
-(setq package-enable-at-startup nil)
-(setq package-archives
-        '(("melpa" . "http://melpa.org/packages/")
-          ("org" . "https://orgmode.org/elpa/")))
-(setq package-archive-priorities
-      '(("melpa-stable" . 20)
-        ("gnu" . 10)
-        ("melpa" . 0)))
+;;(setq package-enable-at-startup nil)
+
+(add-to-list 'package-archives
+             '("melpa" . "https://melpa.org/packages/") t)
+(add-to-list 'package-archives
+             '("org" . "https://orgmode.org/elpa/") t)
 (setq package-menu-hide-low-priority t)
 (package-initialize)
 
@@ -912,11 +912,11 @@ Inspired by crux-beginning-of-line."
 
   (setq org-reverse-note-order t)
 
-  (setq org-agenda-files '("/home/gina/syb/Gantt/Gantt Notes.org"
-                           "/home/gina/syb/Alsayyad/Alsayyad notes.org"
-                           "/home/gina/syb/Eid/Eid notes.org"
-                           "/home/gina/syb/Armstrong Temple/armstrongtemple notes.org"
-                           "/home/gina/syb/Marin/marin notes.org"))
+  (setq org-agenda-files '("~/syb/Gantt/Gantt Notes.org"
+                           "~/syb/Alsayyad/Alsayyad notes.org"
+                           "~/syb/Eid/Eid notes.org"
+                           "~/syb/Armstrong Temple/armstrongtemple notes.org"
+                           "~/syb/Marin/marin notes.org"))
 
 
   (setq org-default-notes-file "c:/Users/gina/Documents/Gina/overall notes.org")
@@ -1149,7 +1149,7 @@ Each entry will have ': ' put in between columns."
   :hook
   (after-init . org-roam-mode)
   :custom
-  (org-roam-directory "/home/gina/Source/278")
+  (org-roam-directory "~/Source/278")
   (org-roam-dailies-directory "daily/")
 
   (org-roam-dailies-capture-templates
@@ -1722,7 +1722,7 @@ End."
 ;; (autoload 'gtags-mode "gtags" "" t)
 ;;
 ;; (require 'deft)
-;; (setq deft-directory "/home/gina/docs/deft")
+;; (setq deft-directory "~/docs/deft")
 ;; (setq deft-extension "org")
 ;; (setq deft-text-mode 'org-mode)
 ;; (setq deft-use-filename-as-title t)
