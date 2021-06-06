@@ -28,8 +28,9 @@
 (defun gina-open-default-buffers ()
   "Open some default buffers I usually want."
   (interactive)
-  (dired "~/scan")
-  (bury-buffer)
+  (when (file-directory-p "~/scan")
+    (dired "~/scan")
+    (bury-buffer))
 
   (gina-open-shell-quietly "/sys")
   (gina-open-shell-quietly "/scratch")
