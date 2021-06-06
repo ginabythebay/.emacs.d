@@ -32,6 +32,10 @@
     (dired "~/scan")
     (bury-buffer))
 
+  (when (file-directory-p "~/Source/278")
+    (dired "~/Source/278")
+    (bury-buffer))
+
   (gina-open-shell-quietly "/sys")
   (gina-open-shell-quietly "/scratch")
 
