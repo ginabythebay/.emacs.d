@@ -153,6 +153,13 @@ the syntax class ')'."
   ;; To disable collection of benchmark data after init is done.
   (add-hook 'after-init-hook 'benchmark-init/deactivate))
 
+
+;; See https://tsdh.org/posts/2021-06-06-update-all-emacs-packages-from-the-command-line.html
+(use-package auto-package-update
+  :ensure t
+  :config
+  (setq auto-package-update-delete-old-versions t))
+
 (use-package diminish
   :ensure t
   :config
