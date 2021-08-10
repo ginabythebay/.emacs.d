@@ -346,9 +346,6 @@ Version 2018-09-29"
       ;; (shell-command "xdg-open .") ;; 2013-02-10 this sometimes froze emacs till the folder is closed. eg with nautilus
       ))))
 
-(use-package bufler
-  :ensure t)
-
 (use-package ibuffer-projectile
   :ensure t
   :config
@@ -1146,8 +1143,8 @@ Each entry will have ': ' put in between columns."
   :ensure t
   :init
   (setq org-roam-v2-ack t)
-  (org-roam-setup)
   :config
+  (org-roam-setup)
   (require 'org-roam-protocol)
   :hook
   (after-init . org-roam-mode)
