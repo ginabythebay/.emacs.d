@@ -1151,6 +1151,8 @@ Each entry will have ': ' put in between columns."
 
 (use-package org-roam
   :ensure t
+  :init
+  (setq org-roam-v2-ack t)
   :config
   (require 'org-roam-protocol)
   :hook
