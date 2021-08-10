@@ -11,6 +11,7 @@ custom.el
 *~
 projectile-bookmarks.eld
 .mc-lists.el
+.last-package-update-day
 anaconda-mode/*
 bookmarks
 server
