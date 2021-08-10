@@ -25,6 +25,13 @@
       (shell buffer-name)
       (bury-buffer))))
 
+(buffer-name)
+(defun gina-find-file-quietly (file-name)
+  "If a shell with FILE-NAME doesn't exist, opens it with now window."
+  (unless (get-file-buffer file-name)
+      (find-file file-name)
+      (bury-buffer)))
+
 (defun gina-open-default-buffers ()
   "Open some default buffers I usually want."
   (interactive)
@@ -33,6 +40,8 @@
 
   (gina-open-shell-quietly "/sys")
   (gina-open-shell-quietly "/scratch")
+
+  (gina-find-file-quietly "~/.emacs.d/init.el")
 
   (message "default buffers opened"))
 
