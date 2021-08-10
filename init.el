@@ -1146,6 +1146,7 @@ Each entry will have ': ' put in between columns."
   :ensure t
   :init
   (setq org-roam-v2-ack t)
+  (org-roam-setup)
   :config
   (require 'org-roam-protocol)
   :hook
