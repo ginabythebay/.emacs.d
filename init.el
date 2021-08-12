@@ -1175,7 +1175,7 @@ Each entry will have ': ' put in between columns."
   ;;        ("C-c n I" . org-roam-insert-immediate))
   :config
   (require 'org-roam-protocol)
-  (org-roam-setup))
+  (org-roam-db-autosync-enable))
 
 (use-package notmuch
   :ensure t
