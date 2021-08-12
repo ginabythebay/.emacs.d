@@ -1164,15 +1164,11 @@ Each entry will have ': ' put in between columns."
 
   :bind (("C-c n l" . org-roam-buffer-toggle)
          ("C-c n f" . org-roam-node-find)
-         ("C-c n i" . org-roam-node-insert))
-  ;; :bind (("C-c c" . 'org-roam-dailies-capture-today)
-  ;;        :map org-roam-mode-map
-  ;;        ("C-c n l" . org-roam)
-  ;;        ("C-c n f" . org-roam-find-file)
-  ;;        ("C-c n g" . org-roam-graph)
-  ;;        :map org-mode-map
-  ;;        ("C-c n i" . org-roam-insert)
-  ;;        ("C-c n I" . org-roam-insert-immediate))
+         ("C-c n i" . org-roam-node-insert)
+         ("C-c n g" . org-roam-graph)
+         ("C-c n c" . org-roam-capture)
+         ;; Dailies
+         ("C-c n j" . org-roam-dailies-capture-today))
   :config
   (require 'org-roam-protocol)
   (org-roam-db-autosync-enable))
