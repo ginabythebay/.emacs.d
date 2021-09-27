@@ -845,6 +845,9 @@ Inspired by crux-beginning-of-line."
 (setq c-default-style "java"
       c-basic-offset 2)
 
+;; if getting messages about epdinfo-server being borken, execute this in *scratch* buffer:
+;;;   (use-package pdf-tools)
+
 (use-package pdf-tools
   :magic ("%PDF" . pdf-view-mode)
   :config
