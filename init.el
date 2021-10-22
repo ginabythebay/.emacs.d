@@ -358,20 +358,21 @@ Version 2018-09-29"
 (defun my-kill-all-pdf-view-buffers ()
   "Iterate through all buffers and kill the ones with major mode ‘pdf-view-mode’."
   (interactive)
-  (let ((buffers (buffer-list)))
-    (while buffers
-      (with-current-buffer (car buffers)
-        (when (string= "pdf-view-mode" major-mode)
-          (kill-buffer)))
-      (setq buffers (cdr buffers))))
-  ;; takes care of the case where we are in pdf virtual mode which
-  ;; seems to leave files 'open'. We check if the functions are
-  ;; defined first because this function can occasionally be called
-  ;; before the pdf code has been loaded.
-  (when (fboundp 'pdf-info-quit)
-    (pdf-info-quit))
-  (when (fboundp 'pdf-info-process-assert-running)
-    (pdf-info-process-assert-running t)))
+  (when (pdf-info-running-p)
+      (let ((buffers (buffer-list)))
+        (while buffers
+          (with-current-buffer (car buffers)
+            (when (string= "pdf-view-mode" major-mode)
+              (kill-buffer)))
+          (setq buffers (cdr buffers))))
+    ;; takes care of the case where we are in pdf virtual mode which
+    ;; seems to leave files 'open'. We check if the functions are
+    ;; defined first because this function can occasionally be called
+    ;; before the pdf code has been loaded.
+    (when (fboundp 'pdf-info-quit)
+      (pdf-info-quit))
+    (when (fboundp 'pdf-info-process-assert-running)
+      (pdf-info-process-assert-running t))))
 
 (defun my-wdired-finish-edit ()
   "Kill any open pdf view buffers then call ‘wdired-finish-edit’."
