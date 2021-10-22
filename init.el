@@ -792,6 +792,10 @@ Inspired by crux-beginning-of-line."
   (use-package forge
     :ensure t))
 
+(when (string-equal system-type "windows-nt")
+  (use-package ssh-agency
+    :ensure t))
+
 (use-package fullframe
   :after (magit)
   :ensure t
