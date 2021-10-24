@@ -6,6 +6,12 @@
 ;;; Code:
 
 
+(require 'gina-launcher)
+(customize-set-variable
+ 'gina-default-buffers
+ '((shells  "/sys" "/scratch")
+   (files  "~/Source/278" "~/.emacs.d/init.el")))
+xb
 (use-package ledger-mode
   :ensure t
   :mode ("\\.ledger$" . ledger-mode)
@@ -16,10 +22,10 @@
 
   (use-package flycheck-ledger-tools-lint
     :ensure nil
-  :load-path "lisp")
+    :load-path "lisp")
   (use-package flycheck-ledger
-              :ensure
-              :if (executable-find "ledger"))
+    :ensure
+    :if (executable-find "ledger"))
   (flycheck-add-next-checker 'ledger '(warning . ledger-tools-lint)))
 
 (provide 'init-octavia)

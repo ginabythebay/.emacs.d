@@ -32,44 +32,57 @@
       (find-file file-name)
       (bury-buffer)))
 
+(defcustom gina-default-buffers
+  '((shells "/scratch") (files "~/.emacs.d" "~/.emacs.d/init.el"))
+  "Default buffers to open when 'gina-open-default-buffers' is called.
+
+  An alist where the allowed KEYS are 'files or 'shells and the
+  VALUES are lists of entries to open.  The entries for the
+  'files key can be directories of files."
+
+  :type 'sexp
+  :group 'gina
+  )
+
 (defun gina-open-default-buffers ()
-  "Open some default buffers I usually want."
+  "Open some buffers declared in 'gina-default-buffers'."
   (interactive)
-  (when (file-directory-p "~/scan")
-    (dired "~/scan")
-    (bury-buffer))
 
-  (when (file-directory-p "~/Source/278")
-    (dired "~/Source/278")
-    (bury-buffer))
+  (let ((files 0)
+        (shells 0))
 
-  (gina-open-shell-quietly "/sys")
-  (gina-open-shell-quietly "/scratch")
+    (cl-loop for x in (alist-get 'shells gina-default-buffers)
+             do (gina-open-shell-quietly x)
+             (setq shells (+ shells 1)))
+    (cl-loop for x in (alist-get 'files gina-default-buffers)
+             do (if (file-directory-p x)
+                    (progn
+                      (dired x)
+                      (bury-buffer))
+                  (gina-find-file-quietly x))
+             (setq files (+ files 1)))
 
-  (gina-find-file-quietly "~/.emacs.d/init.el")
+    (message "Opened %d files and %d shells" files shells)))
 
-  (message "default buffers opened"))
+(defun gina-refile ()
+  "Open a new frame for filing things."
+  (interactive)
+  (select-frame-set-input-focus
+   (make-frame `((fullscreen . maximized))))
 
-  (defun gina-refile ()
-    "Open a new frame for filing things."
-    (interactive)
-    (select-frame-set-input-focus
-     (make-frame `((fullscreen . maximized))))
+  (split-window-right)
 
-    (split-window-right)
+  (dired "c:/Users/gina/Documents/Downloads")
+  (dired-sort-other "-lt")              ; also refreshes
+  (dired "c:/Users/gina/Documents/Clare Lacy/ScannedDocuments")
+  (dired-sort-other "-lt")              ; also refreshes
 
-    (dired "c:/Users/gina/Documents/Downloads")
-    (dired-sort-other "-lt")            ; also refreshes
-    (dired "c:/Users/gina/Documents/Clare Lacy/ScannedDocuments")
-    (dired-sort-other "-lt")            ; also refreshes
+  (other-window 1)
+  (dired "c:/Users/gina/Documents/Gina")
 
-    (other-window 1)
-    (dired "c:/Users/gina/Documents/Gina")
+  (other-window 1))
 
-    (other-window 1))
-
-(provide 'gina-launcher)
-
+(require 'hydra)
 (defhydra gina-launcher-hydra (:hint nil :exit t)
   "
 (quit with _q_)
@@ -88,4 +101,6 @@ _v_: toggle visual line mode
   ("s" isearch-forward)
   ("u" bury-buffer)
   ("v" visual-line-mode))
+
+(provide 'gina-launcher)
 ;;; gina-launcher.el ends here

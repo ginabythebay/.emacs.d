@@ -69,6 +69,14 @@
       org-html-head-include-default-style nil ;; Use our own styles
       org-html-head "<link rel=\"stylesheet\" href=\"https://cdn.simplecss.org/simple.min.css\" />")
 
+
+(require 'gina-launcher)
+(customize-set-variable
+ 'gina-default-buffers
+ '((shells  "/scratch")
+   (files  "~/Source/DOER" "~/Source/DOER/snippets/snippets.org" "~/.emacs.d/init.el")))
+
+
 (require 'org)
 ;(setq org-agenda-files
 ;      (mapcar
