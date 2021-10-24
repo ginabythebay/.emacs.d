@@ -52,7 +52,7 @@
   :bind (:map dired-mode-map
               ("M-RET" . dired-w32-browser)))
 
-(setq-default  ispell-program-name "c:/Program Files/hunspell/bin/hunspell.exe")
+(customize-set-variable 'ispell-program-name "c:/Program Files/hunspell/bin/hunspell.exe")
 
 (defun org-user-idle-seconds ()
   "Return the current Win idle time in seconds."
