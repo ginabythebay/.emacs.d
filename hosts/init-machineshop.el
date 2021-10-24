@@ -63,6 +63,9 @@
       "/mnt/c/Users/gina/Documents/Gina/"
     "c:/Users/gina/Documents/Gina/"))
 
+
+(require 'org)
+
 ;; See https://systemcrafters.net/publishing-websites-with-org-mode/building-the-site/
 (setq org-html-validation-link nil      ;; Don't show validation link
       org-html-head-include-scripts nil ;; Use our own scripts
@@ -76,27 +79,6 @@
  '((shells  "/scratch")
    (files  "~/Source/DOER" "~/Source/DOER/snippets/snippets.org" "~/.emacs.d/init.el")))
 
-
-(require 'org)
-;(setq org-agenda-files
-;      (mapcar
-;       (lambda (r) (concat my-doc-dir r))
-;       (quote ("Alsayyad/Alsayyad notes.org"
-;               "Armstrong Temple/Armstrongtemple notes.org"
-;               "Gamino/Gamino notes.org"
-;               "Gantt/Gantt Notes.org"
-;               "Eid/Eid Notes.org"
-;               "Horn/Horn notes.org"
-;               "Mangano/Mangano notes.org"
-;               "Marin/Marin notes.org"
-;               "Nevitt/Nevitt notes.org"
-;               "Stec/Stec notes.org"
-;               "Sullivan/Sullivan notes.org"
-;               "Overall notes.org"
-;               "rojas/Rojas notes.org"
-;               "saw.org"
-;               "Smith/Smith notes.org"
-;               "Williams/Williams notes.org"))))
 
 (provide 'init-machineshop)
 ;;; init-machineshop.el ends here

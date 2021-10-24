@@ -63,26 +63,5 @@ make it easier to fix."
       "/mnt/c/Users/gina/Documents/Gina/"
     "c:/Users/gina/Documents/Gina/"))
 
-(require 'org)
-(setq org-agenda-files
-      (mapcar
-       (lambda (r) (concat my-doc-dir r))
-       (quote ("Alsayyad/Alsayyad notes.org"
-               "Armstrong Temple/Armstrongtemple notes.org"
-               "Gamino/Gamino notes.org"
-               "Gantt/Gantt Notes.org"
-               "Eid/Eid Notes.org"
-               "Horn/Horn notes.org"
-               "Mangano/Mangano notes.org"
-               "Marin/Marin notes.org"
-               "Nevitt/Nevitt notes.org"
-               "Stec/Stec notes.org"
-               "Sullivan/Sullivan notes.org"
-               "Overall notes.org"
-               "rojas/Rojas notes.org"
-               "saw.org"
-               "Smith/Smith notes.org"
-               "Williams/Williams notes.org"))))
-
 (provide 'init-Gina-PC)
 ;;; init-Gina-PC.el ends here
