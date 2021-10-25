@@ -77,7 +77,11 @@
 (customize-set-variable
  'gina-default-buffers
  '((shells  "/scratch")
-   (files  "~/Source/DOER" "~/Source/DOER/snippets/snippets.org" "~/.emacs.d/init.el")))
+   (files
+    "~/Source/DOER"
+    "~/Source/DOER/snippets/snippets.org"
+    "~/.emacs.d/init.el"
+    "~/.emacs.d/hosts/init-machineshop.el")))
 
 
 (provide 'init-machineshop)
