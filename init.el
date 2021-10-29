@@ -1078,6 +1078,19 @@ Each entry will have ': ' put in between columns."
       (orgtbl-to-generic table (org-combine-plists '(:sep ": " :lstart "; ") params))
       2)))
 
+  ;;  see https://list.orgmode.org/874koc38zn.fsf@gnu.org/T/
+  (add-hook 'org-export-before-processing-hook 'f-ox-filter-table-column-del)
+  (defun f-ox-filter-table-column-del (back-end)
+    "Delete the columns $2 to $> marked as \"/\" on a row with \"/\" in $1.
+ If you want a non-empty column $1 to be deleted make it $2 by
+ inserting an empty column before or rearrange column order in
+ some other way. Make sure \"/\" is in $1 again after that."
+    (while (re-search-forward
+            "^[ \t]*| +/ +|\\(.*?|\\)?? +\\(/\\) +|" nil t)
+      (goto-char (match-beginning 2))
+      (org-table-delete-column)
+      (beginning-of-line)))
+
   (use-package ile
     :load-path "lisp/ile"
     :commands ile-mode
