@@ -1092,22 +1092,19 @@ Each entry will have ': ' put in between columns."
       (beginning-of-line))
 
     ;; in progress
-    ;; (defun gina-foo end &rest remove
-    ;;        ;; this probably works
-    ;;        (if (not (org-duration-p end))
-    ;;            ""
-    ;;          (if (not
-    ;;               (cl-loop for x in remove
-    ;;                        if (not (org-duration-p x)) return nil
-    ;;                        finally return 1))
-    ;;              "")
-         
-    ;;          )
-    ;;        (let ((end (org-duration-to-minutes "16:00")))
-    ;;             (cl-loop for x in '(":30" "7:34")
-    ;;                      do (setq end (- end (org-duration-to-minutes x)))
-    ;;                      finally return end))
-    ;;        )
+    (defun gina-foo (end &rest remove)
+      ;; this probably works
+      (if (not (org-duration-p end))
+          ""
+        (if (not
+             (cl-loop for x in remove
+                      if (not (org-duration-p x)) return nil
+                      finally return 1))
+            ""))
+      (let ((end (org-duration-to-minutes "16:00")))
+        (cl-loop for x in '(":30" "7:34")
+                 do (setq end (- end (org-duration-to-minutes x)))
+                 finally return end)))
 
     )
 
