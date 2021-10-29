@@ -1089,7 +1089,27 @@ Each entry will have ': ' put in between columns."
             "^[ \t]*| +/ +|\\(.*?|\\)?? +\\(/\\) +|" nil t)
       (goto-char (match-beginning 2))
       (org-table-delete-column)
-      (beginning-of-line)))
+      (beginning-of-line))
+
+    ;; in progress
+    ;; (defun gina-foo end &rest remove
+    ;;        ;; this probably works
+    ;;        (if (not (org-duration-p end))
+    ;;            ""
+    ;;          (if (not
+    ;;               (cl-loop for x in remove
+    ;;                        if (not (org-duration-p x)) return nil
+    ;;                        finally return 1))
+    ;;              "")
+         
+    ;;          )
+    ;;        (let ((end (org-duration-to-minutes "16:00")))
+    ;;             (cl-loop for x in '(":30" "7:34")
+    ;;                      do (setq end (- end (org-duration-to-minutes x)))
+    ;;                      finally return end))
+    ;;        )
+
+    )
 
   (use-package ile
     :load-path "lisp/ile"
