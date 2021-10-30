@@ -1092,21 +1092,23 @@ Each entry will have ': ' put in between columns."
       (beginning-of-line))
 
     ;; in progress
-    (defun gina-foo (end &rest remove)
-      ;; this probably works
-      (if (not (org-duration-p end))
-          ""
-        (if (not
-             (cl-loop for x in remove
-                      if (not (org-duration-p x)) return nil
-                      finally return 1))
-            ""))
-      (let ((end (org-duration-to-minutes "16:00")))
-        (cl-loop for x in '(":30" "7:34")
-                 do (setq end (- end (org-duration-to-minutes x)))
-                 finally return end)))
+    (defun gina-subtract-org-durations-or-blank (end &rest remove)
+  "Return the org-duration END after subtracting each duration found in REMOVE.
 
-    )
+END, REMOVE and the return value are all strings, like \"1:30\".
+Returns an empty string if any of the inputs are blank strings."
+  ;; this probably works
+  (if (string-blank-p end)
+      ""
+    (if (not
+         (cl-loop for x in remove
+                  if (string-blank-p x) return nil
+                  finally return 1))
+        ""
+      (let ((end (org-duration-to-minutes end)))
+        (cl-loop for x in remove
+                 do (setq end (- end (org-duration-to-minutes x)))
+                 finally return (org-duration-from-minutes end)))))))
 
   (use-package ile
     :load-path "lisp/ile"
