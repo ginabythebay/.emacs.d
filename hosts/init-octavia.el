@@ -11,7 +11,7 @@
  'gina-default-buffers
  '((shells  "/sys" "/scratch")
    (files  "~/Source/278" "~/.emacs.d/init.el")))
-xb
+
 (use-package ledger-mode
   :ensure t
   :mode ("\\.ledger$" . ledger-mode)
