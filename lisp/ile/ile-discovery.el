@@ -70,8 +70,8 @@ it will be dropped."
             (bates-pair (bates-parse-filename-to-range base-name)))
        (when (and bates-pair (not (ile-skip-production-file-p base-name)))
          (let ((key (bates-page-prefix (car bates-pair))))
-         (map-put result key (cons f (map-elt result key () #'equal)) #'equal)
-       )))
+           (map-put! result key (cons f (map-elt result key () #'equal)) #'equal)
+           )))
      end)
     result))
 
@@ -91,7 +91,7 @@ lists"
   (let ((keys (delete-dups (append (map-keys m1) (map-keys m2))))
         (result ()))
     (dolist (k keys result)
-      (map-put result k
+      (map-put! result k
                (sort
                 (append
                  (map-elt m1 k () #'equal)
