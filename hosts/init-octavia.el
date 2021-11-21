@@ -10,7 +10,11 @@
 (customize-set-variable
  'gina-default-buffers
  '((shells  "/sys" "/scratch")
-   (files  "~/Source/278" "~/.emacs.d/init.el")))
+   (files
+    "~/Source/278"
+    "~/Source/DOER/snippets/snippets.org"
+    "~/.emacs.d/init.el"
+    "~/.emacs.d/hosts/init-octavia.el")))
 
 (use-package ledger-mode
   :ensure t
