@@ -1026,7 +1026,7 @@ Inspired by crux-beginning-of-line."
 
   ;; From https://www.reddit.com/r/orgmode/comments/9tljmi/faster_large_table_editing_disable_flyspell/
   (defun my-dont-flyspell-org-tables (orig-fun &rest args)
-    (let ((flyspell-enabled (position 'flyspell-mode minor-mode-list)))
+    (let ((flyspell-enabled (member 'flyspell-mode minor-mode-list)))
       (flyspell-mode 0)
       (apply orig-fun args)
       (flyspell-mode flyspell-enabled)))
