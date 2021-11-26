@@ -1,0 +1,12 @@
+; DO NOT EDIT (unless you know what you are doing)
+;
+; This subdirectory is a git "subrepo", and this file is maintained by the
+; git-subrepo command. See https://github.com/git-commands/git-subrepo#readme
+;
+[subrepo]
+	remote = https://github.com/mickeynp/combobulate
+	branch = master
+	commit = 0daf4720f66015ea30812da1ce479dd9d9d94550
+	parent = 010c0f95962ab1c6f9f1fc97a9313786b05b1af5
+	method = merge
+	cmdver = 0.4.3
