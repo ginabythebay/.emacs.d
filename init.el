@@ -700,10 +700,12 @@ Inspired by crux-beginning-of-line."
 	      (setq indent-tabs-mode 1)))
   (use-package go-guru
     :ensure t
+    :if (executable-find "guru")
     :config
     (add-hook 'go-mode-hook #'go-guru-hl-identifier-mode))
   (use-package go-expanderr
     :ensure nil
+    :if (executable-find "expanderr")
     :load-path "~/go/src/github.com/stapelberg/expanderr/lisp"))
 
 
