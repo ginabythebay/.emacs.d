@@ -730,6 +730,23 @@ Inspired by crux-beginning-of-line."
 
 ;; END GO CONFIGURATION
 
+;; trying this alpha software out. https://github.com/mickeynp/combobulate
+
+;; Depends on tree-sitter. While tree-sitter can work on windows,
+;; probably not on the ancient machine at work so for now this is a
+;; workaround.
+(when (not (string-equal system-type "windows-nt"))
+  (use-package tree-sitter
+    :ensure t)
+  (use-package tree-sitter-langs
+    :ensure t)
+  (use-package combobulate
+    ;; Ensure `combobulate-mode` is activated when you launch a mode it supports
+    :hook ((python-mode . combobulate-mode)
+           (js-mode . combobulate-mode)
+           (typescript-mode . combobulate-mode))
+    :load-path "lisp/combobulate"))
+
 (use-package flycheck
   :ensure t
   :commands (flycheck-mode
