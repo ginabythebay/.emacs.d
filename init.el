@@ -117,6 +117,8 @@
 
 (setq compilation-scroll-output 'first-error)
 
+(global-set-key [f4] 'compile)
+
 (show-paren-mode 1)
 (defadvice show-paren-function
      (after show-matching-paren-offscreen activate)
