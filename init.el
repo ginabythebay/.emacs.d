@@ -133,10 +133,13 @@ the syntax class ')'."
 (require 'package)
 ;;(setq package-enable-at-startup nil)
 
-(add-to-list 'package-archives
-             '("melpa" . "https://melpa.org/packages/") t)
-(add-to-list 'package-archives
-             '("org" . "https://orgmode.org/elpa/") t)
+(setq package-archives '(("gnu" . "https://elpa.gnu.org/packages/")
+                         ("nongnu" . " https://elpa.nongnu.org/nongnu/")
+                         ("melpa" . "https://melpa.org/packages/")))
+(setq package-archive-priorities
+      '(("gnu" . 30)
+       ("nongnu" . 20)
+       ("melpa" . 10)))
 (setq package-menu-hide-low-priority t)
 (package-initialize)
 
@@ -789,7 +792,35 @@ Inspired by crux-beginning-of-line."
 	 ("\\.erb\\'" . web-mode)
 	 ("\\.mustache\\'" . web-mode)
 	 ("\\.djhtml\\'" . web-mode)
+	 ("\\.tsx\\'" . web-mode)
 	 ("\\.html?\\'" . web-mode)))
+
+;; from https://willschenk.com/articles/2021/setting_up_emacs_for_typescript_development/
+
+(use-package tide
+  :ensure t
+  :config
+  (defun setup-tide-mode ()
+    (interactive)
+    (tide-setup)
+    (flycheck-mode +1)
+    (setq flycheck-check-syntax-automatically '(save mode-enabled))
+    (eldoc-mode +1)
+    (tide-hl-identifier-mode +1)
+    ;; company is an optional dependency. You have to
+    ;; install it separately via package-install
+    ;; `M-x package-install [ret] company`
+    (company-mode +1))
+
+  ;; aligns annotation to the right hand side
+  (setq company-tooltip-align-annotations t)
+
+  ;; formats the buffer before saving
+  (add-hook 'before-save-hook 'tide-format-before-save)
+
+  (add-hook 'typescript-mode-hook #'setup-tide-mode)
+  (flycheck-add-mode 'typescript-tslint 'web-mode)
+  )
 
 (use-package markdown-mode
   :ensure t
