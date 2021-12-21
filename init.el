@@ -821,8 +821,10 @@ Inspired by crux-beginning-of-line."
   (add-hook 'before-save-hook 'tide-format-before-save)
 
   (add-hook 'typescript-mode-hook #'setup-tide-mode)
-  (flycheck-add-mode 'typescript-tslint 'web-mode)
-  )
+  (flycheck-add-mode 'typescript-tslint 'web-mode))
+
+(use-package ts-comint
+  :ensure t)
 
 (use-package markdown-mode
   :ensure t
