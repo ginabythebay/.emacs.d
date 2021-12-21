@@ -728,12 +728,7 @@ Inspired by crux-beginning-of-line."
 
 (if (string= "octavia" my-host)
     (use-package golint
-      :ensure t)
-  (eval-and-compile
-    (defun go-lint-load-path ()
-      (concat (getenv "GOPATH")  "/src/golang.org/x/lint/misc/emacs")))
-  (use-package golint
-    :load-path (lambda() (list (go-lint-load-path)))))
+      :ensure t))
 
 ;; END GO CONFIGURATION
 
