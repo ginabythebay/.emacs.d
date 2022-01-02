@@ -722,7 +722,7 @@ Inspired by crux-beginning-of-line."
 
   ;; see https://github.com/golang/tools/blob/master/gopls/doc/emacs.md
   (if (executable-find "gopls")
-      (progn 
+      (progn
         (require 'project)
         (defun project-find-go-module (dir)
           (when-let ((root (locate-dominating-file dir "go.mod")))
