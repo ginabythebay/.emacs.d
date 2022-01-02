@@ -884,6 +884,8 @@ Inspired by crux-beginning-of-line."
 ;; Python
 (setq c-default-style "python"
       c-basic-offset 2)
+(add-hook 'python-mode-hook '(lambda ()
+ (setq python-indent 2)))
 ;; see https://github.com/boorad/emacs/blob/master/python/my-python-compile.el#L19
 ;; TODO(gina) extrat this stuff out to a separate file I can import
 (defun my-python-mode-hook ()
