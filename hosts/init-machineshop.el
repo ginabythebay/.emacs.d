@@ -52,7 +52,7 @@
   :bind (:map dired-mode-map
               ("M-RET" . dired-w32-browser)))
 
-(add-hook 'flyspell-mode-hook '(lambda ()
+(add-hook 'ispell-minor-mode-hook '(lambda ()
  (setq ispell-program-name "c:/Program Files/hunspell/bin/hunspell.exe")))
 
 (defun org-user-idle-seconds ()
