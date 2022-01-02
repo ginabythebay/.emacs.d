@@ -690,19 +690,26 @@ Inspired by crux-beginning-of-line."
   :commands company-go
   :init (add-to-list 'company-backends 'company-go))
 
+(defun gw-dwim-compile ()
+  "Compile using projectile or default Emacs compile."
+  (interactive)
+  (if (bound-and-true-p projectile-mode)
+      (call-interactively 'projectile-compile-project)
+    (call-interactively 'compile)))
+
 (use-package go-mode
   :ensure t
   :mode ("\\.go$" . go-mode)
   :config (add-hook 'go-mode-hook
-	    (lambda ()
-	      (define-key go-mode-map (kbd "C-c C-c") 'compile)
-	      (define-key go-mode-map (kbd "C-c h") 'godoc-at-point)
-	      ; use guru for highlighting instead
-	      (set (make-local-variable 'highlight-symbol-mode) nil)
-	      (add-hook 'before-save-hook 'gofmt-before-save)
-	      (setq tab-width 4)
-	      (setq gofmt-command "goimports")
-	      (setq indent-tabs-mode 1)))
+	            (lambda ()
+	              (define-key go-mode-map (kbd "C-c C-c") 'gw-dwim-compile)
+	              (define-key go-mode-map (kbd "C-c h") 'godoc-at-point)
+                                        ; use guru for highlighting instead
+	              (set (make-local-variable 'highlight-symbol-mode) nil)
+	              (add-hook 'before-save-hook 'gofmt-before-save)
+	              (setq tab-width 4)
+	              (setq gofmt-command "goimports")
+	              (setq indent-tabs-mode 1)))
   (use-package go-guru
     :ensure t
     :if (executable-find "guru")
