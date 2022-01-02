@@ -685,10 +685,11 @@ Inspired by crux-beginning-of-line."
 
 ;; BEGIN GO CONFIGURATION
 
-(use-package company-go
-  :ensure t
-  :commands company-go
-  :init (add-to-list 'company-backends 'company-go))
+;; this doesn't seem to work anymore
+;; (use-package company-go
+;;   :ensure t
+;;   :commands company-go
+;;   :init (add-to-list 'company-backends 'company-go))
 
 (defun gw-dwim-compile ()
   "Compile using projectile or default Emacs compile."
@@ -708,7 +709,6 @@ Inspired by crux-beginning-of-line."
 	              (set (make-local-variable 'highlight-symbol-mode) nil)
 	              (add-hook 'before-save-hook 'gofmt-before-save)
 	              (setq tab-width 4)
-	              (setq gofmt-command "goimports")
 	              (setq indent-tabs-mode 1)))
   (use-package go-guru
     :ensure t
@@ -718,7 +718,33 @@ Inspired by crux-beginning-of-line."
   (use-package go-expanderr
     :ensure nil
     :if (executable-find "expanderr")
-    :load-path "~/go/src/github.com/stapelberg/expanderr/lisp"))
+    :load-path "~/go/src/github.com/stapelberg/expanderr/lisp")
+
+  ;; see https://github.com/golang/tools/blob/master/gopls/doc/emacs.md
+  (if (executable-find "gopls")
+      (progn 
+        (require 'project)
+        (defun project-find-go-module (dir)
+          (when-let ((root (locate-dominating-file dir "go.mod")))
+            (cons 'go-module root)))
+
+        (cl-defmethod project-root ((project (head go-module)))
+          (cdr project))
+
+        (add-hook 'project-find-functions #'project-find-go-module)
+
+        (use-package eglot
+          :ensure t
+          :init (add-hook 'go-mode-hook 'eglot-ensure)
+          :config
+          (defun eglot-format-buffer-on-save ()
+            (add-hook 'before-save-hook #'eglot-format-buffer -10 t))
+          (add-hook 'go-mode-hook #'eglot-format-buffer-on-save))
+        (setq-default eglot-workspace-configuration
+                      '((:gopls .
+                                ((staticcheck . t)
+                                 (matcher . "CaseSensitive")))))))
+  )
 
 
 ;; TODO(gina) figure out what to use instead.  It is slow to load and
