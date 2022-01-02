@@ -117,7 +117,7 @@
 
 (setq compilation-scroll-output 'first-error)
 
-(global-set-key [f4] 'compile)
+(global-set-key [f4] 'gw-dwim-compile)
 
 (show-paren-mode 1)
 (defadvice show-paren-function
@@ -899,7 +899,7 @@ Inspired by crux-beginning-of-line."
   "Make compile available by keyboard."
   (local-unset-key "\C-c\C-c")
   (global-unset-key "\C-c\C-c")
-  (local-set-key "\C-c\C-c" 'compile))
+  (local-set-key "\C-c\C-c" 'gw-dwim-compile))
 (add-hook 'python-mode-hook 'my-python-mode-hook)
 (setq python-shell-interpreter "ipython"
       python-shell-interpreter-args "--simple-prompt -i")
