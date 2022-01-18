@@ -1296,13 +1296,14 @@ Returns an empty string if any of the inputs are blank strings."
   (require 'org-roam-protocol)
   (org-roam-db-autosync-enable))
 
-(use-package notmuch
-  :ensure t
-  :config
-  (setq notmuch-search-oldest-first nil)
-  (when (not (string= system-type "gnu/linux"))
-    (setq notmuch-command "~/bin/notmuch-remote.sh"))
-  (add-hook 'notmuch-show-mode-hook (lambda () (setq show-trailing-whitespace nil))))
+;; removed 2022-01-18.  Delete after 2022-07-01
+;; (use-package notmuch
+;;   :ensure t
+;;   :config
+;;   (setq notmuch-search-oldest-first nil)
+;;   (when (not (string= system-type "gnu/linux"))
+;;     (setq notmuch-command "~/bin/notmuch-remote.sh"))
+;;   (add-hook 'notmuch-show-mode-hook (lambda () (setq show-trailing-whitespace nil))))
 
 ;; See http://emacs-fu.blogspot.com/2009/08/managing-e-mail-addresses-with-bbdb.html for further notes
 (use-package bbdb
