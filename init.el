@@ -39,6 +39,9 @@
 ;; Stop asking me this already
 (setq vc-follow-symlinks t)
 
+(require 'man)
+(setq Man-notify-method 'bully)
+
 ;; Avoid accidentally editing emacs code
 ;; See https://emacs.stackexchange.com/q/46650/767
 (define-derived-mode emacs-lisp-autoloads-mode emacs-lisp-mode "Autoloads"
