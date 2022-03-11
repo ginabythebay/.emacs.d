@@ -1270,6 +1270,11 @@ Returns an empty string if any of the inputs are blank strings."
   :init
   (setq org-roam-v2-ack t)
 
+  :config
+  (setq org-roam-directory (if (equal my-host "octavia")
+                               "~/Source/278"
+                             "~/Source/DOER/snippets/snippets.org"))
+
   :custom
 
   (org-roam-directory "~/Source/278")
