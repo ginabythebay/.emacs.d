@@ -1273,11 +1273,10 @@ Returns an empty string if any of the inputs are blank strings."
   :config
   (setq org-roam-directory (if (equal my-host "octavia")
                                "~/Source/278"
-                             "~/Source/DOER/snippets/snippets.org"))
+                             "~/Source/DOER/org-roam"))
 
   :custom
 
-  (org-roam-directory "~/Source/278")
   (org-roam-dailies-directory "daily/")
 
   (org-roam-completion-everywhere t)
