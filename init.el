@@ -1271,9 +1271,21 @@ Returns an empty string if any of the inputs are blank strings."
   (setq org-roam-v2-ack t)
 
   :config
-  (setq org-roam-directory (if (equal my-host "octavia")
-                               "~/Source/278"
-                             "~/Source/DOER/org-roam"))
+
+  (defun gw-set-org-roam-dir (new-dir)
+    "Change the org-roam directory to NEW-DIR."
+    (interactive "DOrg Roam Directory: ")
+    (when (not (string= new-dir org-roam-directory))
+      (setq org-roam-directory new-dir)
+      (setq org-roam-db-location (expand-file-name "org-roam.db" new-dir))
+      (org-roam-db-sync)))
+
+  (gw-set-org-roam-dir (if (equal my-host "octavia")
+                           "~/Source/278"
+                         "~/Source/DOER/org-roam"))
+
+  (require 'org-roam-protocol)
+  (org-roam-db-autosync-enable)
 
   :custom
 
@@ -1298,10 +1310,7 @@ Returns an empty string if any of the inputs are blank strings."
          ("C-c n g" . org-roam-graph)
          ("C-c n c" . org-roam-capture)
          ;; Dailies
-         ("C-c n j" . org-roam-dailies-capture-today))
-  :config
-  (require 'org-roam-protocol)
-  (org-roam-db-autosync-enable))
+         ("C-c n j" . org-roam-dailies-capture-today)))
 
 ;; removed 2022-01-18.  Delete after 2022-07-01
 ;; (use-package notmuch
