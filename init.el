@@ -870,6 +870,10 @@ Inspired by crux-beginning-of-line."
   :config
   (global-git-gutter-mode +1))
 
+(setq auth-sources '("~/.authinfo.gpg")) ; secrets in one place
+(setq epg-pinentry-mode 'loopback)      ; enter passphrase in emacs
+(setq epg-gpg-program "gpg2")           ; modern gpg
+
 (use-package magit
   :ensure t
   :bind ("C-x g" . magit-status))
