@@ -872,10 +872,10 @@ Inspired by crux-beginning-of-line."
 
 (use-package magit
   :ensure t
-  :bind ("C-x g" . magit-status)
-  :config
-  (use-package forge
-    :ensure t))
+  :bind ("C-x g" . magit-status))
+
+(use-package forge
+  :after magit)
 
 (when (string-equal system-type "windows-nt")
   (use-package ssh-agency
