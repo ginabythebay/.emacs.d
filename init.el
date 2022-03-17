@@ -278,6 +278,9 @@ the syntax class ')'."
 	      ("m" . mc/edit-lines)
 	      ("a" . mc/mark-all-like-this))))
 
+(use-package csv-mode
+  :ensure t)
+
 (use-package dired
   :ensure nil
   :init
@@ -879,7 +882,11 @@ Inspired by crux-beginning-of-line."
   :bind ("C-x g" . magit-status))
 
 (use-package forge
-  :after magit)
+  :after magit
+  :config
+  ;;  from https://practical.li/spacemacs/source-control/forge-configuration.html
+  (setq  forge-topic-list-limit '(100 . 0))
+  (setq  forge-topic-list-limit '(100 . -10)))
 
 (when (string-equal system-type "windows-nt")
   (use-package ssh-agency
