@@ -1309,6 +1309,11 @@ Returns an empty string if any of the inputs are blank strings."
       "%?"
       :if-new (file+head "%<%Y%m%d%H%M%S>-${slug}.org" "#+title: ${title}\n")
       :unnarrowed t)))
+  (org-roam-dailies-capture-templates
+      '(("d" "default" plain
+         "\n\n* Parts\n\n|   Job | Part                                 | Count |\n|-------+--------------------------------------+-------|\n|     / |                                      |     < |\n\n* Notes\n\n%?"
+         :target (file+head "%<%Y-%m-%d>.org"
+                            "#+title: %<%Y-%m-%d>\n"))))
   ;; (org-roam-dailies-capture-templates
   ;;  '(("d" "default" plain
   ;;     #'org-roam-capture--get-point
