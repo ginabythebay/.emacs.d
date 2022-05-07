@@ -929,6 +929,29 @@ Inspired by crux-beginning-of-line."
   :commands company-anaconda
   :init (add-to-list 'company-backends 'company-anaconda))
 
+;; lsp
+;; see https://emacs-lsp.github.io/lsp-mode/page/installation/
+(use-package lsp-mode
+  :ensure t
+  :init
+  ;; set prefix for lsp-command-keymap (few alternatives - "C-l", "C-c l")
+  (setq lsp-keymap-prefix "C-c l")
+  :hook (;; replace XXX-mode with concrete major-mode(e. g. python-mode)
+         (XXX-mode . lsp)
+         ;; if you want which-key integration
+         (lsp-mode . lsp-enable-which-key-integration))
+  :commands lsp)
+
+;; optionally
+(use-package lsp-ui :commands lsp-ui-mode)
+;; if you are ivy user
+(use-package lsp-ivy :commands lsp-ivy-workspace-symbol)
+(use-package lsp-treemacs :commands lsp-treemacs-errors-list)
+
+;; optionally if you want to use debugger
+(use-package dap-mode)
+
+
 ;; Python
 (setq c-default-style "python"
       c-basic-offset 2)
@@ -944,6 +967,12 @@ Inspired by crux-beginning-of-line."
 (add-hook 'python-mode-hook 'my-python-mode-hook)
 (setq python-shell-interpreter "ipython"
       python-shell-interpreter-args "--simple-prompt -i")
+
+(use-package lsp-pyright
+  :ensure t
+  :hook (python-mode . (lambda ()
+                          (require 'lsp-pyright)
+                          (lsp))))  ; or lsp-deferred
 
 ;; Java
 (setq c-default-style "java"
