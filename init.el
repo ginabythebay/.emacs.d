@@ -968,11 +968,16 @@ Inspired by crux-beginning-of-line."
 (setq python-shell-interpreter "ipython"
       python-shell-interpreter-args "--simple-prompt -i")
 
+(use-package pyenv-mode
+  :ensure t
+  :config
+  (pyenv-mode))
+
 (use-package lsp-pyright
   :ensure t
   :hook (python-mode . (lambda ()
-                          (require 'lsp-pyright)
-                          (lsp))))  ; or lsp-deferred
+                         (require 'lsp-pyright)
+                         (lsp))))  ; or lsp-deferred
 
 ;; Java
 (setq c-default-style "java"
