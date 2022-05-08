@@ -916,18 +916,19 @@ Inspired by crux-beginning-of-line."
 (setq c-default-style "whitesmith"
       c-basic-offset 2)
 
-(use-package anaconda-mode
-  :ensure t
-  :defer t
-  :init
-  (autoload 'anaconda-mode "anaconda-mode" nil t)
-  :config
-  (add-hook 'python-mode-hook 'anaconda-mode))
+;; TODO(gina) delete after October 2022 if still unused
+;; (use-package anaconda-mode
+;;   :ensure t
+;;   :defer t
+;;   :init
+;;   (autoload 'anaconda-mode "anaconda-mode" nil t)
+;;   :config
+;;   (add-hook 'python-mode-hook 'anaconda-mode))
 
-(use-package company-anaconda
-  :ensure t
-  :commands company-anaconda
-  :init (add-to-list 'company-backends 'company-anaconda))
+;; (use-package company-anaconda
+;;   :ensure t
+;;   :commands company-anaconda
+;;   :init (add-to-list 'company-backends 'company-anaconda))
 
 ;; lsp
 ;; see https://emacs-lsp.github.io/lsp-mode/page/installation/
