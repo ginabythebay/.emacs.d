@@ -441,11 +441,12 @@ Inspired by crux-beginning-of-line."
   :ensure t
   :if (memq window-system '(mac ns))
   :config
-    (require 'eshell)  ;; next command has a bug that assumes eshell is loaded
-    (exec-path-from-shell-copy-env "LANG")
-    (exec-path-from-shell-copy-env "PATH")
-    (exec-path-from-shell-copy-env "MANPATH")
-    (exec-path-from-shell-copy-env "GOPATH"))
+  (require 'eshell) ;; next command has a bug that assumes eshell is loaded
+  (exec-path-from-shell-copy-env "LANG")
+  (exec-path-from-shell-copy-env "PATH")
+  (exec-path-from-shell-copy-env "MANPATH")
+  (exec-path-from-shell-copy-env "GOPATH")
+  (exec-path-from-shell-copy-env "PYTHONPATH"))
 
 (use-package crux
   :bind (
@@ -921,18 +922,42 @@ Inspired by crux-beginning-of-line."
 (setq c-default-style "whitesmith"
       c-basic-offset 2)
 
-(use-package anaconda-mode
-  :ensure t
-  :defer t
-  :init
-  (autoload 'anaconda-mode "anaconda-mode" nil t)
-  :config
-  (add-hook 'python-mode-hook 'anaconda-mode))
+;; TODO(gina) delete after October 2022 if still unused
+;; (use-package anaconda-mode
+;;   :ensure t
+;;   :defer t
+;;   :init
+;;   (autoload 'anaconda-mode "anaconda-mode" nil t)
+;;   :config
+;;   (add-hook 'python-mode-hook 'anaconda-mode))
 
-(use-package company-anaconda
+;; (use-package company-anaconda
+;;   :ensure t
+;;   :commands company-anaconda
+;;   :init (add-to-list 'company-backends 'company-anaconda))
+
+;; lsp
+;; see https://emacs-lsp.github.io/lsp-mode/page/installation/
+(use-package lsp-mode
   :ensure t
-  :commands company-anaconda
-  :init (add-to-list 'company-backends 'company-anaconda))
+  :init
+  ;; set prefix for lsp-command-keymap (few alternatives - "C-l", "C-c l")
+  (setq lsp-keymap-prefix "C-c l")
+  :hook (;; replace XXX-mode with concrete major-mode(e. g. python-mode)
+         (XXX-mode . lsp)
+         ;; if you want which-key integration
+         (lsp-mode . lsp-enable-which-key-integration))
+  :commands lsp)
+
+;; optionally
+(use-package lsp-ui :commands lsp-ui-mode)
+;; if you are ivy user
+(use-package lsp-ivy :commands lsp-ivy-workspace-symbol)
+(use-package lsp-treemacs :commands lsp-treemacs-errors-list)
+
+;; optionally if you want to use debugger
+(use-package dap-mode)
+
 
 ;; Python
 (setq c-default-style "python"
@@ -949,6 +974,17 @@ Inspired by crux-beginning-of-line."
 (add-hook 'python-mode-hook 'my-python-mode-hook)
 (setq python-shell-interpreter "ipython"
       python-shell-interpreter-args "--simple-prompt -i")
+
+(use-package pyenv-mode
+  :ensure t
+  :config
+  (pyenv-mode))
+
+(use-package lsp-pyright
+  :ensure t
+  :hook (python-mode . (lambda ()
+                         (require 'lsp-pyright)
+                         (lsp))))  ; or lsp-deferred
 
 ;; Java
 (setq c-default-style "java"

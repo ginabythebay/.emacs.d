@@ -20,3 +20,5 @@ url/*
 transient/*
 /loaddefs.el
 recentf
+.lsp-session*
+.cache/
