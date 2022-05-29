@@ -795,6 +795,11 @@ Inspired by crux-beginning-of-line."
            (typescript-mode . combobulate-mode))
     :load-path "lisp/combobulate"))
 
+(use-package flycheck-pycheckers
+  :ensure t)
+(with-eval-after-load 'flycheck
+  (add-hook 'flycheck-mode-hook #'flycheck-pycheckers-setup))
+
 (use-package flycheck
   :ensure t
   :commands (flycheck-mode
@@ -805,6 +810,7 @@ Inspired by crux-beginning-of-line."
                (haskell-mode-hook    . haskell-mode-map)
                (js2-mode-hook        . js2-mode-map)
                (c-mode-common-hook   . c-mode-base-map)
+               (python-mode-hook   . python-mode-map)
                (ledger-mode-hook     . ledger-mode-map)))
     (add-hook (car m)
               `(lambda ()
@@ -983,8 +989,10 @@ Inspired by crux-beginning-of-line."
 (use-package lsp-pyright
   :ensure t
   :hook (python-mode . (lambda ()
-                         (require 'lsp-pyright)
-                         (lsp))))  ; or lsp-deferred
+                          (require 'lsp-pyright)
+                          (lsp-deferred)
+                          (flycheck-add-next-checker 'lsp 'python-pycheckers)
+                          )))
 
 ;; Java
 (setq c-default-style "java"
@@ -1249,67 +1257,68 @@ Returns an empty string if any of the inputs are blank strings."
                    do (setq end (- end (org-duration-to-minutes x)))
                    finally return (org-duration-from-minutes end))))))
 
-  (use-package ile
-    :load-path "lisp/ile"
-    :commands ile-mode
-    :ensure nil
-    :demand t
-    :init
-    ;; TODO(gina) move this into ILE after I figure out the right way to packageize it.
-    (defvar ile-map nil
-      "ILE keymap.")
-    (define-prefix-command 'ile-map)
-    (define-key ile-map (kbd "a") #'ile-tbl-to-clipboard)
-    (define-key ile-map (kbd "c") #'my-cleanup-region-date)
-    (define-key ile-map (kbd "d") #'ile-duplicate)
-    (define-key ile-map (kbd "i") #'ile-nav-indirect-buffer-for-id)
-    (define-key ile-map (kbd "j") #'ile-jump)
-    (define-key ile-map (kbd "q") #'ile-org-fill-subtree)
-    (define-key ile-map (kbd "s") #'ile-sort-entries-by-date)
-    (define-key ile-map (kbd "t") #'ile-org-noter-dates)
+  ;; TODO(gina) delete if still unsed after 7/29/22
+  ;; (use-package ile
+  ;;   :load-path "lisp/ile"
+  ;;   :commands ile-mode
+  ;;   :ensure nil
+  ;;   :demand t
+  ;;   :init
+  ;;   ;; TODO(gina) move this into ILE after I figure out the right way to packageize it.
+  ;;   (defvar ile-map nil
+  ;;     "ILE keymap.")
+  ;;   (define-prefix-command 'ile-map)
+  ;;   (define-key ile-map (kbd "a") #'ile-tbl-to-clipboard)
+  ;;   (define-key ile-map (kbd "c") #'my-cleanup-region-date)
+  ;;   (define-key ile-map (kbd "d") #'ile-duplicate)
+  ;;   (define-key ile-map (kbd "i") #'ile-nav-indirect-buffer-for-id)
+  ;;   (define-key ile-map (kbd "j") #'ile-jump)
+  ;;   (define-key ile-map (kbd "q") #'ile-org-fill-subtree)
+  ;;   (define-key ile-map (kbd "s") #'ile-sort-entries-by-date)
+  ;;   (define-key ile-map (kbd "t") #'ile-org-noter-dates)
 
-    ;; This part would remain out here somewhere
-    (global-unset-key (kbd "C-l"))
-    (global-set-key (kbd "C-l") 'ile-map)
-    (define-key ile-map (kbd "l") #'recenter-top-bottom)
+  ;;   ;; This part would remain out here somewhere
+  ;;   (global-unset-key (kbd "C-l"))
+  ;;   (global-set-key (kbd "C-l") 'ile-map)
+  ;;   (define-key ile-map (kbd "l") #'recenter-top-bottom)
 
-    (global-set-key (kbd "C-x 8 s") (lambda () (interactive) (insert "§")))
-    :config
-    (require 'company)
-    ;; TODO(gina) can I push this into the ile package itself?
-    (dolist
-        (pkg
-         '(bates ile-company ile-discovery ile ile-link ile-navigation
-                 ile-note-view ile-org-noter ile-pdf ile-clock))
-      (require pkg))
+  ;;   (global-set-key (kbd "C-x 8 s") (lambda () (interactive) (insert "§")))
+  ;;   :config
+  ;;   (require 'company)
+  ;;   ;; TODO(gina) can I push this into the ile package itself?
+  ;;   (dolist
+  ;;       (pkg
+  ;;        '(bates ile-company ile-discovery ile ile-link ile-navigation
+  ;;                ile-note-view ile-org-noter ile-pdf ile-clock))
+  ;;     (require pkg))
 
-    (defun my-pdf-annotate (list-of-edges)
-      "Underline and hightlight."
-      (interactive (list (pdf-view-active-region t)))
-      (let ((pdf-annot-activate-created-annotations nil))
-        (pdf-annot-add-markup-annotation list-of-edges 'underline "#000000" nil)
-        (pdf-annot-add-markup-annotation list-of-edges 'highlight))
+  ;;   (defun my-pdf-annotate (list-of-edges)
+  ;;     "Underline and hightlight."
+  ;;     (interactive (list (pdf-view-active-region t)))
+  ;;     (let ((pdf-annot-activate-created-annotations nil))
+  ;;       (pdf-annot-add-markup-annotation list-of-edges 'underline "#000000" nil)
+  ;;       (pdf-annot-add-markup-annotation list-of-edges 'highlight))
 
-      ;; We avoid using :bind because that would force pdf-tools to
-      ;; load before we might need it and it is slow
-      (bind-keys :package pdf-tools :map pdf-view-mode-map
-                 ("e" . ile-pdf-extract-pages)
-                 ("b" . ile-jump-bates-number)
-                 ("d" . my-pdf-annotate))
+  ;;     ;; We avoid using :bind because that would force pdf-tools to
+  ;;     ;; load before we might need it and it is slow
+  ;;     (bind-keys :package pdf-tools :map pdf-view-mode-map
+  ;;                ("e" . ile-pdf-extract-pages)
+  ;;                ("b" . ile-jump-bates-number)
+  ;;                ("d" . my-pdf-annotate))
 
-      (add-hook 'org-mode-hook 'ile-mode)
+  ;;     (add-hook 'org-mode-hook 'ile-mode)
 
-      (add-hook 'ile-mode-hook
-                (lambda ()
-                  (require 'ile-company)
-                  (set (make-local-variable 'company-backends)
-                       (list (list #'company-dabbrev
-                                   #'ile-company-pdf-dictionary
-                                   :with #'company-yasnippet))))))
+  ;;     (add-hook 'ile-mode-hook
+  ;;               (lambda ()
+  ;;                 (require 'ile-company)
+  ;;                 (set (make-local-variable 'company-backends)
+  ;;                      (list (list #'company-dabbrev
+  ;;                                  #'ile-company-pdf-dictionary
+  ;;                                  :with #'company-yasnippet))))))
 
-    (add-hook 'org-mode-hook #'flyspell-mode)
-    (add-hook 'org-mode-hook #'auto-fill-mode)
-    (add-hook 'org-mode-hook (lambda () (require 'org-override))))
+  ;;   (add-hook 'org-mode-hook #'flyspell-mode)
+  ;;   (add-hook 'org-mode-hook #'auto-fill-mode)
+  ;;   (add-hook 'org-mode-hook (lambda () (require 'org-override))))
   (use-package ox-clip
     :ensure t)
 
