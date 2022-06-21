@@ -1334,6 +1334,12 @@ Returns an empty string if any of the inputs are blank strings."
 
   :config
 
+  (if (eq system-type 'windows-nt)
+      (setq org-roam-graph-viewer
+            (lambda (file)
+              (let ((org-roam-graph-viewer "/mnt/c/Program Files/Google/Chrome/Application/chrome.exe"))
+                (org-roam-graph--open (concat "file://///wsl$/Ubuntu-20.04" file))))))
+
   (defun gw-set-org-roam-dir (new-dir)
     "Change the org-roam directory to NEW-DIR."
     (interactive "DOrg Roam Directory: ")
@@ -1360,10 +1366,10 @@ Returns an empty string if any of the inputs are blank strings."
       :if-new (file+head "%<%Y%m%d%H%M%S>-${slug}.org" "#+title: ${title}\n")
       :unnarrowed t)))
   (org-roam-dailies-capture-templates
-      '(("d" "default" plain
-         "\n\n* Parts\n\n|   Job | Part                                 | Count |\n|-------+--------------------------------------+-------|\n|     / |                                      |     < |\n\n* Notes\n\n%?"
-         :target (file+head "%<%Y-%m-%d>.org"
-                            "#+title: %<%Y-%m-%d>\n"))))
+   '(("d" "default" plain
+      "\n\n* Parts\n\n|   Job | Part                                 | Count |\n|-------+--------------------------------------+-------|\n|     / |                                      |     < |\n\n* Notes\n\n%?"
+      :target (file+head "%<%Y-%m-%d>.org"
+                         "#+title: %<%Y-%m-%d>\n"))))
   ;; (org-roam-dailies-capture-templates
   ;;  '(("d" "default" plain
   ;;     #'org-roam-capture--get-point
