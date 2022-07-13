@@ -1334,10 +1334,10 @@ Returns an empty string if any of the inputs are blank strings."
 
   :config
 
-  (if (eq system-type 'windows-nt)
+  (if (equal "PC-Ian" my-host)
       (setq org-roam-graph-viewer
             (lambda (file)
-              (let ((org-roam-graph-viewer "/mnt/c/Program Files/Google/Chrome/Application/chrome.exe"))
+              (let (("/mnt/c/Program Files/Google/Chrome/Application/chrome.exe" org-roam-graph-viewer))
                 (org-roam-graph--open (concat "file://///wsl$/Ubuntu-20.04" file))))))
 
   (defun gw-set-org-roam-dir (new-dir)
