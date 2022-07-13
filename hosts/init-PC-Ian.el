@@ -72,6 +72,8 @@
       org-html-head-include-default-style nil ;; Use our own styles
       org-html-head "<link rel=\"stylesheet\" href=\"https://cdn.simplecss.org/simple.min.css\" />")
 
+(setq browse-url-browser-function 'browse-url-generic
+      browse-url-generic-program "/mnt/c/Program Files/Google/Chrome/Application/chrome.exe")
 
 (require 'gina-launcher)
 (customize-set-variable
