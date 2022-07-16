@@ -1335,10 +1335,12 @@ Returns an empty string if any of the inputs are blank strings."
   :ensure t
   :init
   (setq org-roam-v2-ack t)
-  
+
   (setq org-roam-node-display-template
         (concat "${title:*} "
                 (propertize "${tags:20}" 'face 'org-tag)))
+  (add-hook 'helm-major-mode-hook (lambda () (setq show-trailing-whitespace nil)))
+
 
 
   :config
