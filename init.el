@@ -513,47 +513,51 @@ Inspired by crux-beginning-of-line."
   :ensure t
   :bind (([(control =)] . er/expand-region)))
 
-(use-package company
-  :after (yasnippet)
-  :ensure t
-  :diminish company-mode
-  :config
-  ;; when running mnt-gdrive inside emacs (for development) and trying
-  ;; to test things inside emacs, in shell mode, emacs locks up if
-  ;; company mode is on.
-  ;; ledger-mode has its own completion
-  (when (equal my-host "octavia")
-    (setq company-global-modes `(not shell-mode ledger-mode))
-    )
-  (setq company-idle-delay .2
-        company-minimum-prefix-length 3
-        company-show-numbers t
-        company-selection-wrap-around t
-        company-dabbrev-downcase nil
-        company-dabbrev-ignore-case t)
+(global-set-key [remap dabbrev-expand] 'hippie-expand)
 
-  ;; see https://emacs.stackexchange.com/a/10520/767
-  (defvar company-mode/enable-yas t
-    "Enable yasnippet for all backends.")
-  (defun company-mode/backend-with-yas (backend)
-    (if (or (not company-mode/enable-yas) (and (listp backend) (member 'company-yasnippet backend)))
-        backend
-      (append (if (consp backend) backend (list backend))
-              '(:with company-yasnippet))))
+;; Delete after 7/21/22 if still not used
+;; 
+;; (use-package company
+;;   :after (yasnippet)
+;;   :ensure t
+;;   :diminish company-mode
+;;   :config
+;;   ;; when running mnt-gdrive inside emacs (for development) and trying
+;;   ;; to test things inside emacs, in shell mode, emacs locks up if
+;;   ;; company mode is on.
+;;   ;; ledger-mode has its own completion
+;;   (when (equal my-host "octavia")
+;;     (setq company-global-modes `(not shell-mode ledger-mode))
+;;     )
+;;   (setq company-idle-delay .2
+;;         company-minimum-prefix-length 3
+;;         company-show-numbers t
+;;         company-selection-wrap-around t
+;;         company-dabbrev-downcase nil
+;;         company-dabbrev-ignore-case t)
 
-  ;; push company-capf to the back so company-dabbrev has priority
-  (setq company-backends (delete 'company-capf company-backends))
-  (setq company-backends (append company-backends '(company-capf)))
+;;   ;; see https://emacs.stackexchange.com/a/10520/767
+;;   (defvar company-mode/enable-yas t
+;;     "Enable yasnippet for all backends.")
+;;   (defun company-mode/backend-with-yas (backend)
+;;     (if (or (not company-mode/enable-yas) (and (listp backend) (member 'company-yasnippet backend)))
+;;         backend
+;;       (append (if (consp backend) backend (list backend))
+;;               '(:with company-yasnippet))))
+
+;;   ;; push company-capf to the back so company-dabbrev has priority
+;;   (setq company-backends (delete 'company-capf company-backends))
+;;   (setq company-backends (append company-backends '(company-capf)))
   
-  (setq company-backends (mapcar #'company-mode/backend-with-yas company-backends))
+;;   (setq company-backends (mapcar #'company-mode/backend-with-yas company-backends))
 
-  (global-company-mode))
+;;   (global-company-mode))
 
-(use-package company-quickhelp
-  :after (company)
-  :config
-  (setq company-quickhelp-delay .1)
-  (company-quickhelp-mode))
+;; (use-package company-quickhelp
+;;   :after (company)
+;;   :config
+;;   (setq company-quickhelp-delay .1)
+;;   (company-quickhelp-mode))
 
 (use-package rainbow-delimiters
   :ensure t
