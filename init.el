@@ -1380,7 +1380,7 @@ Returns an empty string if any of the inputs are blank strings."
    '(("d" "default" plain
       "\n\n* Parts\n\n|   Job | Part                                 | Count |\n|-------+--------------------------------------+-------|\n|     / |                                      |     < |\n\n* Notes\n\n%?\n\n* Delegation\n\n"
       :target (file+head "%<%Y-%m-%d>.org"
-                         "#+title: %<%Y-%m-%d>\n"))))
+                         "#+title: %<%Y-%m-%d>\n#+FILETAGS: :daily:\n\n"))))
   ;; (org-roam-dailies-capture-templates
   ;;  '(("d" "default" plain
   ;;     #'org-roam-capture--get-point
@@ -1420,6 +1420,10 @@ Returns an empty string if any of the inputs are blank strings."
 
   (use-package ivy-hydra
     :ensure t))
+
+(define-key occur-mode-map (kbd "C-s") 'isearch-forward)
+(define-key occur-edit-mode-map (kbd "C-s") 'isearch-forward)
+
 
 ;; Some docs about how to use this...
 ;; See slide 13 of https://www.slideshare.net/kaz_yos/search-and-replacement-techniques-in-emacs-avy-swiper-multiplecursor-ag-and-wgrep
