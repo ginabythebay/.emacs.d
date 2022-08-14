@@ -1041,6 +1041,7 @@ Inspired by crux-beginning-of-line."
 
 (use-package org
   :ensure t
+  :pin gnu
   :preface
   (defun my-find-org-agenda-files ()
     "Find all agenda files."
