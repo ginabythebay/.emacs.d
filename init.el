@@ -1076,6 +1076,9 @@ Inspired by crux-beginning-of-line."
                            "~/syb/Armstrong Temple/armstrongtemple notes.org"
                            "~/syb/Marin/marin notes.org"))
 
+  (org-babel-do-load-languages
+   'org-babel-load-languages
+   '((python . t)))
 
   (setq org-default-notes-file "c:/Users/gina/Documents/Gina/overall notes.org")
 
