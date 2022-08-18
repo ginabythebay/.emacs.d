@@ -1079,6 +1079,11 @@ Inspired by crux-beginning-of-line."
   (org-babel-do-load-languages
    'org-babel-load-languages
    '((python . t)))
+  ;; see https://github.com/emacs-lsp/lsp-mode/issues/2594#issuecomment-873668834
+  (require 'lsp-diagnostics)
+  (lsp-diagnostics-flycheck-enable)
+  (require 'flycheck)
+  (flycheck-add-next-checker 'python-flake8 'lsp)
 
   (setq org-default-notes-file "c:/Users/gina/Documents/Gina/overall notes.org")
 
