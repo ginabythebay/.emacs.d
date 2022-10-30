@@ -439,7 +439,7 @@ Inspired by crux-beginning-of-line."
 ;; TODO(gina) make this only work on mac?
 (use-package exec-path-from-shell
   :ensure t
-  :if (memq window-system '(mac ns))
+  :if (memq window-system '(mac ns x))
   :config
   (require 'eshell) ;; next command has a bug that assumes eshell is loaded
   (exec-path-from-shell-copy-env "LANG")
@@ -985,10 +985,10 @@ Inspired by crux-beginning-of-line."
 (setq python-shell-interpreter "ipython"
       python-shell-interpreter-args "--simple-prompt -i")
 
-(use-package pyenv-mode
+(use-package pyvenv-auto
   :ensure t
   :config
-  (pyenv-mode))
+  (pyvenv-auto-mode t))
 
 (use-package lsp-pyright
   :ensure t
