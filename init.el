@@ -968,6 +968,9 @@ Inspired by crux-beginning-of-line."
 ;; optionally if you want to use debugger
 (use-package dap-mode)
 
+;; awk
+(add-hook 'awk-mode-hook '(lambda ()
+                            (local-set-key "\C-c\C-c" 'compile)))
 
 ;; Python
 (setq c-default-style "python"
