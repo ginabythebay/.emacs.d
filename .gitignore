@@ -22,3 +22,6 @@ transient/*
 recentf
 .lsp-session*
 .cache/
+.dap-breakpoints
+eshell/*
+projects
