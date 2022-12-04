@@ -1042,6 +1042,29 @@ Inspired by crux-beginning-of-line."
 
 (use-package htmlize)
 
+(global-set-key (kbd "C-<f1>") 'iedit-mode)
+
+(use-package hyperbole
+  :ensure t
+
+  :init
+  (defconst doer-part_no-re "[A-Z][0-9]\\{2,3\\}[A-Z]\\{2\\}[0-9]\\{3\\}[A-Z]")
+
+  :config
+  (require 'thingatpt)
+  (defun open-partno (partno)
+    (require 'org-roam)
+    (org-roam-node-find nil partno))
+
+  (defib partno ()
+    "Make a DOER part number open/create the associated org roam buffer.
+
+Part numbers supported are of the form S009MF020A or S09MF020A."
+    (let ((part-no (when (thing-at-point-looking-at doer-part_no-re 10)
+                     (buffer-substring (match-beginning 0) (match-end 0)))))
+      (when part-no
+        (hact 'open-partno part-no)))))
+
 (use-package org
   :ensure t
   :pin gnu
@@ -1386,7 +1409,7 @@ Returns an empty string if any of the inputs are blank strings."
   (org-roam-capture-templates
    '(("d" "default" plain
       "%?"
-      :if-new (file+head "%<%Y%m%d%H%M%S>-${slug}.org" "#+title: ${title}\n")
+      :if-new (file+head "%<%Y%m%d%H%M%S>-${slug}.org" "#+title: ${title}\n#+FILETAGS: :unknown:\n")
       :unnarrowed t)))
   (org-roam-dailies-capture-templates
    '(("d" "default" plain
