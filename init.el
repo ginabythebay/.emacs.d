@@ -1047,6 +1047,9 @@ Inspired by crux-beginning-of-line."
 (use-package just-mode
   :ensure t)
 
+(use-package justl
+  :ensure t)
+
 (use-package hyperbole
   :ensure t
 
