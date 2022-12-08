@@ -1044,6 +1044,9 @@ Inspired by crux-beginning-of-line."
 
 (global-set-key (kbd "C-<f1>") 'iedit-mode)
 
+(use-package just-mode
+  :ensure t)
+
 (use-package hyperbole
   :ensure t
 
