@@ -1066,7 +1066,7 @@ Inspired by crux-beginning-of-line."
     "Make a DOER part number open/create the associated org roam buffer.
 
 Part numbers supported are of the form S009MF020A or S09MF020A."
-    (let ((part-no (when (thing-at-point-looking-at doer-part_no-re 10)
+    (let ((part-no (when (thing-at-point-looking-at doer-part_no-re)
                      (buffer-substring (match-beginning 0) (match-end 0)))))
       (when part-no
         (hact 'open-partno part-no)))))
