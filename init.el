@@ -963,6 +963,13 @@ Inspired by crux-beginning-of-line."
 ;; optionally if you want to use debugger
 (use-package dap-mode)
 
+;; rust
+(use-package rust-mode
+  :ensure t
+  :config
+  (define-key rust-mode-map (kbd "C-c C-c") 'rust-run)
+  (setq rust-format-on-save t))
+
 ;; awk
 (add-hook 'awk-mode-hook '(lambda ()
                             (local-set-key "\C-c\C-c" 'compile)))
