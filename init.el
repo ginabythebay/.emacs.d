@@ -799,30 +799,33 @@ Inspired by crux-beginning-of-line."
            (typescript-mode . combobulate-mode))
     :load-path "lisp/combobulate"))
 
-(use-package flycheck-pycheckers
-  :ensure t)
-(with-eval-after-load 'flycheck
-  (add-hook 'flycheck-mode-hook #'flycheck-pycheckers-setup))
+;;
+;; TODO(gina) delete after July 2023 if unused
+;; 
+;; (use-package flycheck-pycheckers
+;;   :ensure t)
+;; (with-eval-after-load 'flycheck
+;;   (add-hook 'flycheck-mode-hook #'flycheck-pycheckers-setup))
 
-(use-package flycheck
-  :ensure t
-  :commands (flycheck-mode
-             flycheck-next-error
-             flycheck-previous-error)
-  :init
-  (dolist (m '((emacs-lisp-mode-hook . emacs-lisp-mode-map)
-               (haskell-mode-hook    . haskell-mode-map)
-               (js2-mode-hook        . js2-mode-map)
-               (c-mode-common-hook   . c-mode-base-map)
-               (python-mode-hook   . python-mode-map)
-               (ledger-mode-hook     . ledger-mode-map)))
-    (add-hook (car m)
-              `(lambda ()
-                 (flycheck-mode 1)
-                 (bind-key "M-n" #'flycheck-next-error ,(cdr m))
-                 (bind-key "M-p" #'flycheck-previous-error ,(cdr m)))))
-  :config
-  (setq flycheck-go-vet-shadow t))
+;; (use-package flycheck
+;;   :ensure t
+;;   :commands (flycheck-mode
+;;              flycheck-next-error
+;;              flycheck-previous-error)
+;;   :init
+;;   (dolist (m '((emacs-lisp-mode-hook . emacs-lisp-mode-map)
+;;                (haskell-mode-hook    . haskell-mode-map)
+;;                (js2-mode-hook        . js2-mode-map)
+;;                (c-mode-common-hook   . c-mode-base-map)
+;;                (python-mode-hook   . python-mode-map)
+;;                (ledger-mode-hook     . ledger-mode-map)))
+;;     (add-hook (car m)
+;;               `(lambda ()
+;;                  (flycheck-mode 1)
+;;                  (bind-key "M-n" #'flycheck-next-error ,(cdr m))
+;;                  (bind-key "M-p" #'flycheck-previous-error ,(cdr m)))))
+;;   :config
+;;   (setq flycheck-go-vet-shadow t))
 
 (use-package yaml-mode
   :ensure t
@@ -932,24 +935,30 @@ Inspired by crux-beginning-of-line."
 (setq c-default-style "whitesmith"
       c-basic-offset 2)
 
-;; lsp
-;; see https://emacs-lsp.github.io/lsp-mode/page/installation/
-(use-package lsp-mode
-  :ensure t
-  :init
-  ;; set prefix for lsp-command-keymap (few alternatives - "C-l", "C-c l")
-  (setq lsp-keymap-prefix "C-c l")
-  :hook (;; replace XXX-mode with concrete major-mode(e. g. python-mode)
-         (XXX-mode . lsp)
-         ;; if you want which-key integration
-         (lsp-mode . lsp-enable-which-key-integration))
-  :commands lsp)
+;;
+;; TODO(gina) delete after July 2023 if still unused
+;; 
+;; ;; lsp
+;; ;; see https://emacs-lsp.github.io/lsp-mode/page/installation/
+;; (use-package lsp-mode
+;;   :ensure t
+;;   :init
+;;   ;; set prefix for lsp-command-keymap (few alternatives - "C-l", "C-c l")
+;;   (setq lsp-keymap-prefix "C-c l")
+;;   :hook (;; replace XXX-mode with concrete major-mode(e. g. python-mode)
+;;          (XXX-mode . lsp)
+;;          ;; if you want which-key integration
+;;          (lsp-mode . lsp-enable-which-key-integration))
+;;   :commands lsp)
 
-;; optionally
-(use-package lsp-ui :commands lsp-ui-mode)
-;; if you are ivy user
-(use-package lsp-ivy :commands lsp-ivy-workspace-symbol)
-(use-package lsp-treemacs :commands lsp-treemacs-errors-list)
+;; ;; optionally
+;; (use-package lsp-ui :commands lsp-ui-mode)
+;; ;; if you are ivy user
+;; (use-package lsp-ivy :commands lsp-ivy-workspace-symbol)
+;; (use-package lsp-treemacs :commands lsp-treemacs-errors-list)
+
+(use-package eglot
+  :ensure t)
 
 ;; optionally if you want to use debugger
 (use-package dap-mode)
