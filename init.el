@@ -968,7 +968,8 @@ Inspired by crux-beginning-of-line."
   :ensure t
   :config
   (define-key rust-mode-map (kbd "C-c C-c") 'rust-run)
-  (setq rust-format-on-save t))
+  (setq rust-format-on-save t)
+  (add-hook 'rust-mode-hook 'eglot-ensure))
 
 ;; awk
 (add-hook 'awk-mode-hook '(lambda ()
