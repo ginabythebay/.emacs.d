@@ -615,17 +615,30 @@ Inspired by crux-beginning-of-line."
 	      (double-quote . "\"")
 	      (back-quote   . "`")))
 
+  ;;
+  ;; go
+  ;;
   (sp-local-pair 'go-mode "{" nil :post-handlers '((my-create-newline-and-enter-sexp "RET")))
   (sp-local-pair 'go-mode "(" nil :post-handlers '((my-create-newline-and-enter-sexp "RET")))
   (sp-local-pair 'go-mode "[" nil :post-handlers '((my-create-newline-and-enter-sexp "RET")))
   (sp-local-pair 'go-mode "`" nil :post-handlers '((my-create-newline-and-enter-sexp "RET")))
 
+  ;;
+  ;; rust
+  ;;
+  (sp-local-pair 'rust-mode "'" nil :actions nil) ;; no '' pair in rust
+  (sp-local-pair 'rust-mode "{" nil :post-handlers '((my-create-newline-and-enter-sexp "RET")))
+  (sp-local-pair 'rust-mode "(" nil :post-handlers '((my-create-newline-and-enter-sexp "RET")))
+
+  ;;
+  ;; elisp
+  ;;
   ;; see https://github.com/Fuco1/smartparens/wiki/Permissions
-  (sp-local-pair 'emacs-lisp-mode "'" nil :actions nil)           ;; no '' pair in emacs-lisp-mode
-  (sp-local-pair 'emacs-lisp-mode "`" nil :actions nil)           ;; no `` pair in emacs-lisp-mode
+  (sp-local-pair 'emacs-lisp-mode "'" nil :actions nil) ;; no '' pair in emacs-lisp-mode
+  (sp-local-pair 'emacs-lisp-mode "`" nil :actions nil) ;; no `` pair in emacs-lisp-mode
   (sp-local-pair 'suggest-mode "'" nil :actions nil)
   (sp-local-pair 'suggest-mode "`" nil :actions nil)
-  (sp-local-pair 'markdown-mode "`" nil :actions '(insert))       ;; only use ` for auto insertion in markdown-mode
+  (sp-local-pair 'markdown-mode "`" nil :actions '(insert)) ;; only use ` for auto insertion in markdown-mode
 
   (defun my-create-newline-and-enter-sexp (&rest _ignored)
     "Open a new brace or bracket expression, with relevant newlines and indent. "
@@ -959,6 +972,10 @@ Inspired by crux-beginning-of-line."
 
 (use-package eglot
   :ensure t)
+
+;; https://www.gnu.org/software/emacs/manual/html_node/flymake/Finding-diagnostics.html
+(define-key flymake-mode-map (kbd "M-n") 'flymake-goto-next-error)
+(define-key flymake-mode-map (kbd "M-p") 'flymake-goto-prev-error)
 
 ;; optionally if you want to use debugger
 (use-package dap-mode)
