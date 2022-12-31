@@ -1322,6 +1322,13 @@ Returns an empty string if any of the inputs are blank strings."
                    do (setq end (- end (org-duration-to-minutes x)))
                    finally return (org-duration-from-minutes end))))))
 
+  (use-package deferred
+    :ensure t)
+  (use-package request-deferred
+    :ensure t)
+  (use-package perkeep
+    :load-path "lisp/emacs-perkeep")
+
   ;; TODO(gina) delete if still unsed after 7/29/22
   ;; (use-package ile
   ;;   :load-path "lisp/ile"
