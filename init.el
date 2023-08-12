@@ -812,6 +812,10 @@ Inspired by crux-beginning-of-line."
            (typescript-mode . combobulate-mode))
     :load-path "lisp/combobulate"))
 
+(use-package gcode-mode
+  :ensure t
+  :mode "\\.nc\\'" . gcode-mode)
+
 ;;
 ;; TODO(gina) delete after July 2023 if unused
 ;; 
