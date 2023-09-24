@@ -1015,16 +1015,15 @@ Inspired by crux-beginning-of-line."
 
 (use-package pyvenv-auto
   :ensure t
-  :config
-  (pyvenv-auto-mode t))
+  :hook ((python-mode . pyvenv-auto-run)))
 
-(use-package lsp-pyright
-  :ensure t
-  :hook (python-mode . (lambda ()
-                          (require 'lsp-pyright)
-                          (lsp-deferred)
-                          (flycheck-add-next-checker 'lsp 'python-pycheckers)
-                          )))
+  (use-package lsp-pyright
+    :ensure t
+    :hook (python-mode . (lambda ()
+                           (require 'lsp-pyright)
+                           (lsp-deferred)
+                           (flycheck-add-next-checker 'lsp 'python-pycheckers)
+                           )))
 
 ;; Java
 (setq c-default-style "java"
