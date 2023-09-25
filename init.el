@@ -812,11 +812,6 @@ Inspired by crux-beginning-of-line."
            (typescript-mode . combobulate-mode))
     :load-path "lisp/combobulate"))
 
-(use-package gcode-mode
-  :ensure t
-  :mode ("\\.nc\\'" . gcode-mode)
-  :config (add-hook 'gcode-mode-hook 'eldoc-mode))
-
 ;;
 ;; TODO(gina) delete after July 2023 if unused
 ;; 
