@@ -1,4 +1,4 @@
-;;; package --- Summary --- Gina Whites Emacs initialization for SYB windows machine
+;;; package --- Summary --- Gina Whites Emacs initialization for DOER windows machine
 
 ;;; Commentary:
 ;;; Stuff here
@@ -52,8 +52,7 @@
   :bind (:map dired-mode-map
               ("M-RET" . dired-w32-browser)))
 
-(add-hook 'ispell-minor-mode-hook '(lambda ()
- (setq ispell-program-name "c:/Program Files/hunspell/bin/hunspell.exe")))
+(customize-set-variable 'ispell-program-name "c:/Program Files/hunspell/bin/hunspell.exe")
 
 (defun org-user-idle-seconds ()
   "Return the current Win idle time in seconds."
@@ -73,6 +72,8 @@
       org-html-head-include-default-style nil ;; Use our own styles
       org-html-head "<link rel=\"stylesheet\" href=\"https://cdn.simplecss.org/simple.min.css\" />")
 
+(setq browse-url-browser-function 'browse-url-generic
+      browse-url-generic-program "/mnt/c/Program Files/Google/Chrome/Application/chrome.exe")
 
 (require 'gina-launcher)
 (customize-set-variable
@@ -83,8 +84,8 @@
     "~/Source/DOER/snippets/snippets.org"
     "~/.emacs.d/init.el"
     "~/Source/DOER/org-roam/20230329133600-batch.org"
-    "~/.emacs.d/hosts/init-machineshop.el")))
+    "~/.emacs.d/hosts/init-DOER-Gina.el")))
 
 
-(provide 'init-machineshop)
-;;; init-machineshop.el ends here
+(provide 'init-DOER-Gina)
+;;; init-DOER-Gina.el ends here
