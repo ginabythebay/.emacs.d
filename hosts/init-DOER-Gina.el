@@ -81,6 +81,7 @@
  '((shells  "/scratch")
    (files
     "~/Source/DOER"
+    "/mnt/c/users/machinist/Source/f360_setup_sheet/README.md"
     "~/Source/DOER/snippets/snippets.org"
     "~/.emacs.d/init.el"
     "~/Source/DOER/org-roam/20230329133600-batch.org"
