@@ -4,6 +4,7 @@ lisp/NUL
 forge-database.sqlite
 .cask/
 elpa/
+eln-cache/
 .org-id-locations
 org-roam.db
 projectile.cache
