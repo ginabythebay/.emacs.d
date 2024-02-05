@@ -89,6 +89,7 @@
 _b_: back (pop global mark)
 _d_: open default buffers
 _e_: toggle debug on error
+_p_: export parts to batch file
 _s_: iSearch forward
 _u_: bury buffer
 _v_: toggle visual line mode
@@ -98,6 +99,7 @@ _v_: toggle visual line mode
   ("d" gina-open-default-buffers)
   ("e" toggle-debug-on-error)
   ("i" gina-clock-in-to-recent-task)
+  ("p" gina-export-batch)
   ("s" isearch-forward)
   ("u" bury-buffer)
   ("v" visual-line-mode))

@@ -54,6 +54,12 @@
 
 (customize-set-variable 'ispell-program-name "c:/Program Files/hunspell/bin/hunspell.exe")
 
+(defun gina-export-batch ()
+  "Export the current table to the batch file."
+  (interactive)
+  (org-table-export "/mnt/c/Users/machinist/Downloads/batch.csv"
+                    "orgtbl-to-csv"))
+
 (defun org-user-idle-seconds ()
   "Return the current Win idle time in seconds."
   (/ (string-to-number (shell-command-to-string "C:/msys64/home/gina/bin/winidle.exe")) 1000))
