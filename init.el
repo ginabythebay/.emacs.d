@@ -205,6 +205,10 @@ the syntax class ')'."
 (use-package autorevert
   :delight auto-revert-mode)
 
+(use-package casual
+  :ensure t
+  :bind (:map calc-mode-map ("C-o" . 'casual-main-menu)))
+
 (use-package helpful
   :ensure t
   :config
