@@ -9,7 +9,7 @@
 (require 'gina-launcher)
 (customize-set-variable
  'gina-default-buffers
- '((shells  "/sys" "/scratch")
+ '((shells  "/sys" "/scratch" "/scan" "/music")
    (files
     "~/Source/278"
     "~/Source/DOER/snippets/snippets.org"
