@@ -35,6 +35,20 @@
 (defmath ilmrpm (sfm diameter)
   (* (/ sfm diameter) (/ 12 pi )))
 
+;; Example call inside calc:
+;;  'af(.55, .5, 100)
+(defmath af (md cd lf)
+  "Calc internal adjusted feed rate for major and cutter diameters.
+
+  See URL 'https://www.harveyperformance.com/in-the-loupe/tag/internal-adjusted-feed/'.
+
+  MD major (internal) diameter we are cutting.
+
+  CD cutter diameter.
+
+  LF feed rate we would use for a straight cut."
+  (* (/ (- md cd) md) lf))
+
 
 (provide 'calc)
 ;;; calc.el ends here
