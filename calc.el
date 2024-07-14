@@ -29,6 +29,9 @@
 ;;  TODO(gina) try to understand calc units better and see if I can
 ;;  make this work in a way that is more compatible with the rest of
 ;;  calc (e.g. everything seems to assume meters).
+;;
+;; in calc, call this with algibriac mode like
+;;  'ilmrpm(100, .5)
 (defmath ilmrpm (sfm diameter)
   (* (/ sfm diameter) (/ 12 pi )))
 
