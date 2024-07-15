@@ -205,9 +205,15 @@ the syntax class ')'."
 (use-package autorevert
   :delight auto-revert-mode)
 
-(use-package casual
+(use-package casual-calc
   :ensure t
   :bind (:map calc-mode-map ("C-o" . 'casual-main-menu)))
+
+(use-package casual-dired
+  :ensure t
+  :bind (:map dired-mode-map
+              ("C-o" . #'casual-dired-tmenu)
+              ("s" . #'casual-dired-sort-by-tmenu)))
 
 (use-package helpful
   :ensure t
@@ -299,7 +305,7 @@ the syntax class ')'."
     (call-interactively 'shell-pop))
   :bind (:map dired-mode-map
               ("C-t" . my-shell-pop)
-              ("C-o" . 'my-dired-display-file))
+              ("C-S-o" . 'my-dired-display-file))
   :config
   (require 'dired-aux)
   (add-to-list 'dired-compress-file-suffixes
@@ -428,13 +434,14 @@ Inspired by crux-beginning-of-line."
 	     (local-set-key (kbd "C-o") 'my-dired-display-file)
 	     (local-set-key (kbd "C-c C-c") 'my-wdired-finish-edit)))
 
-(advice-add
- 'dired-do-flagged-delete
- :before (lambda (&optional blah) (my-kill-all-pdf-view-buffers)))
+;;  dont really use pdf view these days
+;; (advice-add
+;;  'dired-do-flagged-delete
+;;  :before (lambda (&optional blah) (my-kill-all-pdf-view-buffers)))
 
-(advice-add
- 'dired-ranger-move
- :before (lambda (&optional blah) (my-kill-all-pdf-view-buffers)))
+;; (advice-add
+;;  'dired-ranger-move
+;;  :before (lambda (&optional blah) (my-kill-all-pdf-view-buffers)))
 
 ;; This package is a little janky, but probably better than me doing it all manually
 ;; Under the covers, this runs shell initialization, and copies the values of the resulting
@@ -1031,37 +1038,37 @@ Inspired by crux-beginning-of-line."
 ;; if getting messages about epdinfo-server being borken, execute this in *scratch* buffer:
 ;;;   (use-package pdf-tools)
 
-(use-package pdf-tools
-  :magic ("%PDF" . pdf-view-mode)
-  :config
-  (pdf-tools-install)
-  (dolist
-      (pkg
-       '(pdf-annot pdf-cache pdf-dev pdf-history pdf-info pdf-isearch
-                   pdf-links pdf-misc pdf-occur pdf-outline pdf-sync
-                   pdf-util pdf-view pdf-virtual))
-    (require pkg))
+;; (use-package pdf-tools
+;;   :magic ("%PDF" . pdf-view-mode)
+;;   :config
+;;   (pdf-tools-install)
+;;   (dolist
+;;       (pkg
+;;        '(pdf-annot pdf-cache pdf-dev pdf-history pdf-info pdf-isearch
+;;                    pdf-links pdf-misc pdf-occur pdf-outline pdf-sync
+;;                    pdf-util pdf-view pdf-virtual))
+;;     (require pkg))
 
-  (defun my-edit-virtual-pdf-file ()
-    "When in pdf-virtual mode, edits the current file."
-    (interactive)
-    (w32-browser (pdf-virtual-buffer-current-file)))
+;;   (defun my-edit-virtual-pdf-file ()
+;;     "When in pdf-virtual mode, edits the current file."
+;;     (interactive)
+;;     (w32-browser (pdf-virtual-buffer-current-file)))
 
-  ;; don't do any checking of file sizes for pdfs.  They are mostly
-  ;; big anyway
-  (advice-add 'abort-if-file-too-large
-              :before-while (lambda (size op-type filename)
-                              (not (string-suffix-p ".pdf" filename t))))
+;;   ;; don't do any checking of file sizes for pdfs.  They are mostly
+;;   ;; big anyway
+;;   (advice-add 'abort-if-file-too-large
+;;               :before-while (lambda (size op-type filename)
+;;                               (not (string-suffix-p ".pdf" filename t))))
 
-  ;; automatically annotate highlights
-  (setq pdf-annot-activate-created-annotations t
-        pdf-view-resize-factor 1.1)
-  (setq-default pdf-view-display-size 'fit-page)
+;;   ;; automatically annotate highlights
+;;   (setq pdf-annot-activate-created-annotations t
+;;         pdf-view-resize-factor 1.1)
+;;   (setq-default pdf-view-display-size 'fit-page)
 
-  ;; swiper doesn't work with pdfs
-  (define-key pdf-view-mode-map (kbd "C-s") #'isearch-forward)
-  (define-key pdf-view-mode-map (kbd "G") #'pdf-view-last-page)
-  (define-key pdf-virtual-view-mode-map (kbd "C-e") #'my-edit-virtual-pdf-file))
+;;   ;; swiper doesn't work with pdfs
+;;   (define-key pdf-view-mode-map (kbd "C-s") #'isearch-forward)
+;;   (define-key pdf-view-mode-map (kbd "G") #'pdf-view-last-page)
+;;   (define-key pdf-virtual-view-mode-map (kbd "C-e") #'my-edit-virtual-pdf-file))
 
 (use-package htmlize)
 
