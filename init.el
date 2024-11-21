@@ -126,7 +126,7 @@
 
 (setq compilation-scroll-output 'first-error)
 
-(global-set-key [f4] 'gw-dwim-compile)
+(global-set-key [f4] 'compile)
 
 (show-paren-mode 1)
 (defadvice show-paren-function

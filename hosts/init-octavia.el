@@ -34,5 +34,10 @@
     :if (executable-find "ledger"))
   (flycheck-add-next-checker 'ledger '(warning . ledger-tools-lint)))
 
+;;  https://emacs.stackexchange.com/a/17890
+(require 'exec-path-from-shell)
+(exec-path-from-shell-copy-env "SSH_AGENT_PID")
+(exec-path-from-shell-copy-env "SSH_AUTH_SOCK")
+
 (provide 'init-octavia)
 ;;; init-octavia.el ends here
