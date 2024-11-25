@@ -1019,10 +1019,6 @@ Inspired by crux-beginning-of-line."
 (setq python-shell-interpreter "ipython"
       python-shell-interpreter-args "--simple-prompt -i")
 
-(use-package pyvenv-auto
-  :ensure t
-  :hook ((python-mode . pyvenv-auto-run)))
-
   (use-package lsp-pyright
     :ensure t
     :hook (python-mode . (lambda ()
@@ -1030,6 +1026,10 @@ Inspired by crux-beginning-of-line."
                            (lsp-deferred)
                            (flycheck-add-next-checker 'lsp 'python-pycheckers)
                            )))
+
+(use-package pyvenv-auto
+  :ensure t
+  :hook ((python-mode . pyvenv-auto-run)))
 
 ;; Java
 (setq c-default-style "java"
