@@ -205,15 +205,12 @@ the syntax class ')'."
 (use-package autorevert
   :delight auto-revert-mode)
 
-(use-package casual-calc
+(use-package casual-suite
   :ensure t
-  :bind (:map calc-mode-map ("C-o" . 'casual-main-menu)))
-
-(use-package casual-dired
-  :ensure t
-  :bind (:map dired-mode-map
-              ("C-o" . #'casual-dired-tmenu)
-              ("s" . #'casual-dired-sort-by-tmenu)))
+  :bind
+  (:map calc-mode-map ("C-o" . 'casual-calc-tmenu))
+  (:map dired-mode-map ("C-o" . 'casual-dired-tmenu))
+  (:map dired-mode-map ("s" . 'casual-dired-sort-by-tmenu)))
 
 (use-package helpful
   :ensure t
