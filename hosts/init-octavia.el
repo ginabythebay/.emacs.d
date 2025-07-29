@@ -14,7 +14,6 @@
     "~/Source/278"
     "~/Source/DOER/snippets/snippets.org"
     "~/finances/inbox"
-    "~/scan"
     "~/.emacs.d/init.el"
     "~/.emacs.d/hosts/init-octavia.el")))
 
