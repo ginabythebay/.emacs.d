@@ -102,7 +102,7 @@ _v_: toggle visual line mode
   ("p" gina-export-batch)
   ("s" isearch-forward)
   ("u" bury-buffer)
-  ("v" visual-line-mode))
+  ("v" split-3-windows-vertically-evenly))
 
 (provide 'gina-launcher)
 ;;; gina-launcher.el ends here

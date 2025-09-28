@@ -1993,6 +1993,13 @@ End."
 (put 'upcase-region 'disabled nil)
 (put 'narrow-to-region 'disabled nil)
 
+(defun split-3-windows-vertically-evenly ()
+  (interactive)
+  (command-execute 'split-window-vertically)
+  (command-execute 'split-window-vertically)
+  (command-execute 'balance-windows)
+)
+
 (provide 'init)
 ;;; init.el ends here
 
