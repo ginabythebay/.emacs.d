@@ -99,7 +99,7 @@ _e_: toggle debug on error
 _p_: export parts to batch file
 _s_: iSearch forward
 _u_: bury buffer
-_v_: toggle visual line mode
+_v_: split 3 windows vertically
 "
   ("q" nil)
   ("b" pop-global-mark :exit nil)
