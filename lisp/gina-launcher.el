@@ -82,6 +82,13 @@
 
   (other-window 1))
 
+(defun split-3-windows-vertically-evenly ()
+  (interactive)
+  (command-execute 'split-window-vertically)
+  (command-execute 'split-window-vertically)
+  (command-execute 'balance-windows)
+)
+
 (require 'hydra)
 (defhydra gina-launcher-hydra (:hint nil :exit t)
   "
