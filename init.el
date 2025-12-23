@@ -127,6 +127,7 @@
 (setq compilation-scroll-output 'first-error)
 
 (global-set-key [f4] 'compile)
+(global-set-key (kbd "M-@") (lambda () (interactive)  (insert  ?€ )))
 
 (show-paren-mode 1)
 (defadvice show-paren-function
