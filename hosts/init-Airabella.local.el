@@ -17,5 +17,7 @@
     "~/.emacs.d/hosts/init-octavia.el")))
 
 
+(global-text-scale-adjust 4)
+
 (provide 'init-Airabella.local)
 ;;; init-Airabella.local.el ends here
