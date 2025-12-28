@@ -524,6 +524,9 @@ Inspired by crux-beginning-of-line."
 
 (global-set-key [remap dabbrev-expand] 'hippie-expand)
 
+(use-package ledger-mode
+  :ensure t)
+
 ;; Delete after 7/21/22 if still not used
 ;; 
 ;; (use-package company
