@@ -1081,6 +1081,10 @@ Inspired by crux-beginning-of-line."
 (use-package justl
   :ensure t)
 
+;;  note: need to manually install llm package for some reason
+(use-package ekg
+  :ensure t
+  :bind (([f11] . ekg-capture)))
 
 (use-package org
   :ensure t
