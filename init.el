@@ -308,6 +308,9 @@ the syntax class ')'."
   (require 'dired-aux)
   (add-to-list 'dired-compress-file-suffixes
                '("\\.zip\\'" ".zip" "unzip"))
+  ;; https://stackoverflow.com/a/42038174
+  (when (string= system-type "darwin")
+    (setq dired-use-ls-dired nil))
   (setq dired-dwim-target t)
   (add-hook
    'dired-mode-hook
