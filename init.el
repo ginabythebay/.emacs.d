@@ -1008,6 +1008,14 @@ Inspired by crux-beginning-of-line."
                             (local-set-key "\C-c\C-c" 'compile)))
 
 ;; Python
+(use-package lsp-pyright
+  :ensure t
+  :hook (python-mode . (lambda ()
+                         (require 'lsp-pyright)
+                         (lsp-deferred)
+                         (flycheck-add-next-checker 'lsp 'python-pycheckers)
+                         )))
+
 (setq c-default-style "python"
       c-basic-offset 2)
 (add-hook 'python-mode-hook '(lambda ()
@@ -1023,13 +1031,6 @@ Inspired by crux-beginning-of-line."
 (setq python-shell-interpreter "ipython"
       python-shell-interpreter-args "--simple-prompt -i")
 
-  (use-package lsp-pyright
-    :ensure t
-    :hook (python-mode . (lambda ()
-                           (require 'lsp-pyright)
-                           (lsp-deferred)
-                           (flycheck-add-next-checker 'lsp 'python-pycheckers)
-                           )))
 
 (use-package pyvenv-auto
   :ensure t
@@ -1470,6 +1471,11 @@ Returns an empty string if any of the inputs are blank strings."
 ;;   (when (not (string= system-type "gnu/linux"))
 ;;     (setq notmuch-command "~/bin/notmuch-remote.sh"))
 ;;   (add-hook 'notmuch-show-mode-hook (lambda () (setq show-trailing-whitespace nil))))
+
+;;;  does not work yet
+;; (use-package mu4e
+;;   :load-path "/opt/homebrew/share/emacs/site-lisp/mu/mu4e"
+;;   :commands mu4e)
 
 ;; See http://emacs-fu.blogspot.com/2009/08/managing-e-mail-addresses-with-bbdb.html for further notes
 (use-package bbdb
