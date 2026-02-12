@@ -1570,6 +1570,15 @@ Returns an empty string if any of the inputs are blank strings."
 
 (global-set-key [f5] 'kmacro-end-and-call-macro)
 
+(use-package dimmer
+  :config
+  (dimmer-configure-which-key)
+  (dimmer-configure-helm)
+  (dimmer-configure-hydra)
+  (dimmer-configure-magit)
+  (dimmer-configure-org)
+  (dimmer-mode t)
+  (setq dimmer-fraction 0.3))
 
 (use-package calfw
   :bind (("C-c A" . my-calendar)
