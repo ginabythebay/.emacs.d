@@ -26,3 +26,5 @@ recentf
 .dap-breakpoints
 eshell/*
 projects
+forge-database*
+triples.db
