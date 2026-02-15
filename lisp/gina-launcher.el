@@ -87,7 +87,13 @@
   (command-execute 'split-window-vertically)
   (command-execute 'split-window-vertically)
   (command-execute 'balance-windows)
-)
+
+  (let ((wins (window-list)))
+    (set-window-buffer (car wins) "/sys")
+    (set-window-buffer (car (cdr wins)) "/boltbarn")
+    (set-window-buffer (car (cdr (cdr wins))) "/blog")
+    )
+  )
 
 (require 'hydra)
 (defhydra gina-launcher-hydra (:hint nil :exit t)
