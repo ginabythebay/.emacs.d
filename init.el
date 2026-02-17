@@ -405,7 +405,8 @@ Version 2018-09-29"
 (defun my-wdired-finish-edit ()
   "Kill any open pdf view buffers then call ‘wdired-finish-edit’."
   (interactive)
-  (my-kill-all-pdf-view-buffers)
+  ;; TODO(gina) figure out why this is failing, fix it.  2026-02-17
+  ;; (my-kill-all-pdf-view-buffers)
   (wdired-finish-edit))
 
 (defun my-dired-display-file ()
