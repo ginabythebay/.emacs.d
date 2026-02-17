@@ -293,7 +293,10 @@ the syntax class ')'."
 	      ("a" . mc/mark-all-like-this))))
 
 (use-package csv-mode
-  :ensure t)
+  :ensure t
+  :config
+  (add-hook 'csv-mode-hook 'csv-guess-set-separator)
+)
 
 (use-package dired
   :ensure nil
