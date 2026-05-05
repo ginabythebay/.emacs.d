@@ -292,11 +292,13 @@ the syntax class ')'."
 	      ("m" . mc/edit-lines)
 	      ("a" . mc/mark-all-like-this))))
 
+(use-package dockerfile-mode
+  :ensure t)
+
 (use-package csv-mode
   :ensure t
   :config
-  (add-hook 'csv-mode-hook 'csv-guess-set-separator)
-)
+  (add-hook 'csv-mode-hook 'csv-guess-set-separator))
 
 (use-package dired
   :ensure nil
