@@ -466,6 +466,13 @@ Inspired by crux-beginning-of-line."
   (exec-path-from-shell-copy-env "GOPATH")
   (exec-path-from-shell-copy-env "PYTHONPATH"))
 
+(use-package claude-code-ide
+  :ensure t
+  :vc (:url "https://github.com/manzaltu/claude-code-ide.el" :rev :newest)
+  :bind ("C-c C-'" . claude-code-ide-menu) ; Set your favorite keybinding
+  :config
+  (claude-code-ide-emacs-tools-setup))
+
 (use-package crux
   :bind (
 	 ("C-a" . crux-move-beginning-of-line)
