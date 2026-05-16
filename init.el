@@ -466,12 +466,8 @@ Inspired by crux-beginning-of-line."
   (exec-path-from-shell-copy-env "GOPATH")
   (exec-path-from-shell-copy-env "PYTHONPATH"))
 
-(use-package claude-code-ide
-  :ensure t
-  :vc (:url "https://github.com/manzaltu/claude-code-ide.el" :rev :newest)
-  :bind ("C-c C-'" . claude-code-ide-menu) ; Set your favorite keybinding
-  :config
-  (claude-code-ide-emacs-tools-setup))
+
+(add-hook 'vterm-mode-hook (lambda () (setq show-trailing-whitespace nil)))
 
 (use-package crux
   :bind (
@@ -934,7 +930,7 @@ Inspired by crux-beginning-of-line."
   :config
   (global-git-gutter-mode +1))
 
-(setq auth-sources '("~/.authinfo.gpg")) ; secrets in one place
+(setq auth-sources '("~/.authinfo")) ; secrets in one place
 (setq epg-pinentry-mode 'loopback)      ; enter passphrase in emacs
 (setq epg-gpg-program "gpg2")           ; modern gpg
 
