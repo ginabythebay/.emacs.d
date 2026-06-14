@@ -88,9 +88,10 @@
 ;; from https://aur.archlinux.org/packages/go-fonts-git/
 ;; Note that on linux I had 12 points, but on windows 11 felt better.
 ;; Might need to make this dependant on the screen or something.
-(my-set-font-if-installed "Go Mono-11")
+(my-set-font-if-installed "Go Mono 11")
+(my-set-font-if-installed "FiraCode Nerd Font 16")
 
-;; These come from https://fonts.google.com/?category=Monospace
+;; 14 come from https://fonts.google.com/?category=Monospace
 ;(set-frame-font "Roboto Mono-12" nil t)
 ;(set-frame-font "Inconsolata-16" nil t)
 ;(set-frame-font "PT Mono-14" nil t)
@@ -256,7 +257,7 @@ the syntax class ')'."
   :config
   (deftheme solarized-dark "The dark variant of the Solarized colour theme")
   (load-theme 'solarized-dark t)
-
+  
   ;; (when (string= system-type "gnu/linux")
   ;;   (set-face-background 'mode-line "red")
   ;;   (set-face-background 'mode-line-inactive "brown"))
