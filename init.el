@@ -470,6 +470,9 @@ Inspired by crux-beginning-of-line."
 
 (add-hook 'vterm-mode-hook (lambda () (setq show-trailing-whitespace nil)))
 
+(use-package ghostel
+  :ensure t)
+
 (use-package crux
   :bind (
 	 ("C-a" . crux-move-beginning-of-line)
