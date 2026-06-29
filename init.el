@@ -961,11 +961,29 @@ Inspired by crux-beginning-of-line."
 
 (setq-default show-trailing-whitespace t)
 
-(use-package shell-pop
-  :load-path "lisp/shell-pop-el"
-  :ensure t
-  :bind
-  (("C-t" . shell-pop)))
+(defun rlr/ghostel-buffer ()
+  "Return the active ghostel buffer, or nil if none exists."
+  (seq-find (lambda (buf)
+              (string-match-p "\\*ghostel:" (buffer-name buf)))
+            (buffer-list)))
+
+(defun rlr/ghostel-toggle ()
+  (interactive)
+  (let ((buf (rlr/ghostel-buffer)))
+    (cond
+     ((not buf)
+      (ghostel))
+     ((eq (current-buffer) buf)
+      (bury-buffer))
+     (t
+      (switch-to-buffer buf)))))
+(bind-key* "C-t" 'rlr/ghostel-toggle)
+
+;; (use-package shell-pop
+;;   :load-path "lisp/shell-pop-el"
+;;   :ensure t
+;;   :bind
+;;   (("C-t" . shell-pop)))
 
 (add-hook 'shell-mode-hook (lambda () (setq show-trailing-whitespace nil)))
 
